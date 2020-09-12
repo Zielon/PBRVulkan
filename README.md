@@ -1,2 +1,2 @@
-# Physically base renderer in Vulkan
+# Physically based renderer in Vulkan
 Vulkan real-timer path tracer
