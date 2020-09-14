@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Vulkan">
+      <UniqueIdentifier>{6addb92a-f5f4-402f-940b-a053b9e7eff1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Vulkan\Window.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Vulkan.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Application.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Vulkan\Window.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Vulkan.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Application.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
