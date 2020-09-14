@@ -2,8 +2,8 @@
 
 #include "imgui.h"
 
-#include "../3rd/ImGui/imgui_impl_glfw.h"
-#include "../3rd/ImGui/imgui_impl_vulkan.h"
+#include "../ImGui/imgui_impl_glfw.h"
+#include "../ImGui/imgui_impl_vulkan.h"
 
 namespace Tracer 
 {

@@ -1,0 +1,1 @@
+python ./Scripts/Compile.py

@@ -10,52 +10,66 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{d1388ee0-b14e-4143-b0b2-fd319cc91d22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{8f936c63-5904-4f9f-9e38-aef9ba98af60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders">
+      <UniqueIdentifier>{3c909e00-1ba7-4e98-9666-d1349889acc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Application.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Vulkan.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Window.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Menu.cpp">
-      <Filter>Tracer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RayTracer.cpp">
-      <Filter>Tracer</Filter>
-    </ClCompile>
-    <ClCompile Include="3rd\ImGui\imgui_impl_glfw.cpp">
+    <ClCompile Include="src\ImGui\imgui_impl_glfw.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="3rd\ImGui\imgui_impl_vulkan.cpp">
+    <ClCompile Include="src\ImGui\imgui_impl_vulkan.cpp">
       <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\Menu.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\RayTracer.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Application.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Vulkan.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Window.cpp">
+      <Filter>Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Application.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Vulkan.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Window.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Menu.h">
-      <Filter>Tracer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RayTracer.h">
-      <Filter>Tracer</Filter>
-    </ClInclude>
-    <ClInclude Include="3rd\ImGui\imgui_impl_vulkan.h">
+    <ClInclude Include="src\ImGui\imgui_impl_glfw.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="3rd\ImGui\imgui_impl_glfw.h">
+    <ClInclude Include="src\ImGui\imgui_impl_vulkan.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tracer\Menu.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\RayTracer.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Application.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Vulkan.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Window.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Assets\shaders\Vertex.vert">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Fragment.frag">
+      <Filter>Assets\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

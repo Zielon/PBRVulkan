@@ -1,7 +1,7 @@
-#include "Application.h"
+#include "Tracer/RayTracer.h"
 
 int main()
 {
-    Vulkan::Application application;
-    application.Run();
+    Tracer::RayTracer tracer;
+    tracer.Run();
 }

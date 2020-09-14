@@ -19,23 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="3rd\ImGui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="3rd\ImGui\imgui_impl_vulkan.cpp" />
-    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\ImGui\imgui_impl_vulkan.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Menu.cpp" />
-    <ClCompile Include="src\RayTracer.cpp" />
-    <ClCompile Include="src\Vulkan.cpp" />
-    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Tracer\Menu.cpp" />
+    <ClCompile Include="src\Tracer\RayTracer.cpp" />
+    <ClCompile Include="src\Vulkan\Application.cpp" />
+    <ClCompile Include="src\Vulkan\Vulkan.cpp" />
+    <ClCompile Include="src\Vulkan\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3rd\ImGui\imgui_impl_glfw.h" />
-    <ClInclude Include="3rd\ImGui\imgui_impl_vulkan.h" />
-    <ClInclude Include="src\Application.h" />
-    <ClInclude Include="src\Menu.h" />
-    <ClInclude Include="src\RayTracer.h" />
-    <ClInclude Include="src\Vulkan.h" />
-    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="src\ImGui\imgui_impl_vulkan.h" />
+    <ClInclude Include="src\Tracer\Menu.h" />
+    <ClInclude Include="src\Tracer\RayTracer.h" />
+    <ClInclude Include="src\Vulkan\Application.h" />
+    <ClInclude Include="src\Vulkan\Vulkan.h" />
+    <ClInclude Include="src\Vulkan\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Assets\Shaders\Fragment.frag" />
+    <None Include="src\Assets\shaders\Vertex.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -151,6 +155,10 @@
       <AdditionalLibraryDirectories>C:\VulkanSDK\1.2.148.1\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+call $(ProjectDir)Scripts\Run.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -170,6 +178,10 @@
       <AdditionalLibraryDirectories>C:\VulkanSDK\1.2.148.1\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+call $(ProjectDir)Scripts\Run.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
