@@ -19,15 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3rd\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="3rd\ImGui\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Vulkan\Application.cpp" />
-    <ClCompile Include="src\Vulkan\Vulkan.cpp" />
-    <ClCompile Include="src\Vulkan\Window.cpp" />
+    <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\RayTracer.cpp" />
+    <ClCompile Include="src\Vulkan.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Vulkan\Application.h" />
-    <ClInclude Include="src\Vulkan\Vulkan.h" />
-    <ClInclude Include="src\Vulkan\Window.h" />
+    <ClInclude Include="3rd\ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="3rd\ImGui\imgui_impl_vulkan.h" />
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Menu.h" />
+    <ClInclude Include="src\RayTracer.h" />
+    <ClInclude Include="src\Vulkan.h" />
+    <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

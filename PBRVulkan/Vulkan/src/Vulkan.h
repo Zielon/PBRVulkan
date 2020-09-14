@@ -12,7 +12,6 @@
 	ClassName& operator = (const ClassName&) = delete; \
 	ClassName& operator = (ClassName&&) = delete;
 
-
 namespace Vulkan
 {
 	void VK_CHECK(VkResult result, const char* operation);

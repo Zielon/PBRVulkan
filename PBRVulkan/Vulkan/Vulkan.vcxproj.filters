@@ -4,28 +4,58 @@
     <Filter Include="Vulkan">
       <UniqueIdentifier>{6addb92a-f5f4-402f-940b-a053b9e7eff1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tracer">
+      <UniqueIdentifier>{db8ead7d-9755-40d0-9cec-903d8c049cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{d1388ee0-b14e-4143-b0b2-fd319cc91d22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Vulkan\Window.cpp">
+    <ClCompile Include="src\Application.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vulkan\Vulkan.cpp">
+    <ClCompile Include="src\Vulkan.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vulkan\Application.cpp">
+    <ClCompile Include="src\Window.cpp">
       <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Menu.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RayTracer.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\ImGui\imgui_impl_glfw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\ImGui\imgui_impl_vulkan.cpp">
+      <Filter>ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Vulkan\Window.h">
+    <ClInclude Include="src\Application.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vulkan\Vulkan.h">
+    <ClInclude Include="src\Vulkan.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vulkan\Application.h">
+    <ClInclude Include="src\Window.h">
       <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Menu.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RayTracer.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\ImGui\imgui_impl_vulkan.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\ImGui\imgui_impl_glfw.h">
+      <Filter>ImGui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
