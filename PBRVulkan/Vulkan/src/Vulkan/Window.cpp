@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-namespace Vulkan {
-
+namespace Vulkan
+{
 	void GlfwErrorCallback(const int error, const char* const description)
 	{
 		std::cerr << "ERROR: GLFW: " << description << " (code: " << error << ")" << std::endl;
@@ -11,22 +11,18 @@ namespace Vulkan {
 
 	void GlfwKeyCallback(GLFWwindow* window, const int key, const int scancode, const int action, const int mods)
 	{
-
 	}
 
 	void GlfwCursorPositionCallback(GLFWwindow* window, const double xpos, const double ypos)
 	{
-
 	}
 
 	void GlfwMouseButtonCallback(GLFWwindow* window, const int button, const int action, const int mods)
 	{
-
 	}
 
 	void GlfwScrollCallback(GLFWwindow* window, const double xoffset, const double yoffset)
 	{
-
 	}
 
 	Window::Window()
@@ -59,6 +55,7 @@ namespace Vulkan {
 		glfwSetMouseButtonCallback(window, GlfwMouseButtonCallback);
 		glfwSetScrollCallback(window, GlfwScrollCallback);
 	}
+
 	Window::~Window()
 	{
 		if (window != nullptr)
@@ -70,6 +67,7 @@ namespace Vulkan {
 		glfwTerminate();
 		glfwSetErrorCallback(nullptr);
 	}
+
 	void Window::Run()
 	{
 		while (!glfwWindowShouldClose(window))

@@ -5,7 +5,7 @@
 #include "../ImGui/imgui_impl_glfw.h"
 #include "../ImGui/imgui_impl_vulkan.h"
 
-namespace Tracer 
+namespace Tracer
 {
 	Menu::Menu()
 	{
@@ -20,9 +20,8 @@ namespace Tracer
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
-	
+
 	void Menu::Render()
 	{
-		
 	}
 }

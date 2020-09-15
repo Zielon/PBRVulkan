@@ -2,10 +2,9 @@
 
 #include "../Vulkan/Application.h"
 
-namespace Tracer 
+namespace Tracer
 {
 	class RayTracer : public Vulkan::Application
 	{
-		
 	};
 }

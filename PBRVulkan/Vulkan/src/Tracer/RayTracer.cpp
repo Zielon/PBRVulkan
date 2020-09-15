@@ -1,6 +1,5 @@
 #include "RayTracer.h"
 
-namespace Tracer 
+namespace Tracer
 {
-
 }

@@ -2,9 +2,9 @@
 
 #include "../Vulkan/Vulkan.h"
 
-namespace Tracer 
+namespace Tracer
 {
-	class Menu 
+	class Menu
 	{
 	public:
 		NON_COPIABLE(Menu)

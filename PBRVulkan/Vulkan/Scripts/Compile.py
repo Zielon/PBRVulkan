@@ -1,6 +1,8 @@
 import os
 import subprocess
 
+# The root is \PBRVulkan\Vulkan\
+
 root = os.path.dirname(os.path.abspath(__file__)) 
 shaders = root + "/../src/Assets/Shaders/"
 

@@ -1,8 +1,11 @@
 #pragma once
 
 #include "Vulkan.h"
+#include "Window.h"
+#include "Instance.h"
+#include "Device.h"
+#include "Surface.h"
 
-#include <vector>
 #include <memory>
 
 namespace Vulkan
@@ -18,6 +21,11 @@ namespace Vulkan
 		void Run();
 
 	private:
-		std::unique_ptr<class Window> window;
+		void SetPhysicalDevice();
+
+		std::unique_ptr<Window> window;
+		std::unique_ptr<Instance> instance;
+		std::unique_ptr<Device> device;
+		std::unique_ptr<Surface> surface;
 	};
 }

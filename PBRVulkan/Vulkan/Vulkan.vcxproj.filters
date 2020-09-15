@@ -16,6 +16,9 @@
     <Filter Include="Assets\Shaders">
       <UniqueIdentifier>{3c909e00-1ba7-4e98-9666-d1349889acc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{ce8d5c29-f57a-443a-b469-283f0f4f9242}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
@@ -38,6 +41,15 @@
       <Filter>Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Vulkan\Window.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Instance.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Device.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Surface.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,6 +75,15 @@
     <ClInclude Include="src\Vulkan\Window.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vulkan\Instance.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Device.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Surface.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Assets\shaders\Vertex.vert">
@@ -70,6 +91,12 @@
     </None>
     <None Include="src\Assets\Shaders\Fragment.frag">
       <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Scripts\Compile.py">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\Run.bat">
+      <Filter>Scripts</Filter>
     </None>
   </ItemGroup>
 </Project>
