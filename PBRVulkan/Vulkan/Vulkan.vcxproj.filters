@@ -52,6 +52,9 @@
     <ClCompile Include="src\Vulkan\Surface.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vulkan\SwapChain.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImGui\imgui_impl_glfw.h">
@@ -82,6 +85,9 @@
       <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Vulkan\Surface.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\SwapChain.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

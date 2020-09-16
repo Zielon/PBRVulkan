@@ -19,7 +19,7 @@ namespace Vulkan
 		const Instance& GetInstance() const { return instance; }
 
 	private:
-		VkSurfaceKHR surface;
+		VkSurfaceKHR surface{};
 		const Instance& instance;
 	};
 }

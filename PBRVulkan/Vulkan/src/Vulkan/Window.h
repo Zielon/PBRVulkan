@@ -16,6 +16,7 @@ namespace Vulkan
 		~Window();
 
 		GLFWwindow* Get() const { return window; }
+		VkExtent2D GetFramebufferSize() const;
 		void Run();
 
 	private:

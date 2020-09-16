@@ -26,7 +26,7 @@ namespace Vulkan
 		void CheckPhysicalDevice();
 
 		std::vector<VkPhysicalDevice> devices;
-		VkInstance instance;
+		VkInstance instance{};
 		const Window& window;
 	};
 }

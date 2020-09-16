@@ -7,17 +7,11 @@
 
 namespace Vulkan
 {
-	struct QueueFamilyIndices
+	struct QueueFamily
 	{
-		std::optional<uint32_t> graphicsFamily;
+		std::optional<uint32_t> family;
 		VkQueue& queue;
-
-		QueueFamilyIndices(VkQueue& queue): queue(queue){}
-		
-		bool isComplete()
-		{
-			return graphicsFamily.has_value();
-		}
+		QueueFamily(VkQueue& queue): queue(queue){}
 	};
 
 	class Surface;
@@ -30,18 +24,28 @@ namespace Vulkan
 		Device(VkPhysicalDevice physicalDevice, const Surface& surface);
 		~Device();
 
-		VkPhysicalDevice Get() const { return physicalDevice; };
+		VkDevice Get() const { return device; }
+		VkPhysicalDevice GetPhysical() const { return physicalDevice; }
+		const class Surface& GetSurface() const { return surface; }
 
 	private:
-		std::vector<QueueFamilyIndices> FindQueueFamilies(VkPhysicalDevice device);
+		std::vector<QueueFamily> FindQueueFamilies(VkPhysicalDevice device);
+		static bool CheckDeviceExtensionSupport(VkPhysicalDevice physicalDevice);
 
+		static const std::vector<const char*> RequiredExtensions;
 		const VkPhysicalDevice physicalDevice;
 		const Surface& surface;
-		VkDevice device;
+		VkDevice device{};
 
-		VkQueue graphicsQueue{};
-		VkQueue computeQueue{};
-		VkQueue presentQueue{};
-		VkQueue transferQueue{};
+	public:
+		uint32_t GraphicsFamilyIndex{};
+		uint32_t ComputeFamilyIndex{};
+		uint32_t PresentFamilyIndex{};
+		uint32_t TransferFamilyIndex{};
+		
+		VkQueue GraphicsQueue{};
+		VkQueue ComputeQueue{};
+		VkQueue PresentQueue{};
+		VkQueue TransferQueue{};
 	};
 }

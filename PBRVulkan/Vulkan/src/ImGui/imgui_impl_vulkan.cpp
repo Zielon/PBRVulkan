@@ -890,13 +890,13 @@ VkSurfaceFormatKHR ImGui_ImplVulkanH_SelectSurfaceFormat(VkPhysicalDevice physic
     }
     else
     {
-        // Request several formats, the first found will be used
+        // Request several Formats, the first found will be used
         for (int request_i = 0; request_i < request_formats_count; request_i++)
             for (uint32_t avail_i = 0; avail_i < avail_count; avail_i++)
                 if (avail_format[avail_i].format == request_formats[request_i] && avail_format[avail_i].colorSpace == request_color_space)
                     return avail_format[avail_i];
 
-        // If none of the requested image formats could be found, use the first available
+        // If none of the requested image Formats could be found, use the first available
         return avail_format[0];
     }
 }

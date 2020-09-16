@@ -1,10 +1,19 @@
 #include "Device.h"
 
+#include <set>
+
+#include "Surface.h"
+
 namespace Vulkan
 {
 	Device::Device(VkPhysicalDevice physicalDevice, const Surface& surface) :
 		physicalDevice(physicalDevice), surface(surface)
 	{
+		if (!CheckDeviceExtensionSupport(physicalDevice))
+		{
+			throw std::runtime_error("The device is not suitable!");
+		}
+
 		auto indices = FindQueueFamilies(physicalDevice);
 
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -13,7 +22,7 @@ namespace Vulkan
 
 		for (auto index : indices)
 		{
-			uint32_t queueFamilyIndex = index.graphicsFamily.value();
+			uint32_t queueFamilyIndex = index.family.value();
 
 			VkDeviceQueueCreateInfo queueCreateInfo = {};
 			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -38,19 +47,35 @@ namespace Vulkan
 		createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
 		createInfo.pQueueCreateInfos = queueCreateInfos.data();
 		createInfo.pEnabledFeatures = &deviceFeatures;
+		createInfo.enabledLayerCount = 0;
+		createInfo.enabledExtensionCount = static_cast<uint32_t>(RequiredExtensions.size());
+		createInfo.ppEnabledExtensionNames = RequiredExtensions.data();
 
 		VK_CHECK(vkCreateDevice(physicalDevice, &createInfo, nullptr, &device), "Create Vulkan logical device");
 
 		for (auto index : indices)
 		{
-			uint32_t queueFamilyIndex = index.graphicsFamily.value();
-			vkGetDeviceQueue(device, queueFamilyIndex, 0, &index.queue);
+			uint32_t family = index.family.value();
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, family, surface.Get(), &presentSupport);
+			if (presentSupport)
+			{
+				vkGetDeviceQueue(device, family, 0, &PresentQueue);
+				PresentFamilyIndex = family;
+				break;
+			}
+		}
+
+		for (auto index : indices)
+		{
+			uint32_t family = index.family.value();
+			vkGetDeviceQueue(device, family, 0, &index.queue);
 		}
 	}
 
-	std::vector<QueueFamilyIndices> Device::FindQueueFamilies(VkPhysicalDevice device)
+	std::vector<QueueFamily> Device::FindQueueFamilies(VkPhysicalDevice device)
 	{
-		std::vector<QueueFamilyIndices> indices;
+		std::vector<QueueFamily> indices;
 
 		uint32_t queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
@@ -63,24 +88,23 @@ namespace Vulkan
 		{
 			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			{
-				QueueFamilyIndices index{graphicsQueue};
-				index.graphicsFamily = i;
+				QueueFamily index{GraphicsQueue};
+				index.family = i;
+				GraphicsFamilyIndex = i;
 				indices.push_back(index);
 			}
-
-			if (queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT &&
-				!(queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT))
+			else if (queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT)
 			{
-				QueueFamilyIndices index{computeQueue};
-				index.graphicsFamily = i;
+				QueueFamily index{ComputeQueue};
+				index.family = i;
+				ComputeFamilyIndex = i;
 				indices.push_back(index);
 			}
-
-			if (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT &&
-				!(queueFamily.queueFlags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT)))
+			else if (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT)
 			{
-				QueueFamilyIndices index{transferQueue};
-				index.graphicsFamily = i;
+				QueueFamily index{TransferQueue};
+				index.family = i;
+				TransferFamilyIndex = i;
 				indices.push_back(index);
 			}
 
@@ -88,6 +112,30 @@ namespace Vulkan
 		}
 
 		return indices;
+	}
+
+	const std::vector<const char*> Device::RequiredExtensions =
+	{
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+		VK_NV_RAY_TRACING_EXTENSION_NAME
+	};
+
+	bool Device::CheckDeviceExtensionSupport(VkPhysicalDevice physicalDevice)
+	{
+		uint32_t extensionCount;
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+
+		std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+
+		std::set<std::string> requiredExtensions(RequiredExtensions.begin(), RequiredExtensions.end());
+
+		for (const auto& extension : availableExtensions)
+		{
+			requiredExtensions.erase(extension.extensionName);
+		}
+
+		return requiredExtensions.empty();
 	}
 
 	Device::~Device()
