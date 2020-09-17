@@ -16,7 +16,7 @@ namespace Vulkan
 		Instance(const Window& window, const std::vector<const char*>& validationLayers);
 		~Instance();
 
-		VkInstance Get() const { return instance; };
+		VkInstance Get() const { return instance; }
 		const Window& GetWindow() const { return window; }
 		const std::vector<VkPhysicalDevice>& GetDevices() const { return devices; }
 

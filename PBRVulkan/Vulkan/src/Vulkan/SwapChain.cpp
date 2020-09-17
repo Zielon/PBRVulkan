@@ -3,6 +3,7 @@
 #include "Surface.h"
 #include "Window.h"
 #include "Instance.h"
+#include "ImageView.h"
 
 #include <algorithm>
 
@@ -12,8 +13,8 @@ namespace Vulkan
 	{
 		const auto swapChainSupport = QuerySwapChainSupport(device.GetPhysical());
 
-		VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.Formats);
 		VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.PresentModes);
+		VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.Formats);
 		VkExtent2D extent = ChooseSwapExtent(swapChainSupport.Capabilities);
 		uint32_t imageCount = ChooseImageCount(swapChainSupport.Capabilities);
 
@@ -50,10 +51,19 @@ namespace Vulkan
 		vkGetSwapchainImagesKHR(device.Get(), swapChain, &imageCount, nullptr);
 		swapChainImages.resize(imageCount);
 		vkGetSwapchainImagesKHR(device.Get(), swapChain, &imageCount, swapChainImages.data());
+
+		MinImageCount = swapChainSupport.Capabilities.minImageCount;
+		PresentMode = presentMode;
+		Format = surfaceFormat.format;
+		Extent = extent;
+
+		CreateImageViews();
 	}
 
 	SwapChain::~SwapChain()
 	{
+		swapChainImageViews.clear();
+
 		if (swapChain != nullptr)
 		{
 			vkDestroySwapchainKHR(device.Get(), swapChain, nullptr);
@@ -124,10 +134,10 @@ namespace Vulkan
 		}
 
 		auto actualExtent = surface.GetInstance().GetWindow().GetFramebufferSize();
-		actualExtent.width = std::max(capabilities.minImageExtent.width,
-		                              std::min(capabilities.maxImageExtent.width, actualExtent.width));
-		actualExtent.height = std::max(capabilities.minImageExtent.height,
-		                               std::min(capabilities.maxImageExtent.height, actualExtent.height));
+		actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width,
+		                                capabilities.maxImageExtent.width);
+		actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height,
+		                                 capabilities.maxImageExtent.height);
 		return actualExtent;
 	}
 
@@ -141,5 +151,14 @@ namespace Vulkan
 		}
 
 		return imageCount;
+	}
+
+	void SwapChain::CreateImageViews()
+	{
+		for (auto* const image : swapChainImages)
+		{
+			swapChainImageViews.
+				push_back(std::make_unique<ImageView>(device, image, Format));
+		}
 	}
 }

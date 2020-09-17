@@ -8,6 +8,8 @@
 
 #include <memory>
 
+#include "SwapChain.h"
+
 namespace Vulkan
 {
 	class Application
@@ -27,5 +29,6 @@ namespace Vulkan
 		std::unique_ptr<Instance> instance;
 		std::unique_ptr<Device> device;
 		std::unique_ptr<Surface> surface;
+		std::unique_ptr<SwapChain> swapChain;
 	};
 }

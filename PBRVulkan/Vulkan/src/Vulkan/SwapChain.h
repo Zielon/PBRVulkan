@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "Vulkan.h"
 
@@ -23,6 +24,7 @@ namespace Vulkan
 
 		VkSwapchainKHR Get() const { return swapChain; };
 		const std::vector<VkImage>& GetSwapChainImages() const { return swapChainImages; }
+		const std::vector<std::unique_ptr<class ImageView>>& GetSwapChainImageViews() const { return swapChainImageViews; }
 
 	private:
 		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;
@@ -30,10 +32,18 @@ namespace Vulkan
 		static VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
 		static uint32_t ChooseImageCount(const VkSurfaceCapabilitiesKHR& capabilities);
+		void CreateImageViews();
 
 		std::vector<VkImage> swapChainImages;
+		std::vector<std::unique_ptr<class ImageView>> swapChainImageViews;
 		VkSwapchainKHR swapChain;
 		const class Device& device;
 		const class Surface& surface;
+
+	public:
+		VkPresentModeKHR PresentMode{};
+		VkFormat Format{};
+		VkExtent2D Extent{};
+		uint32_t MinImageCount{};
 	};
 }

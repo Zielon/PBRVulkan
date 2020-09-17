@@ -11,6 +11,8 @@ namespace Vulkan
 		surface.reset(new Surface(*instance));
 
 		SetPhysicalDevice();
+
+		swapChain.reset(new SwapChain(*device));
 	}
 
 	Application::~Application()
