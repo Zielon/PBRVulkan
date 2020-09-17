@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{99d00138-8642-4e15-a5a9-30937569766c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{e7376797-e7f2-4088-a0a1-f2836eea3574}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{15995b00-80d0-47b6-b5d3-ae90f31907e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vulkan">
+      <UniqueIdentifier>{919b5852-ae36-4b24-b75e-8f31adcabb40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tracer">
+      <UniqueIdentifier>{6739e442-065f-48a3-a1c1-06ff4d9958ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders">
+      <UniqueIdentifier>{6183b072-61ab-4ea4-8bb5-d97c4835b787}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Compile.py">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\Run.bat">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Fragment.frag">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Vertex.vert">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Vulkan\Application.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Device.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\GraphicsPipeline.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Image.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\ImageView.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Instance.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Shader.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Surface.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\SwapChain.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Vulkan.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Window.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\Menu.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\RayTracer.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\imgui_impl_glfw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\imgui_impl_vulkan.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Vulkan\Application.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Device.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\GraphicsPipeline.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Image.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\ImageView.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Instance.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Shader.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Surface.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\SwapChain.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Vulkan.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Window.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\Menu.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\RayTracer.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\imgui_impl_glfw.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\imgui_impl_vulkan.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,5 +1,13 @@
 #include "Application.h"
 
+#include "Vulkan.h"
+#include "Window.h"
+#include "Instance.h"
+#include "Device.h"
+#include "Surface.h"
+#include "SwapChain.h"
+#include "GraphicsPipeline.h"
+
 namespace Vulkan
 {
 	Application::Application()
@@ -13,6 +21,7 @@ namespace Vulkan
 		SetPhysicalDevice();
 
 		swapChain.reset(new SwapChain(*device));
+		graphicsPipeline.reset(new GraphicsPipeline(*swapChain, *device));
 	}
 
 	Application::~Application()

@@ -6,11 +6,11 @@ git checkout 2020.06
 call bootstrap-vcpkg.bat
 
 vcpkg.exe install ^
-	glfw3:x64-windows-static ^
-	glm:x64-windows-static ^
-	imgui:x64-windows-static ^
-	stb:x64-windows-static ^
-	tinyobjloader:x64-windows-static
+	glfw3:x64-windows ^
+	glm:x64-windows ^
+	imgui:x64-windows ^
+	stb:x64-windows ^
+	tinyobjloader:x64-windows
 
 vcpkg.exe integrate install
 

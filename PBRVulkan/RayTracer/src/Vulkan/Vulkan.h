@@ -1,5 +1,6 @@
 #pragma once
 
+#undef APIENTRY
 #define NOMINMAX
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
