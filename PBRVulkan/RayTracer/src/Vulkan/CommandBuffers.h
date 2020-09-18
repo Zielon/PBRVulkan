@@ -18,9 +18,9 @@ namespace Vulkan
 		CommandBuffers(const class Device& device, uint32_t size);
 		~CommandBuffers();
 
-		[[nodiscard]] VkCommandPool Get() const { return commandPool; }
+		[[nodiscard]] VkCommandPool GetPool() const { return commandPool; }
 		[[nodiscard]] uint32_t Size() const { return static_cast<uint32_t>(commandBuffers.size()); }
-		VkCommandBuffer& operator [](const size_t i) { return commandBuffers[i]; }
+		const VkCommandBuffer& operator [](const size_t i) const { return commandBuffers[i]; }
 		VkCommandBuffer Begin(size_t i);
 		void End(size_t);
 

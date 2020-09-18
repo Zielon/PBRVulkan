@@ -24,7 +24,6 @@ namespace Vulkan
 
 		[[nodiscard]] VkSwapchainKHR Get() const { return swapChain; };
 		[[nodiscard]] const std::vector<VkImage>& GetSwapChainImages() const { return swapChainImages; }
-
 		[[nodiscard]] const std::vector<std::unique_ptr<class ImageView>>& GetSwapChainImageViews() const
 		{
 			return swapChainImageViews;

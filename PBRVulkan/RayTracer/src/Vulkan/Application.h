@@ -14,14 +14,17 @@ namespace Vulkan
 
 		explicit Application();
 		virtual ~Application();
-
-		void Run();
 		void DrawFrame();
+		virtual void Run();
 
-	private:
+	protected:
 		void CreatePhysicalDevice();
 		void CreateGraphicsPipeline();
-
+		void CreateInstance();
+		void QueueSubmit(VkCommandBuffer command);
+		void Present(uint32_t imageIndex);
+		virtual void Render(VkFramebuffer framebuffer, VkCommandBuffer command){};
+		
 		size_t currentFrame{};
 
 		std::unique_ptr<class Window> window;

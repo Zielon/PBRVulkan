@@ -13,7 +13,6 @@ namespace Vulkan
 		~Semaphore();
 
 		[[nodiscard]] VkSemaphore GetRenderFinished() const { return RenderFinishedSemaphore; }
-
 		[[nodiscard]] VkSemaphore GetImageAvailable() const { return RenderFinishedSemaphore; }
 
 	private:

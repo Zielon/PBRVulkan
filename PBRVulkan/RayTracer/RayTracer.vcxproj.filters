@@ -93,6 +93,9 @@
     <ClCompile Include="src\Vulkan\Fence.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vulkan\RenderPass.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vulkan\Application.h">
@@ -150,6 +153,9 @@
       <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Vulkan\Fence.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\RenderPass.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

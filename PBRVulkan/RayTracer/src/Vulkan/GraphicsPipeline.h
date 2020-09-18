@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vulkan.h"
+#include <memory>
 
 namespace Vulkan
 {
@@ -13,8 +14,8 @@ namespace Vulkan
 		~GraphicsPipeline();
 
 		[[nodiscard]] VkPipelineLayout GetPipelineLayout() const { return pipelineLayout; }
-		[[nodiscard]] VkRenderPass GetRenderPass() const { return renderPass; }
 		[[nodiscard]] VkPipeline GetPipeline() const { return pipeline; }
+		[[nodiscard]] VkRenderPass GetRenderPass() const;
 
 	private:
 		void CreateRenderPass();
@@ -22,8 +23,8 @@ namespace Vulkan
 
 		const SwapChain& swapChain;
 		const Device& device;
+		std::unique_ptr<class RenderPass> renderPass;
 		VkPipelineLayout pipelineLayout;
-		VkRenderPass renderPass;
 		VkPipeline pipeline;
 	};
 }

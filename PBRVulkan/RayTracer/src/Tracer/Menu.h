@@ -8,7 +8,8 @@ namespace Vulkan
 {
 	class Device;
 	class SwapChain;
-	class GraphicsPipeline;
+	class RenderPass;
+	class CommandBuffers;
 }
 
 namespace Tracer
@@ -18,11 +19,19 @@ namespace Tracer
 	public:
 		NON_COPIABLE(Menu)
 
-		Menu(const Vulkan::Device& device, const Vulkan::SwapChain& swapChain);
+		Menu(
+			const Vulkan::Device& device,
+			const Vulkan::SwapChain& swapChain,
+			const Vulkan::CommandBuffers& commandBuffers);
 		~Menu();
 
-		void Render();
+		void Render(VkFramebuffer framebuffer, VkCommandBuffer command) const;
+
 	private:
-		std::unique_ptr<Vulkan::GraphicsPipeline> graphicsPipeline;
+		void RenderSettings() const;
+		
+		const Vulkan::SwapChain& swapChain;
+		const Vulkan::Device& device;
+		std::unique_ptr<Vulkan::RenderPass> renderPass;
 	};
 }

@@ -2,7 +2,6 @@
 
 #include <array>
 
-
 #include "Vulkan.h"
 #include "Window.h"
 #include "Instance.h"
@@ -15,18 +14,11 @@
 #include "Fence.h"
 #include "Framebuffer.h"
 
-const int MAX_FRAMES_IN_FLIGHT = 2;
-
 namespace Vulkan
 {
 	Application::Application()
 	{
-		const auto validationLayers = std::vector<const char*>();
-
-		window.reset(new Window());
-		instance.reset(new Instance(*window, validationLayers));
-		surface.reset(new Surface(*instance));
-
+		CreateInstance();
 		CreatePhysicalDevice();
 		CreateGraphicsPipeline();
 	}
@@ -34,6 +26,33 @@ namespace Vulkan
 	Application::~Application()
 	{
 		window.reset();
+	}
+
+	void Application::DrawFrame()
+	{
+		uint32_t imageIndex;
+		auto& fence = inFlightFences[currentFrame];
+		auto& semaphore = semaphores[currentFrame];
+
+		fence->Wait(UINT64_MAX);
+
+		vkAcquireNextImageKHR(
+			device->Get(),
+			swapChain->Get(),
+			UINT64_MAX,
+			semaphore->GetImageAvailable(),
+			fence->Get(),
+			&imageIndex);
+
+		const auto framebuffer = swapChainFramebuffers[imageIndex]->Get();
+		
+		const VkCommandBuffer command = commandBuffers->Begin(imageIndex);
+		Render(framebuffer, command);
+		commandBuffers->End(imageIndex);
+
+		QueueSubmit(command);
+		fence->Reset();
+		Present(imageIndex);
 	}
 
 	void Application::Run()
@@ -45,75 +64,15 @@ namespace Vulkan
 		}
 	}
 
-	void Application::DrawFrame()
+	void Application::Present(uint32_t imageIndex)
 	{
-		auto& fence = inFlightFences[currentFrame];
-		
-		fence->Wait(UINT64_MAX);
-
 		auto& semaphore = semaphores[currentFrame];
-		auto imageAvailableSemaphore = semaphore->GetImageAvailable();
-		auto renderFinishedSemaphore = semaphore->GetRenderFinished();
-		
-		uint32_t imageIndex;
-		auto result = vkAcquireNextImageKHR(
-			device->Get(), swapChain->Get(), UINT64_MAX, imageAvailableSemaphore, nullptr, &imageIndex);
 
-		// ============= START COMMAND =============
-		
-		const auto commandBuffer = commandBuffers->Begin(imageIndex);
-
-		std::array<VkClearValue, 2> clearValues = {};
-		clearValues[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
-		clearValues[1].depthStencil = {1.0f, 0};
-
-		VkRenderPassBeginInfo renderPassInfo = {};
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = graphicsPipeline->GetRenderPass();
-		renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex]->Get();
-		renderPassInfo.renderArea.offset = {0, 0};
-		renderPassInfo.renderArea.extent = swapChain->Extent;
-		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-		renderPassInfo.pClearValues = clearValues.data();
-
-		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-		{
-			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetPipeline());
-			vkCmdDraw(commandBuffer, 3, 1, 0, 0);
-		}
-		vkCmdEndRenderPass(commandBuffer);
-
-		commandBuffers->End(imageIndex);
-
-		// ============= END COMMAND =============
-		
-		VkCommandBuffer commandBuffers[]{commandBuffer};
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-		VkSemaphore waitSemaphores[] = {imageAvailableSemaphore};
-		VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-		submitInfo.waitSemaphoreCount = 1;
-		submitInfo.pWaitSemaphores = waitSemaphores;
-		submitInfo.pWaitDstStageMask = waitStages;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = commandBuffers;
-
-		VkSemaphore signalSemaphores[] = {renderFinishedSemaphore};
-		submitInfo.signalSemaphoreCount = 1;
-		submitInfo.pSignalSemaphores = signalSemaphores;
-
-		fence->Reset();
-
-		if (vkQueueSubmit(device->GraphicsQueue, 1, &submitInfo, fence->Get()) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to submit draw command buffer!");
-		}
-
+		VkSemaphore waitSemaphores[] = {semaphore->GetImageAvailable()};
 		VkPresentInfoKHR presentInfo{};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = signalSemaphores;
+		presentInfo.pWaitSemaphores = waitSemaphores;
 
 		VkSwapchainKHR swapChains[] = {swapChain->Get()};
 		presentInfo.swapchainCount = 1;
@@ -123,6 +82,38 @@ namespace Vulkan
 		vkQueuePresentKHR(device->PresentQueue, &presentInfo);
 
 		currentFrame = (currentFrame + 1) % inFlightFences.size();
+	}
+
+	void Application::CreateInstance()
+	{
+		const auto validationLayers = std::vector<const char*>();
+
+		window.reset(new Window());
+		instance.reset(new Instance(*window, validationLayers));
+		surface.reset(new Surface(*instance));
+	}
+
+	void Application::QueueSubmit(VkCommandBuffer command)
+	{
+		auto& fence = inFlightFences[currentFrame];
+		auto& semaphore = semaphores[currentFrame];
+
+		VkCommandBuffer commandBuffers[]{command};
+		VkSubmitInfo submitInfo{};
+		VkSemaphore signalSemaphores[] = {semaphore->GetRenderFinished()};
+		VkSemaphore waitSemaphores[] = {semaphore->GetImageAvailable()};
+		VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+		submitInfo.waitSemaphoreCount = 1;
+		submitInfo.pWaitSemaphores = waitSemaphores;
+		submitInfo.pWaitDstStageMask = waitStages;
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = commandBuffers;
+		submitInfo.signalSemaphoreCount = 1;
+		submitInfo.pSignalSemaphores = signalSemaphores;
+
+		VK_CHECK(vkQueueSubmit(device->GraphicsQueue, 1, &submitInfo, fence->Get()), "Failed to submit!");
 	}
 
 	void Application::CreatePhysicalDevice()
@@ -141,7 +132,8 @@ namespace Vulkan
 		{
 			semaphores.emplace_back(new Semaphore(*device));
 			inFlightFences.emplace_back(new Fence(*device));
-			swapChainFramebuffers.emplace_back(new Framebuffer(*imageView, *swapChain, graphicsPipeline->GetRenderPass()));
+			swapChainFramebuffers.emplace_back(
+				new Framebuffer(*imageView, *swapChain, graphicsPipeline->GetRenderPass()));
 		}
 
 		commandBuffers.reset(new CommandBuffers(*device, swapChainFramebuffers.size()));

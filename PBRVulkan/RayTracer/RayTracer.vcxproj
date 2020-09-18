@@ -39,6 +39,7 @@
     <ClCompile Include="src\Vulkan\Image.cpp" />
     <ClCompile Include="src\Vulkan\ImageView.cpp" />
     <ClCompile Include="src\Vulkan\Instance.cpp" />
+    <ClCompile Include="src\Vulkan\RenderPass.cpp" />
     <ClCompile Include="src\Vulkan\Semaphore.cpp" />
     <ClCompile Include="src\Vulkan\Shader.cpp" />
     <ClCompile Include="src\Vulkan\Surface.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="src\Vulkan\Image.h" />
     <ClInclude Include="src\Vulkan\ImageView.h" />
     <ClInclude Include="src\Vulkan\Instance.h" />
+    <ClInclude Include="src\Vulkan\RenderPass.h" />
     <ClInclude Include="src\Vulkan\Semaphore.h" />
     <ClInclude Include="src\Vulkan\Shader.h" />
     <ClInclude Include="src\Vulkan\Surface.h" />
