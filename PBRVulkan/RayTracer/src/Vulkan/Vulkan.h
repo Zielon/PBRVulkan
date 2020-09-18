@@ -1,11 +1,11 @@
 #pragma once
 
-#undef APIENTRY
 #define NOMINMAX
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <stdexcept>
+#undef APIENTRY
 
 #define NON_COPIABLE(ClassName) \
 	ClassName(const ClassName&) = delete; \

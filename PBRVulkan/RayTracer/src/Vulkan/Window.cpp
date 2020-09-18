@@ -77,9 +77,6 @@ namespace Vulkan
 
 	void Window::Run()
 	{
-		while (!glfwWindowShouldClose(window))
-		{
-			glfwPollEvents();
-		}
+
 	}
 }

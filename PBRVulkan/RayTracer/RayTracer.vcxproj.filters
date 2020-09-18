@@ -81,6 +81,15 @@
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Vulkan\Framebuffer.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\CommandBuffers.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Semaphore.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vulkan\Application.h">
@@ -127,6 +136,15 @@
     </ClInclude>
     <ClInclude Include="src\ImGui\imgui_impl_vulkan.h">
       <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Framebuffer.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\CommandBuffers.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Semaphore.h">
+      <Filter>Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
