@@ -3,7 +3,6 @@
 #include "Device.h"
 
 #include <fstream>
-#include <windows.h>
 #include <string>
 #include <iostream>
 

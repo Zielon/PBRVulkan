@@ -20,7 +20,7 @@ namespace Vulkan
 		allocInfo.commandBufferCount = size;
 
 		commandBuffers.resize(size);
-	
+
 		VK_CHECK(vkAllocateCommandBuffers(device.Get(), &allocInfo, commandBuffers.data()),
 		         "Allocate command buffers");
 	}

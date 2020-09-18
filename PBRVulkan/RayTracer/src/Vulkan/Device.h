@@ -11,11 +11,18 @@ namespace Vulkan
 	{
 		std::optional<uint32_t> family;
 		VkQueue& queue;
-		QueueFamily(VkQueue& queue): queue(queue){}
+
+		explicit QueueFamily(VkQueue& queue): queue(queue) { }
 	};
 
 	class Surface;
 
+	/**
+	 * Vulkan's logical device. Additionally, the class contains different queues.
+	 * Every operation in Vulkan requires commands to be submitted to a queue.
+	 * There are different types of queues that originate from different
+	 * queue families and each family of queues allows only a subset of commands.
+	 */
 	class Device final
 	{
 	public:
@@ -24,17 +31,17 @@ namespace Vulkan
 		Device(VkPhysicalDevice physicalDevice, const Surface& surface);
 		~Device();
 
-		VkDevice Get() const { return device; }
-		VkPhysicalDevice GetPhysical() const { return physicalDevice; }
-		const class Surface& GetSurface() const { return surface; }
+		[[nodiscard]] VkDevice Get() const { return device; }
+		[[nodiscard]] VkPhysicalDevice GetPhysical() const { return physicalDevice; }
+		[[nodiscard]] const class Surface& GetSurface() const { return surface; }
 
 	private:
 		std::vector<QueueFamily> FindQueueFamilies(VkPhysicalDevice device);
 		static bool CheckDeviceExtensionSupport(VkPhysicalDevice physicalDevice);
 
 		static const std::vector<const char*> RequiredExtensions;
-		const VkPhysicalDevice physicalDevice;
 		const Surface& surface;
+		VkPhysicalDevice physicalDevice;
 		VkDevice device{};
 
 	public:
@@ -42,7 +49,6 @@ namespace Vulkan
 		uint32_t ComputeFamilyIndex{};
 		uint32_t PresentFamilyIndex{};
 		uint32_t TransferFamilyIndex{};
-		
 		VkQueue GraphicsQueue{};
 		VkQueue ComputeQueue{};
 		VkQueue PresentQueue{};

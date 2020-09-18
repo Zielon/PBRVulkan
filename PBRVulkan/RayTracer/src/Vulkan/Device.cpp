@@ -7,7 +7,7 @@
 namespace Vulkan
 {
 	Device::Device(VkPhysicalDevice physicalDevice, const Surface& surface) :
-		physicalDevice(physicalDevice), surface(surface)
+		surface(surface), physicalDevice(physicalDevice)
 	{
 		if (!CheckDeviceExtensionSupport(physicalDevice))
 		{

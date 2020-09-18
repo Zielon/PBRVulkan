@@ -7,6 +7,10 @@
 
 namespace Vulkan
 {
+	/*
+	 * Class for loading and creating shaders.
+	 * Each shader has to be compiled to binary code before usage.
+	 */
 	class Shader final
 	{
 	public:
@@ -15,8 +19,7 @@ namespace Vulkan
 		Shader(const class Device& device, const std::string& filename);
 		~Shader();
 
-		VkShaderModule Get() const { return shader; }
-
+		[[nodiscard]] VkShaderModule Get() const { return shader; }
 		VkPipelineShaderStageCreateInfo CreateShaderStage(VkShaderStageFlagBits stage) const;
 
 	private:

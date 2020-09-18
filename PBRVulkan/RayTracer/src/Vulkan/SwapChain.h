@@ -22,9 +22,13 @@ namespace Vulkan
 		SwapChain(const class Device& device);
 		~SwapChain();
 
-		VkSwapchainKHR Get() const { return swapChain; };
-		const std::vector<VkImage>& GetSwapChainImages() const { return swapChainImages; }
-		const std::vector<std::unique_ptr<class ImageView>>& GetSwapChainImageViews() const { return swapChainImageViews; }
+		[[nodiscard]] VkSwapchainKHR Get() const { return swapChain; };
+		[[nodiscard]] const std::vector<VkImage>& GetSwapChainImages() const { return swapChainImages; }
+
+		[[nodiscard]] const std::vector<std::unique_ptr<class ImageView>>& GetSwapChainImageViews() const
+		{
+			return swapChainImageViews;
+		}
 
 	private:
 		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;

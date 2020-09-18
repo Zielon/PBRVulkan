@@ -12,9 +12,8 @@ namespace Vulkan
 		ImageView(const class Device& device, VkImage image, VkFormat format);
 		~ImageView();
 
-		VkImageView Get() const { return imageView; }
-
-		const class Device& GetDevice() const { return device; }
+		[[nodiscard]] VkImageView Get() const { return imageView; }
+		[[nodiscard]] const class Device& GetDevice() const { return device; }
 
 	private:
 		VkImageView imageView;

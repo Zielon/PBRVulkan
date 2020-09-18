@@ -33,6 +33,7 @@
     <ClCompile Include="src\Vulkan\Application.cpp" />
     <ClCompile Include="src\Vulkan\CommandBuffers.cpp" />
     <ClCompile Include="src\Vulkan\Device.cpp" />
+    <ClCompile Include="src\Vulkan\Fence.cpp" />
     <ClCompile Include="src\Vulkan\Framebuffer.cpp" />
     <ClCompile Include="src\Vulkan\GraphicsPipeline.cpp" />
     <ClCompile Include="src\Vulkan\Image.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="src\Vulkan\Application.h" />
     <ClInclude Include="src\Vulkan\CommandBuffers.h" />
     <ClInclude Include="src\Vulkan\Device.h" />
+    <ClInclude Include="src\Vulkan\Fence.h" />
     <ClInclude Include="src\Vulkan\Framebuffer.h" />
     <ClInclude Include="src\Vulkan\GraphicsPipeline.h" />
     <ClInclude Include="src\Vulkan\Image.h" />

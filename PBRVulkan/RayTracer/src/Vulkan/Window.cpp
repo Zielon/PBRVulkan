@@ -9,21 +9,13 @@ namespace Vulkan
 		std::cerr << "ERROR: GLFW: " << description << " (code: " << error << ")" << std::endl;
 	}
 
-	void GlfwKeyCallback(GLFWwindow* window, const int key, const int scancode, const int action, const int mods)
-	{
-	}
+	void GlfwKeyCallback(GLFWwindow* window, const int key, const int scancode, const int action, const int mods) { }
 
-	void GlfwCursorPositionCallback(GLFWwindow* window, const double xpos, const double ypos)
-	{
-	}
+	void GlfwCursorPositionCallback(GLFWwindow* window, const double xpos, const double ypos) { }
 
-	void GlfwMouseButtonCallback(GLFWwindow* window, const int button, const int action, const int mods)
-	{
-	}
+	void GlfwMouseButtonCallback(GLFWwindow* window, const int button, const int action, const int mods) { }
 
-	void GlfwScrollCallback(GLFWwindow* window, const double xoffset, const double yoffset)
-	{
-	}
+	void GlfwScrollCallback(GLFWwindow* window, const double xoffset, const double yoffset) { }
 
 	Window::Window()
 	{
@@ -75,8 +67,5 @@ namespace Vulkan
 		return VkExtent2D{static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
 	}
 
-	void Window::Run()
-	{
-
-	}
+	void Window::Run() { }
 }

@@ -7,7 +7,11 @@
 namespace Vulkan
 {
 	class Window;
-	
+
+	/*
+	 * The instance is the connection between your application and the Vulkan library
+	 * and creating it involves specifying some details about your application to the driver.
+	 */
 	class Instance final
 	{
 	public:
@@ -16,12 +20,12 @@ namespace Vulkan
 		Instance(const Window& window, const std::vector<const char*>& validationLayers);
 		~Instance();
 
-		VkInstance Get() const { return instance; }
-		const Window& GetWindow() const { return window; }
-		const std::vector<VkPhysicalDevice>& GetDevices() const { return devices; }
+		[[nodiscard]] VkInstance Get() const { return instance; }
+		[[nodiscard]] const Window& GetWindow() const { return window; }
+		[[nodiscard]] const std::vector<VkPhysicalDevice>& GetDevices() const { return devices; }
 
 	private:
-		std::vector<const char*> GetRequiredInstanceExtensions() const;
+		[[nodiscard]] std::vector<const char*> GetRequiredInstanceExtensions() const;
 		bool CheckValidationLayerSupport(const std::vector<const char*>&) const;
 		void CheckPhysicalDevice();
 

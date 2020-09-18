@@ -4,7 +4,5 @@
 
 namespace Tracer
 {
-	class RayTracer : public Vulkan::Application
-	{
-	};
+	class RayTracer : public Vulkan::Application { };
 }

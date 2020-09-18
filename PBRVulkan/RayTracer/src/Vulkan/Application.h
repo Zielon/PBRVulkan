@@ -23,7 +23,7 @@ namespace Vulkan
 		void CreateGraphicsPipeline();
 
 		size_t currentFrame{};
-		
+
 		std::unique_ptr<class Window> window;
 		std::unique_ptr<class Instance> instance;
 		std::unique_ptr<class Device> device;
@@ -34,7 +34,6 @@ namespace Vulkan
 
 		std::vector<std::unique_ptr<class Framebuffer>> swapChainFramebuffers;
 		std::vector<std::unique_ptr<class Semaphore>> semaphores;
-		std::vector<VkFence> inFlightFences;
-		std::vector<VkFence> imagesInFlight;
+		std::vector<std::unique_ptr<class Fence>> inFlightFences;
 	};
 }

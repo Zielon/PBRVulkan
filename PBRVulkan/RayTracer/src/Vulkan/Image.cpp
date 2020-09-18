@@ -2,11 +2,7 @@
 
 namespace Vulkan
 {
-	Image::Image()
-	{
-	}
+	Image::Image() { }
 
-	Image::~Image()
-	{
-	}
+	Image::~Image() { }
 }

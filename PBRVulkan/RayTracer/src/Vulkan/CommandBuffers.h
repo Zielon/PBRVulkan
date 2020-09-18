@@ -6,6 +6,10 @@
 
 namespace Vulkan
 {
+	/**
+	 * Class to record all operations in a buffer for multiple threads.
+	 * [] operators provides access to command buffers.
+	 */
 	class CommandBuffers final
 	{
 	public:
@@ -14,11 +18,9 @@ namespace Vulkan
 		CommandBuffers(const class Device& device, uint32_t size);
 		~CommandBuffers();
 
-		VkCommandPool Get() const { return commandPool; }
-
-		uint32_t Size() const { return static_cast<uint32_t>(commandBuffers.size()); }
+		[[nodiscard]] VkCommandPool Get() const { return commandPool; }
+		[[nodiscard]] uint32_t Size() const { return static_cast<uint32_t>(commandBuffers.size()); }
 		VkCommandBuffer& operator [](const size_t i) { return commandBuffers[i]; }
-
 		VkCommandBuffer Begin(size_t i);
 		void End(size_t);
 

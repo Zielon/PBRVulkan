@@ -12,13 +12,14 @@ namespace Vulkan
 		GraphicsPipeline(const class SwapChain& swapChain, const class Device& device);
 		~GraphicsPipeline();
 
-		VkPipelineLayout GetPipelineLayout() const { return pipelineLayout; }
-
-		VkRenderPass GetRenderPass() const { return renderPass; }
-
-		VkPipeline GetPipeline() const { return pipeline; }
+		[[nodiscard]] VkPipelineLayout GetPipelineLayout() const { return pipelineLayout; }
+		[[nodiscard]] VkRenderPass GetRenderPass() const { return renderPass; }
+		[[nodiscard]] VkPipeline GetPipeline() const { return pipeline; }
 
 	private:
+		void CreateRenderPass();
+		void CreatePipeline();
+
 		const SwapChain& swapChain;
 		const Device& device;
 		VkPipelineLayout pipelineLayout;

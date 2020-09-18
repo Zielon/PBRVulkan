@@ -2,9 +2,6 @@
 
 #include "Vulkan.h"
 
-#include <functional>
-#include <vector>
-
 namespace Vulkan
 {
 	class Window final
@@ -15,8 +12,8 @@ namespace Vulkan
 		explicit Window();
 		~Window();
 
-		GLFWwindow* Get() const { return window; }
-		VkExtent2D GetFramebufferSize() const;
+		[[nodiscard]] GLFWwindow* Get() const { return window; }
+		[[nodiscard]] VkExtent2D GetFramebufferSize() const;
 		void Run();
 
 	private:
