@@ -9,6 +9,7 @@ namespace Vulkan
 		VkCommandPoolCreateInfo poolInfo = {};
 		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 		poolInfo.queueFamilyIndex = device.GraphicsFamilyIndex;
+		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
 		VK_CHECK(vkCreateCommandPool(device.Get(), &poolInfo, nullptr, &commandPool),
 		         "Create command pool");

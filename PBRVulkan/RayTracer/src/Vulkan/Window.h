@@ -12,11 +12,16 @@ namespace Vulkan
 		explicit Window();
 		~Window();
 
-		[[nodiscard]] GLFWwindow* Get() const { return window; }
+		[[nodiscard]] GLFWwindow* Get() const
+		{
+			return window;
+		}
+
 		[[nodiscard]] VkExtent2D GetFramebufferSize() const;
 		void Run();
 
 	private:
+
 		GLFWwindow* window{};
 	};
 }

@@ -40,14 +40,14 @@ namespace Tracer
 		descriptor.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		descriptor.descriptorCount = 1;
 
-		std::array<VkDescriptorPoolSize, 1> poolSizes = {descriptor};
+		std::array<VkDescriptorPoolSize, 1> poolSizes = { descriptor };
 
 		VkDescriptorPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		poolInfo.poolSizeCount = 1;
 		poolInfo.pPoolSizes = poolSizes.data();
 		poolInfo.maxSets = 1;
-		
+
 		VkDescriptorPool descriptorPool;
 		vkCreateDescriptorPool(device.Get(), &poolInfo, nullptr, &descriptorPool);
 
@@ -121,7 +121,7 @@ namespace Tracer
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = renderPass->Get();
 		renderPassInfo.framebuffer = framebuffer;
-		renderPassInfo.renderArea.offset = {0, 0};
+		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = swapChain.Extent;
 		renderPassInfo.clearValueCount = 0;
 		renderPassInfo.pClearValues = clearValues.data();

@@ -12,8 +12,16 @@ namespace Vulkan
 		Fence(const class Device& device);
 		~Fence();
 
-		[[nodiscard]] const class Device& GetDevice() const { return device; }
-		[[nodiscard]] const VkFence& Get() const { return fence; }
+		[[nodiscard]] const class Device& GetDevice() const
+		{
+			return device;
+		}
+
+		[[nodiscard]] const VkFence& Get() const
+		{
+			return fence;
+		}
+
 		void Reset() const;
 		void Wait(uint64_t timeout) const;
 

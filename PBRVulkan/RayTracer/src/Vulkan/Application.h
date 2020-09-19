@@ -14,19 +14,23 @@ namespace Vulkan
 
 		explicit Application();
 		virtual ~Application();
-		void DrawFrame();
-		virtual void Run();
+
+		virtual void Run() = 0;
 
 	protected:
+		void DrawFrame();
 		void CreatePhysicalDevice();
 		void CreateGraphicsPipeline();
 		void CreateInstance();
 		void QueueSubmit(VkCommandBuffer commandBuffer);
 		void Present(uint32_t imageIndex);
 		void Update();
-		
-		virtual void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer){};
-		
+
+		/*
+		 * Registers all draw operations in a command buffer before presentation stage.
+		 */
+		virtual void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) = 0;
+
 		size_t currentFrame{};
 
 		std::unique_ptr<class Window> window;

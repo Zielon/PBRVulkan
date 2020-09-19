@@ -26,6 +26,9 @@ namespace Vulkan
 		createInfo.pApplicationInfo = &appInfo;
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 		createInfo.ppEnabledExtensionNames = extensions.data();
+		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+		createInfo.ppEnabledLayerNames = validationLayers.data();
+
 
 		if (CheckValidationLayerSupport(validationLayers))
 		{

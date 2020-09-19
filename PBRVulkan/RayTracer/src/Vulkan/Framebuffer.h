@@ -12,7 +12,10 @@ namespace Vulkan
 		Framebuffer(class ImageView& imageView, const class SwapChain& swapChain, VkRenderPass renderPass);
 		~Framebuffer();
 
-		[[nodiscard]] VkFramebuffer Get() const { return framebuffer; }
+		[[nodiscard]] VkFramebuffer Get() const
+		{
+			return framebuffer;
+		}
 
 	private:
 		const ImageView& imageView;

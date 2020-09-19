@@ -72,12 +72,12 @@ namespace Vulkan
 
 	void Application::Present(uint32_t imageIndex)
 	{
-		VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]->Get()};
-		VkSwapchainKHR swapChains[] = {swapChain->Get()};
+		VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame]->Get() };
+		VkSwapchainKHR swapChains[] = { swapChain->Get() };
 		VkPresentInfoKHR presentInfo{};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = waitSemaphores;
+		presentInfo.pWaitSemaphores = signalSemaphores;
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = swapChains;
 		presentInfo.pImageIndices = &imageIndex;
@@ -97,8 +97,11 @@ namespace Vulkan
 
 	void Application::CreateInstance()
 	{
-		const auto validationLayers = std::vector<const char*>();
-
+#ifdef NDEBUG
+		const std::vector<const char*> validationLayers = {};
+#else
+		const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+#endif
 		window.reset(new Window());
 		instance.reset(new Instance(*window, validationLayers));
 		surface.reset(new Surface(*instance));
@@ -108,11 +111,11 @@ namespace Vulkan
 	{
 		auto& fence = inFlightFences[currentFrame];
 
-		VkCommandBuffer commandBuffers[]{commandBuffer};
+		VkCommandBuffer commandBuffers[]{ commandBuffer };
 		VkSubmitInfo submitInfo{};
-		VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]->Get()};
-		VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]->Get()};
-		VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+		VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame]->Get() };
+		VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame]->Get() };
+		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 		submitInfo.waitSemaphoreCount = 1;

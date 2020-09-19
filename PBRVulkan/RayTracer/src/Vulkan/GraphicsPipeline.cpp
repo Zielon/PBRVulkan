@@ -51,7 +51,7 @@ namespace Vulkan
 		viewport.maxDepth = 1.0f;
 
 		VkRect2D scissor{};
-		scissor.offset = {0, 0};
+		scissor.offset = { 0, 0 };
 		scissor.extent = swapChain.Extent;
 
 		VkPipelineViewportStateCreateInfo viewportState{};
@@ -94,9 +94,10 @@ namespace Vulkan
 		depthStencil.stencilTestEnable = VK_FALSE;
 		depthStencil.front = {}; // Optional
 		depthStencil.back = {}; // Optional
-		
+
 		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
+			VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 		colorBlendAttachment.blendEnable = VK_FALSE;
 		colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
 		colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional

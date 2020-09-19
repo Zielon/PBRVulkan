@@ -19,7 +19,11 @@ namespace Vulkan
 		Shader(const class Device& device, const std::string& filename);
 		~Shader();
 
-		[[nodiscard]] VkShaderModule Get() const { return shader; }
+		[[nodiscard]] VkShaderModule Get() const
+		{
+			return shader;
+		}
+
 		VkPipelineShaderStageCreateInfo CreateShaderStage(VkShaderStageFlagBits stage) const;
 
 	private:

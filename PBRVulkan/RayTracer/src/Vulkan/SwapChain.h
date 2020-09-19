@@ -14,6 +14,12 @@ namespace Vulkan
 		std::vector<VkPresentModeKHR> PresentModes;
 	};
 
+	/*
+	 *  The swap chain is essentially a queue of images that are waiting to be presented to the screen.
+	 *  Our application will acquire such an image to draw to it, and then return it to the queue.
+	 *  The general purpose of the swap chain is to synchronize the presentation of images
+	 *  with the refresh rate of the screen.
+	 */
 	class SwapChain final
 	{
 	public:
@@ -22,16 +28,28 @@ namespace Vulkan
 		SwapChain(const class Device& device);
 		~SwapChain();
 
-		[[nodiscard]] VkSwapchainKHR Get() const { return swapChain; };
-		[[nodiscard]] const std::vector<VkImage>& GetImage() const { return images; }
-		[[nodiscard]] const std::vector<std::unique_ptr<class ImageView>>& GetImageViews() const { return imageViews; }
+		[[nodiscard]] VkSwapchainKHR Get() const
+		{
+			return swapChain;
+		};
+
+		[[nodiscard]] const std::vector<VkImage>& GetImage() const
+		{
+			return images;
+		}
+
+		[[nodiscard]] const std::vector<std::unique_ptr<class ImageView>>& GetImageViews() const
+		{
+			return imageViews;
+		}
 
 	private:
-		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;
+		static uint32_t ChooseImageCount(const VkSurfaceCapabilitiesKHR& capabilities);
 		static VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 		static VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+
+		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
-		static uint32_t ChooseImageCount(const VkSurfaceCapabilitiesKHR& capabilities);
 		void CreateImageViews();
 
 		std::vector<VkImage> images;

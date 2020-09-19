@@ -31,9 +31,20 @@ namespace Vulkan
 		Device(VkPhysicalDevice physicalDevice, const Surface& surface);
 		~Device();
 
-		[[nodiscard]] VkDevice Get() const { return device; }
-		[[nodiscard]] VkPhysicalDevice GetPhysical() const { return physicalDevice; }
-		[[nodiscard]] const class Surface& GetSurface() const { return surface; }
+		[[nodiscard]] VkDevice Get() const
+		{
+			return device;
+		}
+
+		[[nodiscard]] VkPhysicalDevice GetPhysical() const
+		{
+			return physicalDevice;
+		}
+
+		[[nodiscard]] const class Surface& GetSurface() const
+		{
+			return surface;
+		}
 
 	private:
 		std::vector<QueueFamily> FindQueueFamilies(VkPhysicalDevice device);

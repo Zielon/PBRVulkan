@@ -12,7 +12,10 @@ namespace Vulkan
 		explicit Semaphore(const class Device& device);
 		~Semaphore();
 
-		[[nodiscard]] VkSemaphore Get() const { return semaphore; }
+		[[nodiscard]] VkSemaphore Get() const
+		{
+			return semaphore;
+		}
 
 	private:
 		const Device& device;

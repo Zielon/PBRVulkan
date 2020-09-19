@@ -35,7 +35,7 @@ namespace Vulkan
 
 		if (device.GraphicsFamilyIndex != device.PresentFamilyIndex)
 		{
-			uint32_t queueFamilyIndices[] = {device.GraphicsFamilyIndex, device.PresentFamilyIndex};
+			uint32_t queueFamilyIndices[] = { device.GraphicsFamilyIndex, device.PresentFamilyIndex };
 
 			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 			createInfo.queueFamilyIndexCount = 2;

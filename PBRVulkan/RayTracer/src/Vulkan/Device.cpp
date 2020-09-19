@@ -88,21 +88,21 @@ namespace Vulkan
 		{
 			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			{
-				QueueFamily index{GraphicsQueue};
+				QueueFamily index{ GraphicsQueue };
 				index.family = i;
 				GraphicsFamilyIndex = i;
 				indices.push_back(index);
 			}
 			else if (queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT)
 			{
-				QueueFamily index{ComputeQueue};
+				QueueFamily index{ ComputeQueue };
 				index.family = i;
 				ComputeFamilyIndex = i;
 				indices.push_back(index);
 			}
 			else if (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT)
 			{
-				QueueFamily index{TransferQueue};
+				QueueFamily index{ TransferQueue };
 				index.family = i;
 				TransferFamilyIndex = i;
 				indices.push_back(index);

@@ -20,9 +20,20 @@ namespace Vulkan
 		Instance(const Window& window, const std::vector<const char*>& validationLayers);
 		~Instance();
 
-		[[nodiscard]] VkInstance Get() const { return instance; }
-		[[nodiscard]] const Window& GetWindow() const { return window; }
-		[[nodiscard]] const std::vector<VkPhysicalDevice>& GetDevices() const { return devices; }
+		[[nodiscard]] VkInstance Get() const
+		{
+			return instance;
+		}
+
+		[[nodiscard]] const Window& GetWindow() const
+		{
+			return window;
+		}
+
+		[[nodiscard]] const std::vector<VkPhysicalDevice>& GetDevices() const
+		{
+			return devices;
+		}
 
 	private:
 		[[nodiscard]] std::vector<const char*> GetRequiredInstanceExtensions() const;

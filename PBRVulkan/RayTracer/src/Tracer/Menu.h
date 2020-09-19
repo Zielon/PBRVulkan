@@ -29,7 +29,7 @@ namespace Tracer
 
 	private:
 		void RenderSettings() const;
-		
+
 		const Vulkan::SwapChain& swapChain;
 		const Vulkan::Device& device;
 		std::unique_ptr<Vulkan::RenderPass> renderPass;

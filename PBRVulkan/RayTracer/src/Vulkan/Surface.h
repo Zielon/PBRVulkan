@@ -14,8 +14,15 @@ namespace Vulkan
 		explicit Surface(const Instance& instance);
 		~Surface();
 
-		[[nodiscard]] VkSurfaceKHR Get() const { return surface; };
-		[[nodiscard]] const Instance& GetInstance() const { return instance; }
+		[[nodiscard]] VkSurfaceKHR Get() const
+		{
+			return surface;
+		};
+
+		[[nodiscard]] const Instance& GetInstance() const
+		{
+			return instance;
+		}
 
 	private:
 		VkSurfaceKHR surface{};
