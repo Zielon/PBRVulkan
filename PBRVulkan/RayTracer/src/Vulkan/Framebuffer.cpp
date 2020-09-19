@@ -8,7 +8,7 @@
 
 namespace Vulkan
 {
-	Framebuffer::Framebuffer(const ImageView& imageView, const SwapChain& swapChain,
+	Framebuffer::Framebuffer(ImageView& imageView, const SwapChain& swapChain,
 	                         VkRenderPass renderPass): imageView(imageView)
 	{
 		std::array<VkImageView, 1> attachments =

@@ -9,15 +9,13 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(Semaphore)
 
-		Semaphore(const class Device& device);
+		explicit Semaphore(const class Device& device);
 		~Semaphore();
 
-		[[nodiscard]] VkSemaphore GetRenderFinished() const { return RenderFinishedSemaphore; }
-		[[nodiscard]] VkSemaphore GetImageAvailable() const { return RenderFinishedSemaphore; }
+		[[nodiscard]] VkSemaphore Get() const { return semaphore; }
 
 	private:
 		const Device& device;
-		VkSemaphore RenderFinishedSemaphore;
-		VkSemaphore ImageAvailableSemaphore;
+		VkSemaphore semaphore;
 	};
 }

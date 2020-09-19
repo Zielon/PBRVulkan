@@ -9,7 +9,7 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(Framebuffer)
 
-		Framebuffer(const class ImageView& imageView, const class SwapChain& swapChain, VkRenderPass renderPass);
+		Framebuffer(class ImageView& imageView, const class SwapChain& swapChain, VkRenderPass renderPass);
 		~Framebuffer();
 
 		[[nodiscard]] VkFramebuffer Get() const { return framebuffer; }

@@ -44,13 +44,15 @@ namespace Vulkan
 		else
 		{
 			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			createInfo.queueFamilyIndexCount = 0; // Optional
+			createInfo.pQueueFamilyIndices = nullptr; // Optional
 		}
 
 		VK_CHECK(vkCreateSwapchainKHR(device.Get(), &createInfo, nullptr, &swapChain), "Create swap chain");
 
 		vkGetSwapchainImagesKHR(device.Get(), swapChain, &imageCount, nullptr);
-		swapChainImages.resize(imageCount);
-		vkGetSwapchainImagesKHR(device.Get(), swapChain, &imageCount, swapChainImages.data());
+		images.resize(imageCount);
+		vkGetSwapchainImagesKHR(device.Get(), swapChain, &imageCount, images.data());
 
 		MinImageCount = swapChainSupport.Capabilities.minImageCount;
 		PresentMode = presentMode;
@@ -62,7 +64,7 @@ namespace Vulkan
 
 	SwapChain::~SwapChain()
 	{
-		swapChainImageViews.clear();
+		imageViews.clear();
 
 		if (swapChain != nullptr)
 		{
@@ -143,7 +145,7 @@ namespace Vulkan
 
 	uint32_t SwapChain::ChooseImageCount(const VkSurfaceCapabilitiesKHR& capabilities)
 	{
-		uint32_t imageCount = capabilities.minImageCount + 1;
+		uint32_t imageCount = capabilities.minImageCount;
 
 		if (capabilities.maxImageCount > 0 && imageCount > capabilities.maxImageCount)
 		{
@@ -155,9 +157,9 @@ namespace Vulkan
 
 	void SwapChain::CreateImageViews()
 	{
-		for (auto* const image : swapChainImages)
+		for (auto* const image : images)
 		{
-			swapChainImageViews.
+			imageViews.
 				push_back(std::make_unique<ImageView>(device, image, Format));
 		}
 	}

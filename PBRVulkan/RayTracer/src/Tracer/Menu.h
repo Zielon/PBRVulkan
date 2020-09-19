@@ -25,7 +25,7 @@ namespace Tracer
 			const Vulkan::CommandBuffers& commandBuffers);
 		~Menu();
 
-		void Render(VkFramebuffer framebuffer, VkCommandBuffer command) const;
+		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) const;
 
 	private:
 		void RenderSettings() const;

@@ -23,11 +23,8 @@ namespace Vulkan
 		~SwapChain();
 
 		[[nodiscard]] VkSwapchainKHR Get() const { return swapChain; };
-		[[nodiscard]] const std::vector<VkImage>& GetSwapChainImages() const { return swapChainImages; }
-		[[nodiscard]] const std::vector<std::unique_ptr<class ImageView>>& GetSwapChainImageViews() const
-		{
-			return swapChainImageViews;
-		}
+		[[nodiscard]] const std::vector<VkImage>& GetImage() const { return images; }
+		[[nodiscard]] const std::vector<std::unique_ptr<class ImageView>>& GetImageViews() const { return imageViews; }
 
 	private:
 		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;
@@ -37,8 +34,8 @@ namespace Vulkan
 		static uint32_t ChooseImageCount(const VkSurfaceCapabilitiesKHR& capabilities);
 		void CreateImageViews();
 
-		std::vector<VkImage> swapChainImages;
-		std::vector<std::unique_ptr<class ImageView>> swapChainImageViews;
+		std::vector<VkImage> images;
+		std::vector<std::unique_ptr<class ImageView>> imageViews;
 		VkSwapchainKHR swapChain;
 		const class Device& device;
 		const class Surface& surface;

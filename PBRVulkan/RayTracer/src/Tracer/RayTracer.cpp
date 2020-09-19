@@ -15,7 +15,7 @@ namespace Tracer
 		menu.reset(new Menu(*device, *swapChain, *commandBuffers));
 	}
 
-	void RayTracer::Render(VkFramebuffer framebuffer, VkCommandBuffer command)
+	void RayTracer::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer)
 	{
 		std::array<VkClearValue, 2> clearValues = {};
 		clearValues[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
@@ -30,14 +30,14 @@ namespace Tracer
 		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 		renderPassInfo.pClearValues = clearValues.data();
 
-		vkCmdBeginRenderPass(command, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 		{
-			vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetPipeline());
-			vkCmdDraw(command, 3, 1, 0, 0);
-		}
-		vkCmdEndRenderPass(command);
+			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetPipeline());
+			vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+		}	
+		vkCmdEndRenderPass(commandBuffer);
 
-		//menu->Render(framebuffer, command);
+		menu->Render(framebuffer, commandBuffer);
 	}
 
 	RayTracer::~RayTracer() { }

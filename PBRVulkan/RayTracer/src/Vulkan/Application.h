@@ -21,9 +21,11 @@ namespace Vulkan
 		void CreatePhysicalDevice();
 		void CreateGraphicsPipeline();
 		void CreateInstance();
-		void QueueSubmit(VkCommandBuffer command);
+		void QueueSubmit(VkCommandBuffer commandBuffer);
 		void Present(uint32_t imageIndex);
-		virtual void Render(VkFramebuffer framebuffer, VkCommandBuffer command){};
+		void Update();
+		
+		virtual void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer){};
 		
 		size_t currentFrame{};
 
@@ -36,7 +38,8 @@ namespace Vulkan
 		std::unique_ptr<class CommandBuffers> commandBuffers;
 
 		std::vector<std::unique_ptr<class Framebuffer>> swapChainFramebuffers;
-		std::vector<std::unique_ptr<class Semaphore>> semaphores;
+		std::vector<std::unique_ptr<class Semaphore>> imageAvailableSemaphores;
+		std::vector<std::unique_ptr<class Semaphore>> renderFinishedSemaphores;
 		std::vector<std::unique_ptr<class Fence>> inFlightFences;
 	};
 }

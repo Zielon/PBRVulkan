@@ -9,20 +9,16 @@ namespace Vulkan
 		VkSemaphoreCreateInfo semaphoreInfo{};
 		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-		VK_CHECK(vkCreateSemaphore(device.Get(), &semaphoreInfo, nullptr, &ImageAvailableSemaphore),
+		VK_CHECK(vkCreateSemaphore(device.Get(), &semaphoreInfo, nullptr, &semaphore),
 		         "Create image Available Semaphore");
-		VK_CHECK(vkCreateSemaphore(device.Get(), &semaphoreInfo, nullptr, &RenderFinishedSemaphore),
-		         "Create render Finished Semaphore");
 	}
 
 	Semaphore::~Semaphore()
 	{
-		if (ImageAvailableSemaphore != nullptr && RenderFinishedSemaphore != nullptr)
+		if (semaphore != nullptr)
 		{
-			vkDestroySemaphore(device.Get(), ImageAvailableSemaphore, nullptr);
-			vkDestroySemaphore(device.Get(), RenderFinishedSemaphore, nullptr);
-			RenderFinishedSemaphore = nullptr;
-			ImageAvailableSemaphore = nullptr;
+			vkDestroySemaphore(device.Get(), semaphore, nullptr);
+			semaphore = nullptr;
 		}
 	}
 }

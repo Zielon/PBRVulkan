@@ -11,7 +11,7 @@ namespace Tracer
 		~RayTracer();
 		
 	private:
-		void Render(VkFramebuffer framebuffer, VkCommandBuffer command) override;
+		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) override;
 		std::unique_ptr<class Menu> menu;
 	};
 }

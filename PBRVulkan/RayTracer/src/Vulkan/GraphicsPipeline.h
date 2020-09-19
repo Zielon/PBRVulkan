@@ -18,7 +18,6 @@ namespace Vulkan
 		[[nodiscard]] VkRenderPass GetRenderPass() const;
 
 	private:
-		void CreateRenderPass();
 		void CreatePipeline();
 
 		const SwapChain& swapChain;

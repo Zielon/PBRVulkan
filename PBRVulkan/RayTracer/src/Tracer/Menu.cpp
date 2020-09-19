@@ -29,7 +29,7 @@ namespace Tracer
 		ImGui::CreateContext();
 
 		auto* window = device.GetSurface().GetInstance().GetWindow().Get();
-		renderPass.reset(new Vulkan::RenderPass(device, swapChain));
+		renderPass.reset(new Vulkan::RenderPass(device, swapChain, false, false));
 
 		if (!ImGui_ImplGlfw_InitForVulkan(window, false))
 		{
@@ -47,6 +47,7 @@ namespace Tracer
 		poolInfo.poolSizeCount = 1;
 		poolInfo.pPoolSizes = poolSizes.data();
 		poolInfo.maxSets = 1;
+		
 		VkDescriptorPool descriptorPool;
 		vkCreateDescriptorPool(device.Get(), &poolInfo, nullptr, &descriptorPool);
 
@@ -59,7 +60,7 @@ namespace Tracer
 		vulkanInit.PipelineCache = nullptr;
 		vulkanInit.DescriptorPool = descriptorPool;
 		vulkanInit.MinImageCount = swapChain.MinImageCount;
-		vulkanInit.ImageCount = static_cast<uint32_t>(swapChain.GetSwapChainImages().size());
+		vulkanInit.ImageCount = static_cast<uint32_t>(swapChain.GetImage().size());
 		vulkanInit.Allocator = nullptr;
 
 		if (!ImGui_ImplVulkan_Init(&vulkanInit, renderPass->Get()))
@@ -106,18 +107,15 @@ namespace Tracer
 		ImGui::DestroyContext();
 	}
 
-	void Menu::Render(VkFramebuffer framebuffer, VkCommandBuffer command) const
+	void Menu::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) const
 	{
 		ImGui_ImplGlfw_NewFrame();
 		ImGui_ImplVulkan_NewFrame();
 		ImGui::NewFrame();
-
 		RenderSettings();
 		ImGui::Render();
 
 		std::array<VkClearValue, 2> clearValues = {};
-		clearValues[0].color = {0.0f, 0.0f, 0.0f, 1.0f};
-		clearValues[1].depthStencil = {1.0f, 0};
 
 		VkRenderPassBeginInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -128,11 +126,11 @@ namespace Tracer
 		renderPassInfo.clearValueCount = 0;
 		renderPassInfo.pClearValues = clearValues.data();
 
-		vkCmdBeginRenderPass(command, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 		{
-			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), command);
+			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
 		}
-		vkCmdEndRenderPass(command);
+		vkCmdEndRenderPass(commandBuffer);
 	}
 
 	void Menu::RenderSettings() const
@@ -153,6 +151,10 @@ namespace Tracer
 		if (ImGui::Begin("Settings", &open, flags))
 		{
 			ImGui::Text("Controls");
+			ImGui::Separator();
+			ImGui::Text("Help");
+			ImGui::Separator();
+			ImGui::Text("Scene");
 			ImGui::Separator();
 		}
 

@@ -30,29 +30,35 @@ namespace Vulkan
 
 	void Application::DrawFrame()
 	{
+		auto& inFlightFence = inFlightFences[currentFrame];
+
+		inFlightFence->Wait(UINT64_MAX);
+
 		uint32_t imageIndex;
-		auto& fence = inFlightFences[currentFrame];
-		auto& semaphore = semaphores[currentFrame];
-
-		fence->Wait(UINT64_MAX);
-
-		vkAcquireNextImageKHR(
+		auto result = vkAcquireNextImageKHR(
 			device->Get(),
 			swapChain->Get(),
 			UINT64_MAX,
-			semaphore->GetImageAvailable(),
-			fence->Get(),
+			imageAvailableSemaphores[currentFrame]->Get(),
+			nullptr,
 			&imageIndex);
 
-		const auto framebuffer = swapChainFramebuffers[imageIndex]->Get();
-		
-		const VkCommandBuffer command = commandBuffers->Begin(imageIndex);
-		Render(framebuffer, command);
+		if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+		{
+			throw std::runtime_error(std::string("Failed to acquire next image"));
+		}
+
+		const VkCommandBuffer commandBuffer = commandBuffers->Begin(imageIndex);
+		{
+			Render(swapChainFramebuffers[imageIndex]->Get(), commandBuffer);
+		}
 		commandBuffers->End(imageIndex);
 
-		QueueSubmit(command);
-		fence->Reset();
+		inFlightFence->Reset();
+
+		QueueSubmit(commandBuffer);
 		Present(imageIndex);
+		Update();
 	}
 
 	void Application::Run()
@@ -66,21 +72,26 @@ namespace Vulkan
 
 	void Application::Present(uint32_t imageIndex)
 	{
-		auto& semaphore = semaphores[currentFrame];
-
-		VkSemaphore waitSemaphores[] = {semaphore->GetImageAvailable()};
+		VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]->Get()};
+		VkSwapchainKHR swapChains[] = {swapChain->Get()};
 		VkPresentInfoKHR presentInfo{};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 		presentInfo.waitSemaphoreCount = 1;
 		presentInfo.pWaitSemaphores = waitSemaphores;
-
-		VkSwapchainKHR swapChains[] = {swapChain->Get()};
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = swapChains;
 		presentInfo.pImageIndices = &imageIndex;
 
-		vkQueuePresentKHR(device->PresentQueue, &presentInfo);
+		auto result = vkQueuePresentKHR(device->PresentQueue, &presentInfo);
 
+		if (result != VK_SUCCESS)
+		{
+			throw std::runtime_error(std::string("Failed to present next image"));
+		}
+	}
+
+	void Application::Update()
+	{
 		currentFrame = (currentFrame + 1) % inFlightFences.size();
 	}
 
@@ -93,15 +104,14 @@ namespace Vulkan
 		surface.reset(new Surface(*instance));
 	}
 
-	void Application::QueueSubmit(VkCommandBuffer command)
+	void Application::QueueSubmit(VkCommandBuffer commandBuffer)
 	{
 		auto& fence = inFlightFences[currentFrame];
-		auto& semaphore = semaphores[currentFrame];
 
-		VkCommandBuffer commandBuffers[]{command};
+		VkCommandBuffer commandBuffers[]{commandBuffer};
 		VkSubmitInfo submitInfo{};
-		VkSemaphore signalSemaphores[] = {semaphore->GetRenderFinished()};
-		VkSemaphore waitSemaphores[] = {semaphore->GetImageAvailable()};
+		VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]->Get()};
+		VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]->Get()};
 		VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
 
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -118,7 +128,7 @@ namespace Vulkan
 
 	void Application::CreatePhysicalDevice()
 	{
-		auto physicalDevice = instance->GetDevices().front();
+		auto* physicalDevice = instance->GetDevices().front();
 
 		device.reset(new Device(physicalDevice, *surface));
 	}
@@ -126,16 +136,22 @@ namespace Vulkan
 	void Application::CreateGraphicsPipeline()
 	{
 		swapChain.reset(new SwapChain(*device));
+
+		for (const auto& imageView : swapChain->GetImageViews())
+		{
+			imageAvailableSemaphores.emplace_back(new Semaphore(*device));
+			renderFinishedSemaphores.emplace_back(new Semaphore(*device));
+			inFlightFences.emplace_back(new Fence(*device));
+		}
+
 		graphicsPipeline.reset(new GraphicsPipeline(*swapChain, *device));
 
-		for (const auto& imageView : swapChain->GetSwapChainImageViews())
+		for (const auto& imageView : swapChain->GetImageViews())
 		{
-			semaphores.emplace_back(new Semaphore(*device));
-			inFlightFences.emplace_back(new Fence(*device));
 			swapChainFramebuffers.emplace_back(
 				new Framebuffer(*imageView, *swapChain, graphicsPipeline->GetRenderPass()));
 		}
 
-		commandBuffers.reset(new CommandBuffers(*device, swapChainFramebuffers.size()));
+		commandBuffers.reset(new CommandBuffers(*device, static_cast<uint32_t>(swapChainFramebuffers.size())));
 	}
 }

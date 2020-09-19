@@ -9,7 +9,7 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(RenderPass)
 
-		RenderPass(const class Device& device, const class SwapChain& swapChain);
+		RenderPass(const class Device& device, const class SwapChain& swapChain, bool clearColorBuffer, bool clearDepthBuffer);
 		~RenderPass();
 		
 		[[nodiscard]] VkRenderPass Get() const { return renderPass; }
