@@ -1,6 +1,8 @@
 #include "RayTracer.h"
 
 #include <array>
+#include <iostream>
+
 
 #include "Menu.h"
 
@@ -14,6 +16,8 @@ namespace Tracer
 	RayTracer::RayTracer()
 	{
 		menu.reset(new Menu(*device, *swapChain, *commandBuffers));
+
+		RegisterCallbacks();
 	}
 
 	void RayTracer::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer)
@@ -39,6 +43,50 @@ namespace Tracer
 		vkCmdEndRenderPass(commandBuffer);
 
 		menu->Render(framebuffer, commandBuffer);
+	}
+
+	void RayTracer::RegisterCallbacks()
+	{
+		window->OnCursorPositionChanged.emplace_back([this](const double xpos, const double ypos)
+			{
+				OnCursorPositionChanged(xpos, ypos);
+			});
+
+		window->OnKeyChanged.emplace_back([this](const int key, const int scancode, const int action, const int mods)
+			{
+				OnKeyChanged(key, scancode, action, mods);
+			});
+
+		window->OnMouseButtonChanged.emplace_back([this](const int button, const int action, const int mods)
+			{
+				OnMouseButtonChanged(button, action, mods);
+			});
+
+		window->OnScrollChanged.emplace_back([this](const double xoffset, const double yoffset)
+			{
+				OnScrollChanged(xoffset, yoffset);
+			});
+	}
+
+	
+	void RayTracer::OnKeyChanged(int key, int scancode, int action, int mods)
+	{
+		std::cout << "NOT IMPLEMENTED OnKeyChanged()" << std::endl;
+	}
+	
+	void RayTracer::OnCursorPositionChanged(double xpos, double ypos)
+	{
+		std::cout << "NOT IMPLEMENTED OnCursorPositionChanged()" << std::endl;
+	}
+	
+	void RayTracer::OnMouseButtonChanged(int button, int action, int mods)
+	{
+		std::cout << "NOT IMPLEMENTED OnMouseButtonChanged()" << std::endl;
+	}
+	
+	void RayTracer::OnScrollChanged(double xoffset, double yoffset)
+	{
+		std::cout << "NOT IMPLEMENTED OnScrollChanged()" << std::endl;
 	}
 
 	void RayTracer::Run()

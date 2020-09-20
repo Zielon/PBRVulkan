@@ -30,6 +30,10 @@ namespace Vulkan
 		 * Registers all draw operations in a command buffer before presentation stage.
 		 */
 		virtual void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) = 0;
+		virtual void OnKeyChanged(int key, int scancode, int action, int mods) = 0;
+		virtual void OnCursorPositionChanged(double xpos, double ypos) = 0;
+		virtual void OnMouseButtonChanged(int button, int action, int mods) = 0;
+		virtual void OnScrollChanged(double xoffset, double yoffset) = 0;
 
 		size_t currentFrame{};
 
