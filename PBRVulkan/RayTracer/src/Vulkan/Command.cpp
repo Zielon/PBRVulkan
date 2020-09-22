@@ -27,7 +27,7 @@ namespace Vulkan
 			vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
 			func(commandBuffer);
-			
+
 			vkEndCommandBuffer(commandBuffer);
 
 			VkSubmitInfo submitInfo{};
@@ -35,7 +35,7 @@ namespace Vulkan
 			submitInfo.commandBufferCount = 1;
 			submitInfo.pCommandBuffers = &commandBuffer;
 
-			const auto graphicsQueue = commandBuffers.GetDevice().GraphicsQueue;
+			auto* const graphicsQueue = commandBuffers.GetDevice().GraphicsQueue;
 
 			vkQueueSubmit(graphicsQueue, 1, &submitInfo, nullptr);
 			vkQueueWaitIdle(graphicsQueue);

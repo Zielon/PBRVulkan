@@ -30,6 +30,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Tracer\Menu.cpp" />
     <ClCompile Include="src\Tracer\RayTracer.cpp" />
+    <ClCompile Include="src\Tracer\Scene.cpp" />
     <ClCompile Include="src\Vulkan\Application.cpp" />
     <ClCompile Include="src\Vulkan\Command.cpp" />
     <ClCompile Include="src\Vulkan\CommandBuffers.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="src\ImGui\imgui_impl_vulkan.h" />
     <ClInclude Include="src\Tracer\Menu.h" />
     <ClInclude Include="src\Tracer\RayTracer.h" />
+    <ClInclude Include="src\Tracer\Scene.h" />
     <ClInclude Include="src\Vulkan\Application.h" />
     <ClInclude Include="src\Vulkan\Buffer.hpp" />
     <ClInclude Include="src\Vulkan\CommandBuffers.h" />

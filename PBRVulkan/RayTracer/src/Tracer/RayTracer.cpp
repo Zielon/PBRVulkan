@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Menu.h"
+#include "Scene.h"
 
 #include "../Vulkan/GraphicsPipeline.h"
 #include "../Vulkan/SwapChain.h"
@@ -14,30 +15,7 @@ namespace Tracer
 	RayTracer::RayTracer()
 	{
 		menu.reset(new Menu(*device, *swapChain, *commandBuffers));
-
-		const std::vector<Geometry::Vertex> vertices = {
-			{ { 0.0f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { -0.5f, 0.5f } },
-			{ { 0.5f, 0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, -0.5f } },
-			{ { -0.5f, 0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.5f, 0.5f } }
-		};
-
-		const auto size = sizeof(vertices[0]) * vertices.size();
-
-		std::unique_ptr<Vulkan::Buffer<Geometry::Vertex>> buffer_staging(
-			new Vulkan::Buffer<Geometry::Vertex>(
-				*device, size,
-				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
-
-		buffer_staging->Fill(vertices.data());
-
-		vertexBuffer.reset(
-			new Vulkan::Buffer<Geometry::Vertex>(
-				*device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT),
-				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-
-		vertexBuffer->Copy(*commandBuffers, *buffer_staging);
+		scene.reset(new Scene(*device, *commandBuffers));
 
 		RegisterCallbacks();
 	}
@@ -57,13 +35,17 @@ namespace Tracer
 		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 		renderPassInfo.pClearValues = clearValues.data();
 
+		VkBuffer vertexBuffers[] = { scene->GetVertexBuffer().Get() };
+		const VkBuffer indexBuffer = scene->GetIndexBuffer().Get();
+		VkDeviceSize offsets[] = { 0 };
+
 		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 		{
 			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetPipeline());
-			VkBuffer vertexBuffers[] = { vertexBuffer->Get() };
-			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-			vkCmdDraw(commandBuffer, static_cast<uint32_t>(3), 1, 0, 0);
+			vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+
+			vkCmdDrawIndexed(commandBuffer, 6, 1, 0, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);
 
@@ -129,8 +111,5 @@ namespace Tracer
 		device->WaitIdle();
 	}
 
-	RayTracer::~RayTracer()
-	{
-		vertexBuffer.reset();
-	}
+	RayTracer::~RayTracer() { }
 }

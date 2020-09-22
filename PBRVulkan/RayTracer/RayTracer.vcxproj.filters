@@ -105,6 +105,9 @@
     <ClCompile Include="src\Vulkan\Command.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tracer\Scene.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vulkan\Application.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="src\Vulkan\Buffer.hpp">
       <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\Scene.h">
+      <Filter>Tracer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
