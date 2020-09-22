@@ -31,6 +31,9 @@ namespace Vulkan
 		Device(VkPhysicalDevice physicalDevice, const Surface& surface);
 		~Device();
 
+		// Wait on the host for the completion of outstanding queue operations for all queues on a given logical device
+		void WaitIdle() const;
+		
 		[[nodiscard]] VkDevice Get() const
 		{
 			return device;

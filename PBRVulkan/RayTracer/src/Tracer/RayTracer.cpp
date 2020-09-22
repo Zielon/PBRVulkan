@@ -16,9 +16,9 @@ namespace Tracer
 		menu.reset(new Menu(*device, *swapChain, *commandBuffers));
 
 		const std::vector<Geometry::Vertex> vertices = {
-			{ { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, -0.5f } },
-			{ { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.5f, 0.5f } },
-			{ { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { -0.5f, 0.5f } }
+			{ { 0.0f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { -0.5f, 0.5f } },
+			{ { 0.5f, 0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, -0.5f } },
+			{ { -0.5f, 0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.5f, 0.5f } }
 		};
 
 		const auto size = sizeof(vertices[0]) * vertices.size();
@@ -125,7 +125,12 @@ namespace Tracer
 			glfwPollEvents();
 			DrawFrame();
 		}
+
+		device->WaitIdle();
 	}
 
-	RayTracer::~RayTracer() { }
+	RayTracer::~RayTracer()
+	{
+		vertexBuffer.reset();
+	}
 }

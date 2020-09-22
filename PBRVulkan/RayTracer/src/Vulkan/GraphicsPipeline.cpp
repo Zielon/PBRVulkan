@@ -33,7 +33,7 @@ namespace Vulkan
 
 		auto bindingDescription = Geometry::Vertex::GetBindingDescription();
 		auto attributeDescriptions = Geometry::Vertex::GetAttributeDescriptions();
-		
+
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputInfo.vertexBindingDescriptionCount = 1;
@@ -158,6 +158,12 @@ namespace Vulkan
 		{
 			vkDestroyPipelineLayout(device.Get(), pipelineLayout, nullptr);
 			pipelineLayout = nullptr;
+		}
+
+		if (pipeline != nullptr)
+		{
+			vkDestroyPipeline(device.Get(), pipeline, nullptr);
+			pipeline = nullptr;
 		}
 	}
 }

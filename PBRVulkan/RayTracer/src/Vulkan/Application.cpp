@@ -25,6 +25,18 @@ namespace Vulkan
 
 	Application::~Application()
 	{
+		// Destructor has to call in the right order all graphics components
+		commandBuffers.reset();
+		swapChainFramebuffers.clear();
+		graphicsPipeline.reset();
+		inFlightFences.clear();
+		renderFinishedSemaphores.clear();
+		imageAvailableSemaphores.clear();
+		swapChain.reset();
+		commandBuffers.reset();
+		device.reset();
+		surface.reset();
+		instance.reset();
 		window.reset();
 	}
 

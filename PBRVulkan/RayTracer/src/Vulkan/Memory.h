@@ -7,7 +7,7 @@ namespace Vulkan
 	class Device;
 
 	/*
-	 * Class which handles memory allocation for buffers
+	 * Class which handles memory allocation for buffers.
 	 */
 	class Memory final
 	{

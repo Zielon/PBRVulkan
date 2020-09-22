@@ -30,9 +30,15 @@ namespace Vulkan
 	{
 		if (!commandBuffers.empty())
 		{
-			vkFreeCommandBuffers(device.Get(), commandPool, static_cast<uint32_t>(commandBuffers.size()),
-			                     commandBuffers.data());
+			vkFreeCommandBuffers(
+				device.Get(), commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 			commandBuffers.clear();
+		}
+
+		if (commandPool != nullptr)
+		{
+			vkDestroyCommandPool(device.Get(), commandPool, nullptr);
+			commandPool = nullptr;
 		}
 	}
 

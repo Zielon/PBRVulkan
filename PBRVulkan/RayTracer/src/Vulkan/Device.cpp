@@ -146,4 +146,9 @@ namespace Vulkan
 			device = nullptr;
 		}
 	}
+
+	void Device::WaitIdle() const
+	{
+		VK_CHECK(vkDeviceWaitIdle(device), "Wait for a device to become idle");
+	}
 }

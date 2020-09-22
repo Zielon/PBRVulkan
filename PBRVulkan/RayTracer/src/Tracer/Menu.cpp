@@ -46,7 +46,6 @@ namespace Tracer
 		poolInfo.pPoolSizes = poolSizes.data();
 		poolInfo.maxSets = 1;
 
-		VkDescriptorPool descriptorPool;
 		vkCreateDescriptorPool(device.Get(), &poolInfo, nullptr, &descriptorPool);
 
 		ImGui_ImplVulkan_InitInfo vulkanInit = {};
@@ -100,6 +99,8 @@ namespace Tracer
 
 	Menu::~Menu()
 	{
+		vkDestroyDescriptorPool(device.Get(), descriptorPool, nullptr);
+		descriptorPool = nullptr;
 		ImGui_ImplVulkan_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
