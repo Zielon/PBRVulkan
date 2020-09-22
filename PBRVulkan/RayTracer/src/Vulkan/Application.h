@@ -45,6 +45,7 @@ namespace Vulkan
 		std::unique_ptr<class GraphicsPipeline> graphicsPipeline;
 		std::unique_ptr<class CommandBuffers> commandBuffers;
 
+		// Per image in swap chain specific components
 		std::vector<std::unique_ptr<class Framebuffer>> swapChainFramebuffers;
 		std::vector<std::unique_ptr<class Semaphore>> imageAvailableSemaphores;
 		std::vector<std::unique_ptr<class Semaphore>> renderFinishedSemaphores;

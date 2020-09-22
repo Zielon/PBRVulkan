@@ -22,6 +22,9 @@
     <Filter Include="Geometry">
       <UniqueIdentifier>{fe18f866-2eb2-4df1-9ba1-7ae8d3fc0ecc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry\UBOs">
+      <UniqueIdentifier>{2b616ec9-41bf-42e8-b347-b151b31e5454}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="src\Tracer\Scene.h">
       <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Geometry\MVP.h">
+      <Filter>Geometry\UBOs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
