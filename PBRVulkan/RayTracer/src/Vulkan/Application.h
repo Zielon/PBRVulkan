@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace Vulkan
-{
+{	
 	class Application
 	{
 	public:

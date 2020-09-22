@@ -4,6 +4,7 @@
 #include "Device.h"
 #include "Shader.h"
 #include "RenderPass.h"
+#include "../Geometry/Vertex.h"
 
 namespace Vulkan
 {
@@ -30,12 +31,15 @@ namespace Vulkan
 			fragShader.CreateShaderStage(VK_SHADER_STAGE_FRAGMENT_BIT)
 		};
 
+		auto bindingDescription = Geometry::Vertex::GetBindingDescription();
+		auto attributeDescriptions = Geometry::Vertex::GetAttributeDescriptions();
+		
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputInfo.vertexBindingDescriptionCount = 0;
-		vertexInputInfo.pVertexBindingDescriptions = nullptr; // Optional
-		vertexInputInfo.vertexAttributeDescriptionCount = 0;
-		vertexInputInfo.pVertexAttributeDescriptions = nullptr; // Optional
+		vertexInputInfo.vertexBindingDescriptionCount = 1;
+		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+		vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+		vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
 		VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
 		inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

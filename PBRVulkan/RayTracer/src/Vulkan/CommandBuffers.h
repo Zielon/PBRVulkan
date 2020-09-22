@@ -35,6 +35,11 @@ namespace Vulkan
 			return commandBuffers[i];
 		}
 
+		[[nodiscard]] const class Device& GetDevice() const
+		{
+			return device;
+		}
+
 		VkCommandBuffer Begin(size_t i);
 		void End(size_t);
 

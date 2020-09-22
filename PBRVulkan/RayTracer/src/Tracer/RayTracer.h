@@ -1,6 +1,8 @@
 #pragma once
 
+#include "../Geometry/Vertex.h"
 #include "../Vulkan/Application.h"
+#include "../Vulkan/Buffer.hpp"
 
 namespace Tracer
 {
@@ -21,5 +23,6 @@ namespace Tracer
 		void OnScrollChanged(double xoffset, double yoffset) override;
 
 		std::unique_ptr<class Menu> menu;
+		std::unique_ptr<Vulkan::Buffer<Geometry::Vertex>> vertexBuffer;
 	};
 }

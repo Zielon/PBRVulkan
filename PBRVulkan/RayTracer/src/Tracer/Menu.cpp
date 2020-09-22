@@ -4,8 +4,6 @@
 #include <iostream>
 #include <ostream>
 
-#include "imgui.h"
-
 #include "../Vulkan/SwapChain.h"
 #include "../Vulkan/Device.h"
 #include "../Vulkan/Surface.h"

@@ -31,6 +31,7 @@
     <ClCompile Include="src\Tracer\Menu.cpp" />
     <ClCompile Include="src\Tracer\RayTracer.cpp" />
     <ClCompile Include="src\Vulkan\Application.cpp" />
+    <ClCompile Include="src\Vulkan\Command.cpp" />
     <ClCompile Include="src\Vulkan\CommandBuffers.cpp" />
     <ClCompile Include="src\Vulkan\Device.cpp" />
     <ClCompile Include="src\Vulkan\Fence.cpp" />
@@ -39,6 +40,7 @@
     <ClCompile Include="src\Vulkan\Image.cpp" />
     <ClCompile Include="src\Vulkan\ImageView.cpp" />
     <ClCompile Include="src\Vulkan\Instance.cpp" />
+    <ClCompile Include="src\Vulkan\Memory.cpp" />
     <ClCompile Include="src\Vulkan\RenderPass.cpp" />
     <ClCompile Include="src\Vulkan\Semaphore.cpp" />
     <ClCompile Include="src\Vulkan\Shader.cpp" />
@@ -48,11 +50,13 @@
     <ClCompile Include="src\Vulkan\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Geometry\Vertex.h" />
     <ClInclude Include="src\ImGui\imgui_impl_glfw.h" />
     <ClInclude Include="src\ImGui\imgui_impl_vulkan.h" />
     <ClInclude Include="src\Tracer\Menu.h" />
     <ClInclude Include="src\Tracer\RayTracer.h" />
     <ClInclude Include="src\Vulkan\Application.h" />
+    <ClInclude Include="src\Vulkan\Buffer.hpp" />
     <ClInclude Include="src\Vulkan\CommandBuffers.h" />
     <ClInclude Include="src\Vulkan\Device.h" />
     <ClInclude Include="src\Vulkan\Fence.h" />
@@ -61,6 +65,7 @@
     <ClInclude Include="src\Vulkan\Image.h" />
     <ClInclude Include="src\Vulkan\ImageView.h" />
     <ClInclude Include="src\Vulkan\Instance.h" />
+    <ClInclude Include="src\Vulkan\Memory.h" />
     <ClInclude Include="src\Vulkan\RenderPass.h" />
     <ClInclude Include="src\Vulkan\Semaphore.h" />
     <ClInclude Include="src\Vulkan\Shader.h" />

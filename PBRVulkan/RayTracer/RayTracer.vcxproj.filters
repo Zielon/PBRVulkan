@@ -19,6 +19,9 @@
     <Filter Include="Assets\Shaders">
       <UniqueIdentifier>{6183b072-61ab-4ea4-8bb5-d97c4835b787}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{fe18f866-2eb2-4df1-9ba1-7ae8d3fc0ecc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">
@@ -96,6 +99,12 @@
     <ClCompile Include="src\Vulkan\RenderPass.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vulkan\Memory.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Command.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vulkan\Application.h">
@@ -157,6 +166,15 @@
     </ClInclude>
     <ClInclude Include="src\Vulkan\RenderPass.h">
       <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Geometry\Vertex.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Memory.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Buffer.hpp">
+      <Filter>Geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

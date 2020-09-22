@@ -1,5 +1,6 @@
 #pragma once
 
+#include <imgui.h>
 #include <memory>
 
 #include "../Vulkan/Vulkan.h"
@@ -26,6 +27,16 @@ namespace Tracer
 		~Menu();
 
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) const;
+
+		static bool WantCaptureMouse()
+		{
+			return ImGui::GetIO().WantCaptureMouse;
+		}
+
+		static bool WantCaptureKeyboard()
+		{
+			return ImGui::GetIO().WantCaptureKeyboard;
+		}
 
 	private:
 		void RenderSettings() const;
