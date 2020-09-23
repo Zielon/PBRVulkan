@@ -33,12 +33,13 @@ namespace Vulkan
 		commandBuffers.reset();
 		swapChainFrameBuffers.clear();
 		graphicsPipeline.reset();
+		descriptorsManager.reset();
+		uniformBuffers.clear();
 		inFlightFences.clear();
 		renderFinishedSemaphores.clear();
 		imageAvailableSemaphores.clear();
 		swapChain.reset();
 		commandBuffers.reset();
-		uniformBuffers.clear();
 		device.reset();
 		surface.reset();
 		instance.reset();

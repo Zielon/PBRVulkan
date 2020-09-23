@@ -22,6 +22,9 @@ namespace Vulkan
 
 	DescriptorsManager::~DescriptorsManager()
 	{
+		descriptorSets.clear();
+		descriptorSetLayout.reset();
+
 		if (descriptorPool != nullptr)
 		{
 			vkDestroyDescriptorPool(device.Get(), descriptorPool, nullptr);

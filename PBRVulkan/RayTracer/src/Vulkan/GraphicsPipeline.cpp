@@ -162,16 +162,18 @@ namespace Vulkan
 
 	GraphicsPipeline::~GraphicsPipeline()
 	{
-		if (pipelineLayout != nullptr)
-		{
-			vkDestroyPipelineLayout(device.Get(), pipelineLayout, nullptr);
-			pipelineLayout = nullptr;
-		}
-
 		if (pipeline != nullptr)
 		{
 			vkDestroyPipeline(device.Get(), pipeline, nullptr);
 			pipeline = nullptr;
+		}
+
+		renderPass.reset();
+
+		if (pipelineLayout != nullptr)
+		{
+			vkDestroyPipelineLayout(device.Get(), pipelineLayout, nullptr);
+			pipelineLayout = nullptr;
 		}
 	}
 }

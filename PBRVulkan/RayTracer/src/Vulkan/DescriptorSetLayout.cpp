@@ -22,5 +22,12 @@ namespace Vulkan
 		         "Create descriptor set layout");
 	}
 
-	DescriptorSetLayout::~DescriptorSetLayout() { }
+	DescriptorSetLayout::~DescriptorSetLayout()
+	{
+		if (descriptorSetLayout != nullptr)
+		{
+			vkDestroyDescriptorSetLayout(device.Get(), descriptorSetLayout, nullptr);
+			descriptorSetLayout = nullptr;
+		}
+	}
 }
