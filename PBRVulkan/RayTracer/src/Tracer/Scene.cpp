@@ -2,6 +2,8 @@
 
 #include "../Vulkan/Device.h"
 #include "../Vulkan/CommandBuffers.h"
+#include "../Geometry/Vertex.h"
+#include "../Vulkan/Buffer.h"
 
 namespace Tracer
 {
@@ -15,7 +17,7 @@ namespace Tracer
 
 	void Scene::CreateBuffers()
 	{
-		const std::vector<Geometry::Vertex> vertices = {
+		const std::vector<Uniforms::Vertex> vertices = {
 			{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { -0.5f, 0.5f } },
 			{ { 0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, -0.5f } },
 			{ { 0.5f, 0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.5f, 0.5f } },
@@ -30,8 +32,8 @@ namespace Tracer
 		
 		auto size = sizeof(vertices[0]) * vertices.size();
 
-		std::unique_ptr<Vulkan::Buffer<Geometry::Vertex>> buffer_staging(
-			new Vulkan::Buffer<Geometry::Vertex>(
+		std::unique_ptr<Vulkan::Buffer> buffer_staging(
+			new Vulkan::Buffer(
 				device, size,
 				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
@@ -39,7 +41,7 @@ namespace Tracer
 		buffer_staging->Fill(vertices.data());
 
 		vertexBuffer.reset(
-			new Vulkan::Buffer<Geometry::Vertex>(
+			new Vulkan::Buffer(
 				device, size,
 				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT),
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
@@ -51,7 +53,7 @@ namespace Tracer
 		size = sizeof(indices[0]) * indices.size();
 
 		buffer_staging.reset(
-			new Vulkan::Buffer<Geometry::Vertex>(
+			new Vulkan::Buffer(
 				device, size,
 				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
@@ -59,7 +61,7 @@ namespace Tracer
 		buffer_staging->Fill(indices.data());
 
 		indexBuffer.reset(
-			new Vulkan::Buffer<Geometry::Vertex>(
+			new Vulkan::Buffer(
 				device, size,
 				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT),
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));

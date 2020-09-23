@@ -13,6 +13,10 @@
 #include "Semaphore.h"
 #include "Fence.h"
 #include "Framebuffer.h"
+#include "Buffer.h"
+#include "DescriptorsManager.h"
+
+#include "../Geometry/MVP.h"
 
 namespace Vulkan
 {
@@ -27,13 +31,14 @@ namespace Vulkan
 	{
 		// Destructor has to call in the right order all graphics components
 		commandBuffers.reset();
-		swapChainFramebuffers.clear();
+		swapChainFrameBuffers.clear();
 		graphicsPipeline.reset();
 		inFlightFences.clear();
 		renderFinishedSemaphores.clear();
 		imageAvailableSemaphores.clear();
 		swapChain.reset();
 		commandBuffers.reset();
+		uniformBuffers.clear();
 		device.reset();
 		surface.reset();
 		instance.reset();
@@ -62,15 +67,18 @@ namespace Vulkan
 
 		const VkCommandBuffer commandBuffer = commandBuffers->Begin(imageIndex);
 		{
-			Render(swapChainFramebuffers[imageIndex]->Get(), commandBuffer);
+			Render(swapChainFrameBuffers[imageIndex]->Get(), commandBuffer, imageIndex);
 		}
 		commandBuffers->End(imageIndex);
 
 		inFlightFence->Reset();
 
+		UpdateUniformBuffer(imageIndex);
+
 		QueueSubmit(commandBuffer);
 		Present(imageIndex);
-		Update();
+
+		currentFrame = (currentFrame + 1) % inFlightFences.size();
 	}
 
 	void Application::Run()
@@ -100,11 +108,6 @@ namespace Vulkan
 		{
 			throw std::runtime_error(std::string("Failed to present next image"));
 		}
-	}
-
-	void Application::Update()
-	{
-		currentFrame = (currentFrame + 1) % inFlightFences.size();
 	}
 
 	void Application::CreateInstance()
@@ -152,21 +155,26 @@ namespace Vulkan
 	{
 		swapChain.reset(new SwapChain(*device));
 
-		for (const auto& imageView : swapChain->GetImageViews())
+		for (const auto& _ : swapChain->GetImageViews())
 		{
 			imageAvailableSemaphores.emplace_back(new Semaphore(*device));
 			renderFinishedSemaphores.emplace_back(new Semaphore(*device));
 			inFlightFences.emplace_back(new Fence(*device));
+			uniformBuffers.emplace_back(
+				new Buffer(*device, sizeof(Uniforms::MVP),
+				           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+				           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 		}
 
-		graphicsPipeline.reset(new GraphicsPipeline(*swapChain, *device));
+		descriptorsManager.reset(new DescriptorsManager(*device, *swapChain, uniformBuffers));
+		graphicsPipeline.reset(new GraphicsPipeline(*swapChain, *device, descriptorsManager->GetDescriptorSetLayout()));
 
 		for (const auto& imageView : swapChain->GetImageViews())
 		{
-			swapChainFramebuffers.emplace_back(
+			swapChainFrameBuffers.emplace_back(
 				new Framebuffer(*imageView, *swapChain, graphicsPipeline->GetRenderPass()));
 		}
 
-		commandBuffers.reset(new CommandBuffers(*device, static_cast<uint32_t>(swapChainFramebuffers.size())));
+		commandBuffers.reset(new CommandBuffers(*device, static_cast<uint32_t>(swapChainFrameBuffers.size())));
 	}
 }

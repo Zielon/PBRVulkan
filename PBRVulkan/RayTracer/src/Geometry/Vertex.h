@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include "../Vulkan/Vulkan.h"
 
-namespace Geometry
+namespace Uniforms
 {
 	struct Vertex final
 	{

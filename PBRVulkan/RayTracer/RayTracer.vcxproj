@@ -32,8 +32,11 @@
     <ClCompile Include="src\Tracer\RayTracer.cpp" />
     <ClCompile Include="src\Tracer\Scene.cpp" />
     <ClCompile Include="src\Vulkan\Application.cpp" />
+    <ClCompile Include="src\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Vulkan\Command.cpp" />
     <ClCompile Include="src\Vulkan\CommandBuffers.cpp" />
+    <ClCompile Include="src\Vulkan\DescriptorSetLayout.cpp" />
+    <ClCompile Include="src\Vulkan\DescriptorsManager.cpp" />
     <ClCompile Include="src\Vulkan\Device.cpp" />
     <ClCompile Include="src\Vulkan\Fence.cpp" />
     <ClCompile Include="src\Vulkan\Framebuffer.cpp" />
@@ -59,8 +62,10 @@
     <ClInclude Include="src\Tracer\RayTracer.h" />
     <ClInclude Include="src\Tracer\Scene.h" />
     <ClInclude Include="src\Vulkan\Application.h" />
-    <ClInclude Include="src\Vulkan\Buffer.hpp" />
+    <ClInclude Include="src\Vulkan\Buffer.h" />
     <ClInclude Include="src\Vulkan\CommandBuffers.h" />
+    <ClInclude Include="src\Vulkan\DescriptorSetLayout.h" />
+    <ClInclude Include="src\Vulkan\DescriptorsManager.h" />
     <ClInclude Include="src\Vulkan\Device.h" />
     <ClInclude Include="src\Vulkan\Fence.h" />
     <ClInclude Include="src\Vulkan\Framebuffer.h" />

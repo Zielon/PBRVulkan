@@ -2,9 +2,14 @@
 
 #include <memory>
 
-#include "../Geometry/Vertex.h"
 #include "../Vulkan/Vulkan.h"
-#include "../Vulkan/Buffer.hpp"
+
+namespace Vulkan
+{
+	class Device;
+	class Buffer;
+	class CommandBuffers;
+}
 
 namespace Tracer
 {
@@ -16,12 +21,12 @@ namespace Tracer
 		Scene(const class Vulkan::Device& device, const class Vulkan::CommandBuffers& commandBuffers);
 		~Scene();
 
-		[[nodiscard]] const Vulkan::Buffer<Geometry::Vertex>& GetVertexBuffer() const
+		[[nodiscard]] const class Vulkan::Buffer& GetVertexBuffer() const
 		{
 			return *vertexBuffer;
 		}
 
-		[[nodiscard]] const Vulkan::Buffer<Geometry::Vertex>& GetIndexBuffer() const
+		[[nodiscard]] const Vulkan::Buffer& GetIndexBuffer() const
 		{
 			return *indexBuffer;
 		}
@@ -29,8 +34,8 @@ namespace Tracer
 	private:
 		const class Vulkan::Device& device;
 		const class Vulkan::CommandBuffers& commandBuffers;
-		std::unique_ptr<Vulkan::Buffer<Geometry::Vertex>> vertexBuffer;
-		std::unique_ptr<Vulkan::Buffer<Geometry::Vertex>> indexBuffer;
+		std::unique_ptr<class Vulkan::Buffer> vertexBuffer;
+		std::unique_ptr<class Vulkan::Buffer> indexBuffer;
 
 		void CreateBuffers();
 	};

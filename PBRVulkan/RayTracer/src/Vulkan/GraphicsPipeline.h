@@ -14,7 +14,9 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(GraphicsPipeline)
 
-		GraphicsPipeline(const class SwapChain& swapChain, const class Device& device);
+		GraphicsPipeline(const class SwapChain& swapChain,
+		                 const class Device& device,
+		                 const class DescriptorSetLayout& descriptorSetLayout);
 		~GraphicsPipeline();
 
 		[[nodiscard]] VkPipelineLayout GetPipelineLayout() const
@@ -37,10 +39,11 @@ namespace Vulkan
 	private:
 		void CreatePipeline();
 
-		const SwapChain& swapChain;
 		const Device& device;
-		std::unique_ptr<class RenderPass> renderPass;
-		VkPipelineLayout pipelineLayout;
+		const SwapChain& swapChain;
+		const DescriptorSetLayout& descriptorSetLayout;
 		VkPipeline pipeline;
+		VkPipelineLayout pipelineLayout;
+		std::unique_ptr<class RenderPass> renderPass;
 	};
 }

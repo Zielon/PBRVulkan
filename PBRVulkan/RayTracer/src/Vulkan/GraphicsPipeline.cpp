@@ -4,12 +4,17 @@
 #include "Device.h"
 #include "Shader.h"
 #include "RenderPass.h"
+#include "DescriptorSetLayout.h"
+
 #include "../Geometry/Vertex.h"
 
 namespace Vulkan
 {
-	GraphicsPipeline::GraphicsPipeline(const SwapChain& swapChain, const Device& device):
-		swapChain(swapChain), device(device), renderPass(new RenderPass(device, swapChain, true, true))
+	GraphicsPipeline::GraphicsPipeline(const SwapChain& swapChain,
+	                                   const Device& device,
+	                                   const DescriptorSetLayout& descriptorSetLayout):
+		device(device), swapChain(swapChain), descriptorSetLayout(descriptorSetLayout),
+		renderPass(new RenderPass(device, swapChain, true, true))
 	{
 		CreatePipeline();
 	}
@@ -31,8 +36,8 @@ namespace Vulkan
 			fragShader.CreateShaderStage(VK_SHADER_STAGE_FRAGMENT_BIT)
 		};
 
-		auto bindingDescription = Geometry::Vertex::GetBindingDescription();
-		auto attributeDescriptions = Geometry::Vertex::GetAttributeDescriptions();
+		auto bindingDescription = Uniforms::Vertex::GetBindingDescription();
+		auto attributeDescriptions = Uniforms::Vertex::GetAttributeDescriptions();
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -72,7 +77,7 @@ namespace Vulkan
 		rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
 		rasterizer.lineWidth = 1.0f;
 		rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-		rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;
 		rasterizer.depthBiasConstantFactor = 0.0f; // Optional
 		rasterizer.depthBiasClamp = 0.0f; // Optional
@@ -121,11 +126,14 @@ namespace Vulkan
 		colorBlending.blendConstants[2] = 0.0f;
 		colorBlending.blendConstants[3] = 0.0f;
 
+		VkDescriptorSetLayout descriptorSetLayouts[] = { descriptorSetLayout.Get() };
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = 0;
+		pipelineLayoutInfo.setLayoutCount = 1;
 		pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
 		pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
+		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts;
 
 		VK_CHECK(vkCreatePipelineLayout(device.Get(), &pipelineLayoutInfo, nullptr, &pipelineLayout),
 		         "Create graphics pipeline layout");

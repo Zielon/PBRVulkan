@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace Vulkan
-{	
+{
 	class Application
 	{
 	public:
@@ -24,12 +24,9 @@ namespace Vulkan
 		void CreateInstance();
 		void QueueSubmit(VkCommandBuffer commandBuffer);
 		void Present(uint32_t imageIndex);
-		void Update();
+		virtual void UpdateUniformBuffer(uint32_t imageIndex) = 0;
 
-		/*
-		 * Registers all draw operations in a command buffer before presentation stage.
-		 */
-		virtual void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) = 0;
+		virtual void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex) = 0;
 		virtual void OnKeyChanged(int key, int scancode, int action, int mods) = 0;
 		virtual void OnCursorPositionChanged(double xpos, double ypos) = 0;
 		virtual void OnMouseButtonChanged(int button, int action, int mods) = 0;
@@ -44,9 +41,11 @@ namespace Vulkan
 		std::unique_ptr<class SwapChain> swapChain;
 		std::unique_ptr<class GraphicsPipeline> graphicsPipeline;
 		std::unique_ptr<class CommandBuffers> commandBuffers;
+		std::unique_ptr<class DescriptorsManager> descriptorsManager;
 
 		// Per image in swap chain specific components
-		std::vector<std::unique_ptr<class Framebuffer>> swapChainFramebuffers;
+		std::vector<std::unique_ptr<class Framebuffer>> swapChainFrameBuffers;
+		std::vector<std::unique_ptr<class Buffer>> uniformBuffers;
 		std::vector<std::unique_ptr<class Semaphore>> imageAvailableSemaphores;
 		std::vector<std::unique_ptr<class Semaphore>> renderFinishedSemaphores;
 		std::vector<std::unique_ptr<class Fence>> inFlightFences;
