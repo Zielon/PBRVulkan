@@ -1,16 +1,15 @@
 #include "RayTracer.h"
 
-#include <array>
-#include <iostream>
-#include <chrono>
 #define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <array>
+#include <chrono>
 
 #include "Menu.h"
 #include "Scene.h"
 #include "../Geometry/MVP.h"
-
 #include "../Vulkan/GraphicsPipeline.h"
 #include "../Vulkan/SwapChain.h"
 #include "../Vulkan/Window.h"

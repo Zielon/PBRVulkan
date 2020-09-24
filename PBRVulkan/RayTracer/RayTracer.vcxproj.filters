@@ -22,7 +22,7 @@
     <Filter Include="Geometry">
       <UniqueIdentifier>{fe18f866-2eb2-4df1-9ba1-7ae8d3fc0ecc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Geometry\UBOs">
+    <Filter Include="Geometry\Uniforms">
       <UniqueIdentifier>{2b616ec9-41bf-42e8-b347-b151b31e5454}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -192,7 +192,7 @@
       <Filter>Tracer</Filter>
     </ClInclude>
     <ClInclude Include="src\Geometry\MVP.h">
-      <Filter>Geometry\UBOs</Filter>
+      <Filter>Geometry\Uniforms</Filter>
     </ClInclude>
     <ClInclude Include="src\Vulkan\Buffer.h">
       <Filter>Geometry</Filter>

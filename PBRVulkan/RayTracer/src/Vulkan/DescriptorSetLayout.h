@@ -1,11 +1,13 @@
 #pragma once
 
-#include <memory>
-
 #include "Vulkan.h"
 
 namespace Vulkan
 {
+	/**
+	 * The descriptor layout specifies the types of resources that
+	 * are going to be accessed by the pipeline.
+	 */
 	class DescriptorSetLayout final
 	{
 	public:
@@ -17,6 +19,11 @@ namespace Vulkan
 		[[nodiscard]] VkDescriptorSetLayout Get() const
 		{
 			return descriptorSetLayout;
+		}
+
+		[[nodiscard]] const class Device& GetDevice() const
+		{
+			return device;
 		}
 
 	private:

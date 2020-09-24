@@ -158,9 +158,9 @@ namespace Vulkan
 
 		for (const auto& _ : swapChain->GetImageViews())
 		{
+			inFlightFences.emplace_back(new Fence(*device));
 			imageAvailableSemaphores.emplace_back(new Semaphore(*device));
 			renderFinishedSemaphores.emplace_back(new Semaphore(*device));
-			inFlightFences.emplace_back(new Fence(*device));
 			uniformBuffers.emplace_back(
 				new Buffer(*device, sizeof(Uniforms::MVP),
 				           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
