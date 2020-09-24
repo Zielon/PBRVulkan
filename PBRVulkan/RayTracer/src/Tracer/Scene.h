@@ -9,6 +9,12 @@ namespace Vulkan
 	class Device;
 	class Buffer;
 	class CommandBuffers;
+	class Image;
+}
+
+namespace Assets
+{
+	class TextureImage;
 }
 
 namespace Tracer
@@ -36,6 +42,8 @@ namespace Tracer
 		const class Vulkan::CommandBuffers& commandBuffers;
 		std::unique_ptr<class Vulkan::Buffer> vertexBuffer;
 		std::unique_ptr<class Vulkan::Buffer> indexBuffer;
+		std::unique_ptr<class Vulkan::Image> image;
+		std::unique_ptr<class Assets::TextureImage> textureImage;
 
 		void CreateBuffers();
 	};

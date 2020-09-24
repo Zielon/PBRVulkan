@@ -9,7 +9,9 @@
 
 #include "Menu.h"
 #include "Scene.h"
+
 #include "../Geometry/MVP.h"
+
 #include "../Vulkan/GraphicsPipeline.h"
 #include "../Vulkan/SwapChain.h"
 #include "../Vulkan/Window.h"

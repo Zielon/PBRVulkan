@@ -2,8 +2,12 @@
 
 #include "../Vulkan/Device.h"
 #include "../Vulkan/CommandBuffers.h"
-#include "../Geometry/Vertex.h"
 #include "../Vulkan/Buffer.h"
+#include "../Vulkan/Image.h"
+
+#include "../Geometry/Vertex.h"
+
+#include "../Assets/TextureImage.h"
 
 namespace Tracer
 {
@@ -11,6 +15,8 @@ namespace Tracer
 		: device(device), commandBuffers(commandBuffers)
 	{
 		CreateBuffers();
+
+		textureImage.reset(new Assets::TextureImage(device, commandBuffers, "../Textures/statue.jpg"));
 	}
 
 	Scene::~Scene() {}
@@ -29,7 +35,7 @@ namespace Tracer
 		};
 
 		// =============== VERTEX BUFFER ===============
-		
+
 		auto size = sizeof(vertices[0]) * vertices.size();
 
 		std::unique_ptr<Vulkan::Buffer> buffer_staging(
@@ -49,7 +55,7 @@ namespace Tracer
 		vertexBuffer->Copy(commandBuffers, *buffer_staging);
 
 		// =============== INDEX BUFFER ===============
-		
+
 		size = sizeof(indices[0]) * indices.size();
 
 		buffer_staging.reset(

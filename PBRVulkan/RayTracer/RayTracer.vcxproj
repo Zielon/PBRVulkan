@@ -25,6 +25,7 @@
     <None Include="src\Assets\Shaders\Vertex.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Assets\TextureImage.cpp" />
     <ClCompile Include="src\ImGui\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\ImGui\imgui_impl_vulkan.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -54,6 +55,7 @@
     <ClCompile Include="src\Vulkan\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Assets\TextureImage.h" />
     <ClInclude Include="src\Geometry\MVP.h" />
     <ClInclude Include="src\Geometry\Vertex.h" />
     <ClInclude Include="src\ImGui\imgui_impl_glfw.h" />

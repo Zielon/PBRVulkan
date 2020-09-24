@@ -111,13 +111,16 @@
     <ClCompile Include="src\Tracer\Scene.cpp">
       <Filter>Tracer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vulkan\Buffer.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vulkan\DescriptorSetLayout.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Vulkan\DescriptorsManager.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assets\TextureImage.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Buffer.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
@@ -194,13 +197,16 @@
     <ClInclude Include="src\Geometry\MVP.h">
       <Filter>Geometry\Uniforms</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vulkan\Buffer.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="src\Vulkan\DescriptorSetLayout.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Vulkan\DescriptorsManager.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\TextureImage.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Buffer.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
