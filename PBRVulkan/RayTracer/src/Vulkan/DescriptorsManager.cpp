@@ -1,23 +1,28 @@
 #include "DescriptorsManager.h"
 
+#include <array>
+
+#include "../Assets/TextureImage.h"
+#include "../Geometry/MVP.h"
+#include "../Tracer/Scene.h"
 
 #include "Buffer.h"
 #include "Device.h"
 #include "SwapChain.h"
 #include "DescriptorSetLayout.h"
-#include "../Geometry/MVP.h"
 
 namespace Vulkan
 {
 	DescriptorsManager::DescriptorsManager(
 		const Device& device,
 		const SwapChain& swapChain,
+		const Tracer::Scene& scene,
 		const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers):
 		device(device), swapChain(swapChain)
 	{
 		descriptorSetLayout.reset(new DescriptorSetLayout(device));
 		CreateDescriptorPool();
-		CreateDescriptorSets(uniformBuffers);
+		CreateDescriptorSets(uniformBuffers, scene);
 	}
 
 	DescriptorsManager::~DescriptorsManager()
@@ -34,21 +39,25 @@ namespace Vulkan
 
 	void DescriptorsManager::CreateDescriptorPool()
 	{
-		VkDescriptorPoolSize poolSize{};
-		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		poolSize.descriptorCount = static_cast<uint32_t>(swapChain.GetImage().size());
+		std::array<VkDescriptorPoolSize, 2> poolSizes{};
+		poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChain.GetImage().size());
+
+		poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChain.GetImage().size());
 
 		VkDescriptorPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-		poolInfo.poolSizeCount = 1;
-		poolInfo.pPoolSizes = &poolSize;
+		poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+		poolInfo.pPoolSizes = poolSizes.data();
 		poolInfo.maxSets = static_cast<uint32_t>(swapChain.GetImage().size());
 
 		VK_CHECK(vkCreateDescriptorPool(device.Get(), &poolInfo, nullptr, &descriptorPool),
 		         "Create descriptor pool");
 	}
 
-	void DescriptorsManager::CreateDescriptorSets(const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers)
+	void DescriptorsManager::CreateDescriptorSets(const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers,
+	                                              const Tracer::Scene& scene)
 	{
 		std::vector<VkDescriptorSetLayout> layouts(swapChain.GetImage().size(), descriptorSetLayout->Get());
 
@@ -70,16 +79,31 @@ namespace Vulkan
 			bufferInfo.offset = 0;
 			bufferInfo.range = sizeof(Uniforms::MVP);
 
-			VkWriteDescriptorSet descriptorWrite{};
-			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrite.dstSet = descriptorSets[i];
-			descriptorWrite.dstBinding = 0;
-			descriptorWrite.dstArrayElement = 0;
-			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			descriptorWrite.descriptorCount = 1;
-			descriptorWrite.pBufferInfo = &bufferInfo;
+			VkDescriptorImageInfo imageInfo{};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = scene.GetTexture().GetImageView();
+			imageInfo.sampler = scene.GetTexture().GetTextureSampler();
 
-			vkUpdateDescriptorSets(device.Get(), 1, &descriptorWrite, 0, nullptr);
+			std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+
+			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[0].dstSet = descriptorSets[i];
+			descriptorWrites[0].dstBinding = 0;
+			descriptorWrites[0].dstArrayElement = 0;
+			descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			descriptorWrites[0].descriptorCount = 1;
+			descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+			descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[1].dstSet = descriptorSets[i];
+			descriptorWrites[1].dstBinding = 1;
+			descriptorWrites[1].dstArrayElement = 0;
+			descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			descriptorWrites[1].descriptorCount = 1;
+			descriptorWrites[1].pImageInfo = &imageInfo;
+
+			vkUpdateDescriptorSets(device.Get(), static_cast<uint32_t>(descriptorWrites.size()),
+			                       descriptorWrites.data(), 0, nullptr);
 		}
 	}
 }

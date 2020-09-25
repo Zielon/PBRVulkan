@@ -5,6 +5,11 @@
 
 #include "Vulkan.h"
 
+namespace Tracer
+{
+	class Scene;
+}
+
 namespace Vulkan
 {
 	class DescriptorsManager final
@@ -12,7 +17,9 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(DescriptorsManager)
 
-		DescriptorsManager(const class Device& device, const class SwapChain& swapChain,
+		DescriptorsManager(const class Device& device,
+		                   const class SwapChain& swapChain,
+		                   const class Tracer::Scene& scene,
 		                   const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers);
 		~DescriptorsManager();
 
@@ -39,6 +46,7 @@ namespace Vulkan
 		std::unique_ptr<class DescriptorSetLayout> descriptorSetLayout;
 
 		void CreateDescriptorPool();
-		void CreateDescriptorSets(const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers);
+		void CreateDescriptorSets(const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers,
+		                          const Tracer::Scene& scene);
 	};
 }

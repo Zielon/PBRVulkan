@@ -4,13 +4,12 @@
 #include <stb_image.h>
 
 #include "../Vulkan/Buffer.h"
-#include "../Vulkan/Image.h"
-#include "../Vulkan/CommandBuffers.h"
+#include "../Vulkan/CommandPool.h"
 
 namespace Assets
 {
 	TextureImage::TextureImage(const Vulkan::Device& device,
-	                           const Vulkan::CommandBuffers& commandBuffers,
+	                           const Vulkan::CommandPool& commandPool,
 	                           const std::string& path)
 	{
 		int texWidth, texHeight, texChannels;
@@ -34,16 +33,18 @@ namespace Assets
 		const auto extent = VkExtent2D{ static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight) };
 
 		image.reset(new Vulkan::Image(
-			device,
-			extent,
+			device, extent,
 			VK_FORMAT_R8G8B8A8_UNORM,
 			VK_IMAGE_TILING_OPTIMAL,
 			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
-		image->TransitionImageLayout(commandBuffers, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-		image->Copy(commandBuffers, *stagingBuffer);
-		image->TransitionImageLayout(commandBuffers, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+		image->TransitionImageLayout(commandPool, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+		image->Copy(commandPool, *stagingBuffer);
+		image->TransitionImageLayout(commandPool, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		                             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+		sampler.reset(new Vulkan::TextureSampler(device));
+		imageView.reset(new Vulkan::ImageView(device, image->Get(), image->GetFormat()));
 	}
 }

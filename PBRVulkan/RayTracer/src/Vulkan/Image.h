@@ -19,16 +19,21 @@ namespace Vulkan
 		      VkMemoryPropertyFlags properties);
 		~Image();
 
-		void Copy(const class CommandBuffers& commandBuffers, const class Buffer& buffer);
+		void Copy(const class CommandPool& commandPool, const class Buffer& buffer);
 
 		void TransitionImageLayout(
-			const class CommandBuffers& commandBuffers,
+			const class CommandPool& commandPool,
 			VkImageLayout oldLayout,
 			VkImageLayout newLayout);
 
 		[[nodiscard]] VkImage Get() const
 		{
 			return image;
+		}
+
+		[[nodiscard]] VkFormat GetFormat() const
+		{
+			return format;
 		}
 
 		[[nodiscard]] const class Memory& GetMemory() const

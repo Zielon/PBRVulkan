@@ -1,22 +1,16 @@
 #include "CommandBuffers.h"
 
 #include "Device.h"
+#include "CommandPool.h"
 
 namespace Vulkan
 {
-	CommandBuffers::CommandBuffers(const Device& device, uint32_t size): device(device)
+	CommandBuffers::CommandBuffers(const class CommandPool& commandPool, uint32_t size):
+		device(commandPool.GetDevice()), commandPool(commandPool)
 	{
-		VkCommandPoolCreateInfo poolInfo = {};
-		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		poolInfo.queueFamilyIndex = device.GraphicsFamilyIndex;
-		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-
-		VK_CHECK(vkCreateCommandPool(device.Get(), &poolInfo, nullptr, &commandPool),
-		         "Create command pool");
-
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		allocInfo.commandPool = commandPool;
+		allocInfo.commandPool = commandPool.Get();
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		allocInfo.commandBufferCount = size;
 
@@ -31,14 +25,8 @@ namespace Vulkan
 		if (!commandBuffers.empty())
 		{
 			vkFreeCommandBuffers(
-				device.Get(), commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+				device.Get(), commandPool.Get(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 			commandBuffers.clear();
-		}
-
-		if (commandPool != nullptr)
-		{
-			vkDestroyCommandPool(device.Get(), commandPool, nullptr);
-			commandPool = nullptr;
 		}
 	}
 

@@ -10,7 +10,7 @@ namespace Vulkan
 	class Device;
 	class SwapChain;
 	class RenderPass;
-	class CommandBuffers;
+	class CommandPool;
 }
 
 namespace Tracer
@@ -23,7 +23,7 @@ namespace Tracer
 		Menu(
 			const Vulkan::Device& device,
 			const Vulkan::SwapChain& swapChain,
-			const Vulkan::CommandBuffers& commandBuffers);
+			const Vulkan::CommandPool& commandPool);
 		~Menu();
 
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) const;

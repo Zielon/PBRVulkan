@@ -9,8 +9,9 @@
 #include "../Vulkan/Surface.h"
 #include "../Vulkan/Instance.h"
 #include "../Vulkan/Window.h"
-#include "../Vulkan/CommandBuffers.h"
+#include "../Vulkan/CommandPool.h"
 #include "../Vulkan/RenderPass.h"
+#include "../Vulkan/Command.cpp"
 
 #include "../ImGui/imgui_impl_glfw.h"
 #include "../ImGui/imgui_impl_vulkan.h"
@@ -20,7 +21,7 @@ namespace Tracer
 	Menu::Menu(
 		const Vulkan::Device& device,
 		const Vulkan::SwapChain& swapChain,
-		const Vulkan::CommandBuffers& commandBuffers)
+		const Vulkan::CommandPool& commandPool)
 		: swapChain(swapChain), device(device)
 	{
 		IMGUI_CHECKVERSION();
@@ -73,27 +74,10 @@ namespace Tracer
 		}
 
 		ImGui::StyleColorsDark();
-
-		VkCommandBufferBeginInfo beginInfo = {};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-		auto* commandBuffer = commandBuffers[0];
-
-		vkBeginCommandBuffer(commandBuffer, &beginInfo);
-		ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
-		vkEndCommandBuffer(commandBuffer);
-
-		VkSubmitInfo submitInfo = {};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &commandBuffer;
-
-		auto* const graphicsQueue = device.GraphicsQueue;
-
-		vkQueueSubmit(graphicsQueue, 1, &submitInfo, nullptr);
-		vkQueueWaitIdle(graphicsQueue);
-
+		Vulkan::Command::Submit(commandPool, [](VkCommandBuffer commandBuffer)
+		{
+			ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
+		});
 		ImGui_ImplVulkan_DestroyFontUploadObjects();
 	}
 

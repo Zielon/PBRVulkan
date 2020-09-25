@@ -34,12 +34,12 @@ namespace Vulkan
 		}
 
 		VkPhysicalDeviceFeatures deviceFeatures{};
-		deviceFeatures.fillModeNonSolid = true;
-		deviceFeatures.samplerAnisotropy = true;
+		deviceFeatures.fillModeNonSolid = VK_TRUE;
+		deviceFeatures.samplerAnisotropy = VK_TRUE;
 
 		VkPhysicalDeviceDescriptorIndexingFeaturesEXT indexingFeatures = {};
 		indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
-		indexingFeatures.runtimeDescriptorArray = true;
+		indexingFeatures.runtimeDescriptorArray = VK_TRUE;
 
 		VkDeviceCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -56,7 +56,7 @@ namespace Vulkan
 		for (auto index : indices)
 		{
 			uint32_t family = index.family.value();
-			VkBool32 presentSupport = false;
+			VkBool32 presentSupport = VK_FALSE;
 			vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, family, surface.Get(), &presentSupport);
 			if (presentSupport)
 			{

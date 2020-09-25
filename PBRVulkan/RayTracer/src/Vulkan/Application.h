@@ -5,6 +5,11 @@
 #include <memory>
 #include <vector>
 
+namespace Tracer
+{
+	class Scene;
+}
+
 namespace Vulkan
 {
 	class Application
@@ -17,16 +22,21 @@ namespace Vulkan
 
 		virtual void Run() = 0;
 
+		void CreateSwapChain();
+		void CreateGraphicsPipeline(const Tracer::Scene& scene);
+
 	protected:
 		void DrawFrame();
 		void CreatePhysicalDevice();
-		void CreateGraphicsPipeline();
 		void CreateInstance();
 		void QueueSubmit(VkCommandBuffer commandBuffer);
 		void Present(uint32_t imageIndex);
-		virtual void UpdateUniformBuffer(uint32_t imageIndex) = 0;
 
+		virtual void UpdateUniformBuffer(uint32_t imageIndex) = 0;
 		virtual void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex) = 0;
+		virtual void LoadScene() = 0;
+		
+		// User interface API
 		virtual void OnKeyChanged(int key, int scancode, int action, int mods) = 0;
 		virtual void OnCursorPositionChanged(double xpos, double ypos) = 0;
 		virtual void OnMouseButtonChanged(int button, int action, int mods) = 0;
@@ -41,9 +51,10 @@ namespace Vulkan
 		std::unique_ptr<class SwapChain> swapChain;
 		std::unique_ptr<class GraphicsPipeline> graphicsPipeline;
 		std::unique_ptr<class CommandBuffers> commandBuffers;
+		std::unique_ptr<class CommandPool> commandPool;
 		std::unique_ptr<class DescriptorsManager> descriptorsManager;
 
-		// Per image in swap chain specific components
+		// Per image in swap chain specific components	
 		std::vector<std::unique_ptr<class Framebuffer>> swapChainFrameBuffers;
 		std::vector<std::unique_ptr<class Buffer>> uniformBuffers;
 		std::vector<std::unique_ptr<class Semaphore>> imageAvailableSemaphores;

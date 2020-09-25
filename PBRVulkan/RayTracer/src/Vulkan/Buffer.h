@@ -16,7 +16,7 @@ namespace Vulkan
 		Buffer(const Device& device, size_t size, VkBufferUsageFlagBits usage, VkMemoryPropertyFlags properties);
 		~Buffer();
 
-		void Copy(const class CommandBuffers& commandBuffers, const Buffer& src);
+		void Copy(const class CommandPool& commandPool, const Buffer& src);
 		void Fill(const void* data) const;
 
 		[[nodiscard]] const VkBuffer& Get() const

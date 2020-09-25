@@ -14,6 +14,7 @@
 #include "Fence.h"
 #include "Framebuffer.h"
 #include "Buffer.h"
+#include "CommandPool.h"
 #include "DescriptorsManager.h"
 
 #include "../Geometry/MVP.h"
@@ -24,7 +25,6 @@ namespace Vulkan
 	{
 		CreateInstance();
 		CreatePhysicalDevice();
-		CreateGraphicsPipeline();
 	}
 
 	Application::~Application()
@@ -111,18 +111,6 @@ namespace Vulkan
 		}
 	}
 
-	void Application::CreateInstance()
-	{
-#ifdef NDEBUG
-		const std::vector<const char*> validationLayers = {};
-#else
-		const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
-#endif
-		window.reset(new Window());
-		instance.reset(new Instance(*window, validationLayers));
-		surface.reset(new Surface(*instance));
-	}
-
 	void Application::QueueSubmit(VkCommandBuffer commandBuffer)
 	{
 		auto& fence = inFlightFences[currentFrame];
@@ -145,14 +133,19 @@ namespace Vulkan
 		VK_CHECK(vkQueueSubmit(device->GraphicsQueue, 1, &submitInfo, fence->Get()), "Failed to submit!");
 	}
 
-	void Application::CreatePhysicalDevice()
+	void Application::CreateInstance()
 	{
-		auto* physicalDevice = instance->GetDevices().front();
-
-		device.reset(new Device(physicalDevice, *surface));
+#ifdef NDEBUG
+		const std::vector<const char*> validationLayers = {};
+#else
+		const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+#endif
+		window.reset(new Window());
+		instance.reset(new Instance(*window, validationLayers));
+		surface.reset(new Surface(*instance));
 	}
 
-	void Application::CreateGraphicsPipeline()
+	void Application::CreateSwapChain()
 	{
 		swapChain.reset(new SwapChain(*device));
 
@@ -166,8 +159,19 @@ namespace Vulkan
 				           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 		}
+	}
 
-		descriptorsManager.reset(new DescriptorsManager(*device, *swapChain, uniformBuffers));
+	void Application::CreatePhysicalDevice()
+	{
+		auto* physicalDevice = instance->GetDevices().front();
+
+		device.reset(new Device(physicalDevice, *surface));
+		commandPool.reset(new CommandPool(*device));
+	}
+
+	void Application::CreateGraphicsPipeline(const Tracer::Scene& scene)
+	{
+		descriptorsManager.reset(new DescriptorsManager(*device, *swapChain, scene, uniformBuffers));
 		graphicsPipeline.reset(new GraphicsPipeline(*swapChain, *device, descriptorsManager->GetDescriptorSetLayout()));
 
 		for (const auto& imageView : swapChain->GetImageViews())
@@ -176,6 +180,6 @@ namespace Vulkan
 				new Framebuffer(*imageView, *swapChain, graphicsPipeline->GetRenderPass()));
 		}
 
-		commandBuffers.reset(new CommandBuffers(*device, static_cast<uint32_t>(swapChainFrameBuffers.size())));
+		commandBuffers.reset(new CommandBuffers(*commandPool, static_cast<uint32_t>(swapChainFrameBuffers.size())));
 	}
 }

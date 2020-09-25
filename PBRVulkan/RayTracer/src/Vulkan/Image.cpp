@@ -50,9 +50,9 @@ namespace Vulkan
 		}
 	}
 
-	void Image::Copy(const CommandBuffers& commandBuffers, const Buffer& buffer)
+	void Image::Copy(const CommandPool& commandPool, const Buffer& buffer)
 	{
-		Command::Submit(commandBuffers, [&](VkCommandBuffer commandBuffer)-> void
+		Command::Submit(commandPool, [&](VkCommandBuffer commandBuffer)-> void
 		{
 			VkBufferImageCopy region = {};
 			region.bufferOffset = 0;
@@ -71,11 +71,11 @@ namespace Vulkan
 	}
 
 	void Image::TransitionImageLayout(
-		const CommandBuffers& commandBuffers,
+		const CommandPool& commandPool,
 		VkImageLayout oldLayout,
 		VkImageLayout newLayout)
 	{
-		Command::Submit(commandBuffers, [&](VkCommandBuffer commandBuffer)-> void
+		Command::Submit(commandPool, [&](VkCommandBuffer commandBuffer)-> void
 		{
 			VkImageMemoryBarrier barrier{};
 			barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;

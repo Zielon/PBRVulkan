@@ -36,6 +36,7 @@
     <ClCompile Include="src\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Vulkan\Command.cpp" />
     <ClCompile Include="src\Vulkan\CommandBuffers.cpp" />
+    <ClCompile Include="src\Vulkan\CommandPool.cpp" />
     <ClCompile Include="src\Vulkan\DescriptorSetLayout.cpp" />
     <ClCompile Include="src\Vulkan\DescriptorsManager.cpp" />
     <ClCompile Include="src\Vulkan\Device.cpp" />
@@ -51,6 +52,7 @@
     <ClCompile Include="src\Vulkan\Shader.cpp" />
     <ClCompile Include="src\Vulkan\Surface.cpp" />
     <ClCompile Include="src\Vulkan\SwapChain.cpp" />
+    <ClCompile Include="src\Vulkan\TextureSampler.cpp" />
     <ClCompile Include="src\Vulkan\Vulkan.cpp" />
     <ClCompile Include="src\Vulkan\Window.cpp" />
   </ItemGroup>
@@ -66,6 +68,7 @@
     <ClInclude Include="src\Vulkan\Application.h" />
     <ClInclude Include="src\Vulkan\Buffer.h" />
     <ClInclude Include="src\Vulkan\CommandBuffers.h" />
+    <ClInclude Include="src\Vulkan\CommandPool.h" />
     <ClInclude Include="src\Vulkan\DescriptorSetLayout.h" />
     <ClInclude Include="src\Vulkan\DescriptorsManager.h" />
     <ClInclude Include="src\Vulkan\Device.h" />
@@ -81,6 +84,7 @@
     <ClInclude Include="src\Vulkan\Shader.h" />
     <ClInclude Include="src\Vulkan\Surface.h" />
     <ClInclude Include="src\Vulkan\SwapChain.h" />
+    <ClInclude Include="src\Vulkan\TextureSampler.h" />
     <ClInclude Include="src\Vulkan\Vulkan.h" />
     <ClInclude Include="src\Vulkan\Window.h" />
   </ItemGroup>

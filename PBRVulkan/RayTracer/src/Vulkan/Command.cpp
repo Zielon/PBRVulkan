@@ -1,24 +1,24 @@
 #include <functional>
 
 #include "Vulkan.h"
-#include "CommandBuffers.h"
 #include "Device.h"
+#include "CommandPool.h"
 
 namespace Vulkan
 {
 	class Command final
 	{
 	public:
-		static void Submit(const CommandBuffers& commandBuffers, const std::function<void(VkCommandBuffer)>& func)
+		static void Submit(const CommandPool& commandPool, const std::function<void(VkCommandBuffer)>& func)
 		{
 			VkCommandBufferAllocateInfo allocInfo{};
 			allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 			allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-			allocInfo.commandPool = commandBuffers.GetPool();
+			allocInfo.commandPool = commandPool.Get();
 			allocInfo.commandBufferCount = 1;
 
 			VkCommandBuffer commandBuffer;
-			vkAllocateCommandBuffers(commandBuffers.GetDevice().Get(), &allocInfo, &commandBuffer);
+			vkAllocateCommandBuffers(commandPool.GetDevice().Get(), &allocInfo, &commandBuffer);
 
 			VkCommandBufferBeginInfo beginInfo{};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -35,7 +35,7 @@ namespace Vulkan
 			submitInfo.commandBufferCount = 1;
 			submitInfo.pCommandBuffers = &commandBuffer;
 
-			auto* const graphicsQueue = commandBuffers.GetDevice().GraphicsQueue;
+			auto* const graphicsQueue = commandPool.GetDevice().GraphicsQueue;
 
 			vkQueueSubmit(graphicsQueue, 1, &submitInfo, nullptr);
 			vkQueueWaitIdle(graphicsQueue);

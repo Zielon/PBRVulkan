@@ -17,13 +17,8 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(CommandBuffers)
 
-		CommandBuffers(const class Device& device, uint32_t size);
+		CommandBuffers(const class CommandPool& commandPool, uint32_t size);
 		~CommandBuffers();
-
-		[[nodiscard]] VkCommandPool GetPool() const
-		{
-			return commandPool;
-		}
 
 		[[nodiscard]] uint32_t Size() const
 		{
@@ -45,7 +40,7 @@ namespace Vulkan
 
 	private:
 		const Device& device;
-		VkCommandPool commandPool;
+		const CommandPool& commandPool;
 		std::vector<VkCommandBuffer> commandBuffers;
 	};
 }

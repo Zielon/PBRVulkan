@@ -1,7 +1,7 @@
 #include "Scene.h"
 
 #include "../Vulkan/Device.h"
-#include "../Vulkan/CommandBuffers.h"
+#include "../Vulkan/CommandPool.h"
 #include "../Vulkan/Buffer.h"
 #include "../Vulkan/Image.h"
 
@@ -11,12 +11,12 @@
 
 namespace Tracer
 {
-	Scene::Scene(const Vulkan::Device& device, const Vulkan::CommandBuffers& commandBuffers)
-		: device(device), commandBuffers(commandBuffers)
+	Scene::Scene(const Vulkan::Device& device, const Vulkan::CommandPool& commandPool)
+		: device(device), commandPool(commandPool)
 	{
 		CreateBuffers();
 
-		textureImage.reset(new Assets::TextureImage(device, commandBuffers, "../Textures/statue.jpg"));
+		textureImage.reset(new Assets::TextureImage(device, commandPool, "../Textures/statue.jpg"));
 	}
 
 	Scene::~Scene() {}
@@ -24,10 +24,10 @@ namespace Tracer
 	void Scene::CreateBuffers()
 	{
 		const std::vector<Uniforms::Vertex> vertices = {
-			{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { -0.5f, 0.5f } },
-			{ { 0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, -0.5f } },
-			{ { 0.5f, 0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.5f, 0.5f } },
-			{ { -0.5f, 0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.5f, 0.5f } }
+			{ { -0.5f, -0.5f, 0.f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
+			{ { 0.5f, -0.5f, 0.f }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } },
+			{ { 0.5f, 0.5f, 0.f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
+			{ { -0.5f, 0.5f, 0.f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
 		};
 
 		const std::vector<uint32_t> indices = {
@@ -52,7 +52,7 @@ namespace Tracer
 				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT),
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
-		vertexBuffer->Copy(commandBuffers, *buffer_staging);
+		vertexBuffer->Copy(commandPool, *buffer_staging);
 
 		// =============== INDEX BUFFER ===============
 
@@ -72,6 +72,6 @@ namespace Tracer
 				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT),
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
-		indexBuffer->Copy(commandBuffers, *buffer_staging);
+		indexBuffer->Copy(commandPool, *buffer_staging);
 	}
 }

@@ -23,10 +23,12 @@ namespace Tracer
 {
 	RayTracer::RayTracer()
 	{
-		menu.reset(new Menu(*device, *swapChain, *commandBuffers));
-		scene.reset(new Scene(*device, *commandBuffers));
-
+		LoadScene();
+		CreateSwapChain();
+		CreateGraphicsPipeline(*scene);
 		RegisterCallbacks();
+
+		menu.reset(new Menu(*device, *swapChain, *commandPool));
 	}
 
 	void RayTracer::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
@@ -62,6 +64,11 @@ namespace Tracer
 		vkCmdEndRenderPass(commandBuffer);
 
 		menu->Render(framebuffer, commandBuffer);
+	}
+
+	void RayTracer::LoadScene()
+	{
+		scene.reset(new Scene(*device, *commandPool));
 	}
 
 	void RayTracer::UpdateUniformBuffer(uint32_t imageIndex)

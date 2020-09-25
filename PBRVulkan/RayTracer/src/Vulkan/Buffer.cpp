@@ -2,7 +2,7 @@
 
 #include "Device.h"
 #include "Memory.h"
-#include "CommandBuffers.h"
+#include "CommandPool.h"
 #include "Command.cpp"
 
 namespace Vulkan
@@ -32,9 +32,9 @@ namespace Vulkan
 		}
 	}
 
-	void Buffer::Copy(const CommandBuffers& commandBuffers, const Buffer& src)
+	void Buffer::Copy(const CommandPool& commandPool, const Buffer& src)
 	{
-		Command::Submit(commandBuffers, [&](VkCommandBuffer cmd)-> void
+		Command::Submit(commandPool, [&](VkCommandBuffer cmd)-> void
 		{
 			VkBufferCopy copyRegion = {};
 			copyRegion.srcOffset = 0;
