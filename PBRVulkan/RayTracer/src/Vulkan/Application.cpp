@@ -39,6 +39,7 @@ namespace Vulkan
 		renderFinishedSemaphores.clear();
 		imageAvailableSemaphores.clear();
 		swapChain.reset();
+		commandPool.reset();
 		commandBuffers.reset();
 		device.reset();
 		surface.reset();
