@@ -396,3 +396,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 Shadrec/
+
+!PBRVulkan/Assets/Models/*.obj
