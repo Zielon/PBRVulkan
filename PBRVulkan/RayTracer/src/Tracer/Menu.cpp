@@ -68,7 +68,7 @@ namespace Tracer
 
 		auto& io = ImGui::GetIO();
 
-		if (!io.Fonts->AddFontFromFileTTF("../Fonts/Cousine-Regular.ttf", 13))
+		if (!io.Fonts->AddFontFromFileTTF("../Assets/Fonts/Cousine-Regular.ttf", 13))
 		{
 			throw std::runtime_error("failed to load ImGui font");
 		}

@@ -3,7 +3,6 @@
 #include "../Vulkan/Device.h"
 #include "../Vulkan/CommandPool.h"
 #include "../Vulkan/Buffer.h"
-#include "../Vulkan/Image.h"
 
 #include "../Geometry/Vertex.h"
 
@@ -16,7 +15,7 @@ namespace Tracer
 	{
 		CreateBuffers();
 
-		textureImage.reset(new Assets::TextureImage(device, commandPool, "../Textures/statue.jpg"));
+		textureImage.reset(new Assets::TextureImage(device, commandPool, "../Assets/Textures/statue.jpg"));
 	}
 
 	Scene::~Scene() {}

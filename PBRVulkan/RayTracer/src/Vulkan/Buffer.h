@@ -35,10 +35,10 @@ namespace Vulkan
 		}
 
 	private:
+		VkDeviceSize size;
 		VkBuffer buffer{};
 		const Device& device;
 		std::unique_ptr<Memory> memory;
-		VkDeviceSize size;
 
 		[[nodiscard]] VkMemoryRequirements GetMemoryRequirements() const;
 	};

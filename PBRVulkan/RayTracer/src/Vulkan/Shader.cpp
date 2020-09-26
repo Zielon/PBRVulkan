@@ -11,7 +11,7 @@ namespace Vulkan
 	Shader::Shader(const Device& device, const std::string& filename):
 		device(device)
 	{
-		CreateShaderModule(Load("../Shaders/" + filename));
+		CreateShaderModule(Load("../Assets/Shaders/" + filename));
 	}
 
 	Shader::~Shader()
