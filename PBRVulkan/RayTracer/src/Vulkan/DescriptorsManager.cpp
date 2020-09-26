@@ -74,17 +74,13 @@ namespace Vulkan
 
 		for (size_t i = 0; i < swapChain.GetImage().size(); i++)
 		{
+			std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+
+			// Uniforms descriptor
 			VkDescriptorBufferInfo bufferInfo{};
 			bufferInfo.buffer = uniformBuffers[i]->Get();
 			bufferInfo.offset = 0;
 			bufferInfo.range = sizeof(Uniforms::MVP);
-
-			VkDescriptorImageInfo imageInfo{};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = scene.GetTexture().GetImageView();
-			imageInfo.sampler = scene.GetTexture().GetTextureSampler();
-
-			std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
 			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[0].dstSet = descriptorSets[i];
@@ -93,6 +89,12 @@ namespace Vulkan
 			descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 			descriptorWrites[0].descriptorCount = 1;
 			descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+			// Texture descriptor
+			VkDescriptorImageInfo imageInfo{};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = scene.GetTexture().GetImageView();
+			imageInfo.sampler = scene.GetTexture().GetTextureSampler();
 
 			descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[1].dstSet = descriptorSets[i];

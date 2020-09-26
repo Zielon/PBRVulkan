@@ -129,6 +129,9 @@
     <ClCompile Include="src\Vulkan\CommandPool.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vulkan\DepthBuffer.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vulkan\Application.h">
@@ -219,6 +222,9 @@
       <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Vulkan\CommandPool.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DepthBuffer.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

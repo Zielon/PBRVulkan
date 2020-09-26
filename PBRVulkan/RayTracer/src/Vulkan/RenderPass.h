@@ -14,6 +14,9 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(RenderPass)
 
+		/**
+		 * clearDepthBuffer and clearColorBuffer are needed for ImGui render call
+		 */
 		RenderPass(const class Device& device, const class SwapChain& swapChain, bool clearColorBuffer,
 		           bool clearDepthBuffer);
 		~RenderPass();

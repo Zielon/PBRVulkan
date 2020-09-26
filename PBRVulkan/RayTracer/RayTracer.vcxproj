@@ -37,6 +37,7 @@
     <ClCompile Include="src\Vulkan\Command.cpp" />
     <ClCompile Include="src\Vulkan\CommandBuffers.cpp" />
     <ClCompile Include="src\Vulkan\CommandPool.cpp" />
+    <ClCompile Include="src\Vulkan\DepthBuffer.cpp" />
     <ClCompile Include="src\Vulkan\DescriptorSetLayout.cpp" />
     <ClCompile Include="src\Vulkan\DescriptorsManager.cpp" />
     <ClCompile Include="src\Vulkan\Device.cpp" />
@@ -69,6 +70,7 @@
     <ClInclude Include="src\Vulkan\Buffer.h" />
     <ClInclude Include="src\Vulkan\CommandBuffers.h" />
     <ClInclude Include="src\Vulkan\CommandPool.h" />
+    <ClInclude Include="src\Vulkan\DepthBuffer.h" />
     <ClInclude Include="src\Vulkan\DescriptorSetLayout.h" />
     <ClInclude Include="src\Vulkan\DescriptorsManager.h" />
     <ClInclude Include="src\Vulkan\Device.h" />
@@ -196,11 +198,11 @@
       <AdditionalDependencies>C:\VulkanSDK\1.2.148.1\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>call $(ProjectDir)Scripts\Run.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>call $(ProjectDir)Scripts\Run.bat</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -223,11 +225,11 @@
       <AdditionalDependencies>C:\VulkanSDK\1.2.148.1\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>call $(ProjectDir)Scripts\Run.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>call $(ProjectDir)Scripts\Run.bat</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

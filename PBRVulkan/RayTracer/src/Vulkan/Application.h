@@ -53,6 +53,7 @@ namespace Vulkan
 		std::unique_ptr<class CommandBuffers> commandBuffers;
 		std::unique_ptr<class CommandPool> commandPool;
 		std::unique_ptr<class DescriptorsManager> descriptorsManager;
+		std::unique_ptr<class DepthBuffer> depthBuffer;
 
 		// Per image in swap chain specific components	
 		std::vector<std::unique_ptr<class Framebuffer>> swapChainFrameBuffers;

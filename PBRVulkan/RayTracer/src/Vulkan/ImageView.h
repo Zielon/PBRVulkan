@@ -13,6 +13,7 @@ namespace Vulkan
 		NON_COPIABLE(ImageView)
 
 		ImageView(const class Device& device, VkImage image, VkFormat format);
+		ImageView(const class Device& device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 		~ImageView();
 
 		[[nodiscard]] VkImageView Get() const

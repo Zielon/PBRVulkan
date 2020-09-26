@@ -6,7 +6,7 @@ namespace Vulkan
 {
 	/**
 	 * The descriptor layout specifies the types of resources that
-	 * are going to be accessed by the pipeline.
+	 * are going to be accessed by the pipeline and the shaders.
 	 */
 	class DescriptorSetLayout final
 	{

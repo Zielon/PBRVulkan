@@ -15,6 +15,7 @@
 #include "Framebuffer.h"
 #include "Buffer.h"
 #include "CommandPool.h"
+#include "DepthBuffer.h"
 #include "DescriptorsManager.h"
 
 #include "../Geometry/MVP.h"
@@ -32,6 +33,7 @@ namespace Vulkan
 		// Destructor has to call in the right order all graphics components
 		commandBuffers.reset();
 		swapChainFrameBuffers.clear();
+		depthBuffer.reset();
 		graphicsPipeline.reset();
 		descriptorsManager.reset();
 		uniformBuffers.clear();
@@ -149,6 +151,7 @@ namespace Vulkan
 	void Application::CreateSwapChain()
 	{
 		swapChain.reset(new SwapChain(*device));
+		depthBuffer.reset(new DepthBuffer(*commandPool, swapChain->Extent));
 
 		for (const auto& _ : swapChain->GetImageViews())
 		{
@@ -178,7 +181,7 @@ namespace Vulkan
 		for (const auto& imageView : swapChain->GetImageViews())
 		{
 			swapChainFrameBuffers.emplace_back(
-				new Framebuffer(*imageView, *swapChain, graphicsPipeline->GetRenderPass()));
+				new Framebuffer(*imageView, *swapChain, *depthBuffer, graphicsPipeline->GetRenderPass()));
 		}
 
 		commandBuffers.reset(new CommandBuffers(*commandPool, static_cast<uint32_t>(swapChainFrameBuffers.size())));

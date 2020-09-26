@@ -3,17 +3,22 @@
 #include "ImageView.h"
 #include "SwapChain.h"
 #include "Device.h"
+#include "DepthBuffer.h"
 
 #include <array>
 
 namespace Vulkan
 {
-	Framebuffer::Framebuffer(ImageView& imageView, const SwapChain& swapChain,
-	                         VkRenderPass renderPass): imageView(imageView)
+	Framebuffer::Framebuffer(
+		const ImageView& imageView,
+		const SwapChain& swapChain,
+		const DepthBuffer& depthBuffer,
+		VkRenderPass renderPass): imageView(imageView)
 	{
-		std::array<VkImageView, 1> attachments =
+		std::array<VkImageView, 2> attachments =
 		{
-			imageView.Get()
+			imageView.Get(),
+			depthBuffer.GetImageView().Get()
 		};
 
 		VkFramebufferCreateInfo framebufferInfo = {};
