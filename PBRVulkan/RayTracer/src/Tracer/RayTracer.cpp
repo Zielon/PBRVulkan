@@ -59,7 +59,7 @@ namespace Tracer
 			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
 			                        graphicsPipeline->GetPipelineLayout(), 0, 1, descriptorSets, 0, nullptr);
 
-			vkCmdDrawIndexed(commandBuffer, 12, 1, 0, 0, 0);
+			vkCmdDrawIndexed(commandBuffer, scene->GetIndexSize(), 1, 0, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);
 

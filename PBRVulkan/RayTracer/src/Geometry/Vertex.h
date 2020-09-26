@@ -1,7 +1,9 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
+
 #include <array>
-#include <glm/glm.hpp>
 #include "../Vulkan/Vulkan.h"
 
 namespace Uniforms
@@ -46,6 +48,28 @@ namespace Uniforms
 		bool operator==(const Vertex& other) const
 		{
 			return Position == other.Position && Normal == other.Normal && Tex == other.Tex;
+		}
+	};
+}
+
+/**
+ * The vertices vector contains a lot of duplicated vertex data,
+ * because many vertices are included in multiple triangles.
+ * We should keep only the unique vertices and use
+ * the index buffer to reuse them whenever they come up.
+ * https://en.cppreference.com/w/cpp/utility/hash
+ */
+namespace std
+{
+	template <>
+	struct hash<Uniforms::Vertex>
+	{
+		size_t operator()(Uniforms::Vertex const& vertex) const
+		{
+			return
+				((hash<glm::vec3>()(vertex.Position) ^
+					(hash<glm::vec3>()(vertex.Normal) << 1)) >> 1) ^
+				(hash<glm::vec2>()(vertex.Tex) << 1);
 		}
 	};
 }

@@ -3,6 +3,7 @@
 #include <memory>
 
 
+#include "../Geometry/Vertex.h"
 #include "../Vulkan/CommandBuffers.h"
 #include "../Vulkan/Vulkan.h"
 
@@ -44,14 +45,29 @@ namespace Tracer
 			return *textureImage;
 		}
 
+		[[nodiscard]] uint32_t GetIndexSize() const
+		{
+			return static_cast<uint32_t>(indices.size());
+		}
+
+		[[nodiscard]] uint32_t GetVertexSize() const
+		{
+			return static_cast<uint32_t>(vertices.size());
+		}
+
 	private:
 		const class Vulkan::Device& device;
 		const class Vulkan::CommandPool& commandPool;
+
+		std::vector<Uniforms::Vertex> vertices;
+		std::vector<uint32_t> indices;
+
 		std::unique_ptr<class Vulkan::Buffer> vertexBuffer;
 		std::unique_ptr<class Vulkan::Buffer> indexBuffer;
 		std::unique_ptr<class Vulkan::Image> image;
 		std::unique_ptr<class Assets::TextureImage> textureImage;
 
 		void CreateBuffers();
+		void Load();
 	};
 }
