@@ -1,0 +1,24 @@
+Renderer
+{
+	resolution 1280 720
+	maxDepth 2
+}
+
+Camera
+{
+	position 20 12 0
+	lookAt -0.953633 2.17253 -0.0972613
+	fov 60
+}
+
+material default
+{
+	albedoTexture ../Assets/Scenes/viking/textures/viking_room.png
+	roughness 0.5
+}
+
+mesh
+{
+	file ../Assets/Scenes/viking/viking_room.obj
+	material default
+}

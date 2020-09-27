@@ -1,36 +1,26 @@
 ﻿#include "TextureImage.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #include "../Vulkan/Buffer.h"
 #include "../Vulkan/CommandPool.h"
 
-namespace Assets
+#include "../Assets/Texture.h"
+
+namespace Tracer
 {
 	TextureImage::TextureImage(const Vulkan::Device& device,
 	                           const Vulkan::CommandPool& commandPool,
-	                           const std::string& path)
+	                           const Assets::Texture& texture)
 	{
-		int texWidth, texHeight, texChannels;
-		stbi_uc* pixels = stbi_load(path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-		VkDeviceSize imageSize = texHeight * texWidth * 4;
-
-		if (!pixels)
-		{
-			throw std::runtime_error("Failed to load texture image!");
-		}
-
-		std::unique_ptr<Vulkan::Buffer> stagingBuffer(new Vulkan::Buffer(
-			device, imageSize,
+		const std::unique_ptr<Vulkan::Buffer> stagingBuffer(new Vulkan::Buffer(
+			device, texture.GetImageSize(),
 			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 
-		stagingBuffer->Fill(pixels);
+		stagingBuffer->Fill(texture.GetPixels());
 
-		stbi_image_free(pixels);
-
-		const auto extent = VkExtent2D{ static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight) };
+		const auto extent = VkExtent2D{
+			static_cast<uint32_t>(texture.GetWidth()), static_cast<uint32_t>(texture.GetHeight())
+		};
 
 		image.reset(new Vulkan::Image(
 			device, extent,

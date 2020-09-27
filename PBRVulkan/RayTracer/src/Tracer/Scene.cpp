@@ -1,10 +1,7 @@
 #include "Scene.h"
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <stb_image.h>
-#include <tiny_obj_loader.h>
-
-#include <unordered_map>
+#include "TextureImage.h"
+#include "Camera.h"
 
 #include "../Vulkan/Device.h"
 #include "../Vulkan/CommandPool.h"
@@ -12,77 +9,112 @@
 
 #include "../Geometry/Vertex.h"
 
-#include "../Assets/TextureImage.h"
+#include "../Assets/Material.h"
+#include "../Assets/Light.h"
+#include "../Assets/Texture.h"
+#include "../Assets/Mesh.h"
+
+#include "../Loader/Loader.h"
+#include "../Loader/RenderOptions.h"
 
 namespace Tracer
 {
-	Scene::Scene(const Vulkan::Device& device, const Vulkan::CommandPool& commandPool)
-		: device(device), commandPool(commandPool)
+	Scene::Scene(
+		const std::string& config,
+		const Vulkan::Device& device,
+		const Vulkan::CommandPool& commandPool)
+		: config(config), device(device), commandPool(commandPool)
 	{
 		Load();
 		CreateBuffers();
 	}
 
-	Scene::~Scene() {}
-
 	void Scene::Load()
 	{
-		const std::string MODEL_PATH = "../Assets/Models/viking_room.obj";
-		const std::string TEXTURE_PATH = "../Assets/Textures/viking_room.png";
+		Loader::RenderOptions options;
+		LoadSceneFromFile(config, *this, options);
 
-		textureImage.reset(new Assets::TextureImage(device, commandPool, TEXTURE_PATH));
+		textureImages.emplace_back(new TextureImage(device, commandPool, *textures[0]));
 
-		tinyobj::attrib_t attrib;
-		std::vector<tinyobj::shape_t> shapes;
-		std::vector<tinyobj::material_t> materials;
-		std::string warn, err;
+		// Release loaded pixles from Texture objects
+		textures.clear();
+	}
 
-		if (!LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str()))
+	void Scene::AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov)
+	{
+		camera.reset(new Camera(pos, lookAt, fov));
+	}
+
+	void Scene::AddHDR(const std::string& path) { }
+
+	int Scene::AddMeshInstance(Assets::MeshInstance meshInstance)
+	{
+		int id = meshInstances.size();
+		meshInstances.push_back(meshInstance);
+		return id;
+	}
+
+	int Scene::AddMesh(const std::string& path)
+	{
+		int id = -1;
+
+		if (meshMap.find(path) != meshMap.end())
 		{
-			throw std::runtime_error(warn + err);
+			id = meshMap[path];
+		}
+		else
+		{
+			id = meshes.size();
+			meshes.emplace_back(new Assets::Mesh(path));
+			meshMap[path] = id;
 		}
 
-		std::unordered_map<Uniforms::Vertex, uint32_t> uniqueVertices{};
+		verticesSize += meshes[id]->GetVerticesSize();
+		indeciesSize += meshes[id]->GetIndeciesSize();
+		return id;
+	}
 
-		for (const auto& shape : shapes)
+	int Scene::AddTexture(const std::string& path)
+	{
+		if (textureMap.find(path) != textureMap.end())
 		{
-			for (const auto& index : shape.mesh.indices)
-			{
-				Uniforms::Vertex vertex{};
-
-				vertex.Position = {
-					attrib.vertices[3 * index.vertex_index + 0],
-					attrib.vertices[3 * index.vertex_index + 1],
-					attrib.vertices[3 * index.vertex_index + 2]
-				};
-
-				vertex.Normal = {
-					attrib.normals[3 * index.normal_index + 0],
-					attrib.normals[3 * index.normal_index + 1],
-					attrib.normals[3 * index.normal_index + 2]
-				};
-				
-				vertex.Tex = {
-					attrib.texcoords[2 * index.texcoord_index + 0],
-					1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-				};
-
-				if (uniqueVertices.count(vertex) == 0)
-				{
-					uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-					vertices.push_back(vertex);
-				}
-
-				indices.push_back(uniqueVertices[vertex]);
-			}
+			return meshMap[path];
 		}
+
+		int id = textures.size();
+		textures.emplace_back(new Assets::Texture(path));
+		textureMap[path] = id;
+		return id;
+	}
+
+	int Scene::AddMaterial(Assets::Material material)
+	{
+		int id = materials.size();
+		materials.push_back(material);
+		return id;
+	}
+
+	int Scene::AddLight(Assets::Light light)
+	{
+		int id = lights.size();
+		lights.push_back(light);
+		return id;
 	}
 
 	void Scene::CreateBuffers()
 	{
+		std::vector<uint32_t> indices;
+		std::vector<Geometry::Vertex> vertices;
+
+		for (const auto& mesh : meshes)
+		{
+			vertices.insert(vertices.end(), mesh->GetVertices().begin(), mesh->GetVertices().end());
+			indices.insert(indices.end(), mesh->GetIndecies().begin(), mesh->GetIndecies().end());
+		}
+
 		// =============== VERTEX BUFFER ===============
 
-		auto size = sizeof(vertices[0]) * vertices.size();
+		auto size = sizeof(meshes[0]->GetVertices()[0]) * verticesSize;
 
 		std::unique_ptr<Vulkan::Buffer> buffer_staging(
 			new Vulkan::Buffer(
@@ -120,4 +152,6 @@ namespace Tracer
 
 		indexBuffer->Copy(commandPool, *buffer_staging);
 	}
+
+	Scene::~Scene() { }
 }

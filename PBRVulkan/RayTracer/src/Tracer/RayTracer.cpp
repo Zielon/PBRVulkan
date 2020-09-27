@@ -68,7 +68,8 @@ namespace Tracer
 
 	void RayTracer::LoadScene()
 	{
-		scene.reset(new Scene(*device, *commandPool));
+		const std::string CONFIG = "../Assets/Scenes/viking.scene";
+		scene.reset(new Scene(CONFIG, *device, *commandPool));
 	}
 
 	void RayTracer::UpdateUniformBuffer(uint32_t imageIndex)
@@ -78,12 +79,12 @@ namespace Tracer
 		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
 		Uniforms::MVP ubo{};
-		ubo.Model = rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		ubo.View = lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		ubo.Projection = glm::perspective(glm::radians(45.0f),
+		ubo.model = rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.view = lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.projection = glm::perspective(glm::radians(45.0f),
 		                                  swapChain->Extent.width / static_cast<float>(swapChain->Extent.height), 0.1f,
 		                                  10.0f);
-		ubo.Projection[1][1] *= -1;
+		ubo.projection[1][1] *= -1;
 
 		uniformBuffers[imageIndex]->Fill(&ubo);
 	}

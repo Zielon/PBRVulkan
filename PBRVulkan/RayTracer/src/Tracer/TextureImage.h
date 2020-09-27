@@ -1,12 +1,11 @@
 #pragma once
 
+#include <memory>
+
 #include "../Vulkan/Vulkan.h"
 #include "../Vulkan/TextureSampler.h"
 #include "../Vulkan/ImageView.h"
 #include "../Vulkan/Image.h"
-
-#include <string>
-#include <memory>
 
 namespace Vulkan
 {
@@ -20,13 +19,19 @@ namespace Vulkan
 
 namespace Assets
 {
+	class Texture;
+}
+
+namespace Tracer
+{
 	class TextureImage
 	{
 	public:
 		NON_COPIABLE(TextureImage)
+
 		TextureImage(const Vulkan::Device& device,
 		             const Vulkan::CommandPool& commandPool,
-		             const std::string& path);
+		             const Assets::Texture& texture);
 		~TextureImage() = default;
 
 		[[nodiscard]] const Vulkan::Image& GetImage() const

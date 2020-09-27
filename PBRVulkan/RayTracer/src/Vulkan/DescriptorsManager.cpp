@@ -2,9 +2,10 @@
 
 #include <array>
 
-#include "../Assets/TextureImage.h"
 #include "../Geometry/MVP.h"
+
 #include "../Tracer/Scene.h"
+#include "../Tracer/TextureImage.h"
 
 #include "Buffer.h"
 #include "Device.h"

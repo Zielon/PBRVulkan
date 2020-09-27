@@ -25,6 +25,9 @@
     <Filter Include="Geometry\Uniforms">
       <UniqueIdentifier>{2b616ec9-41bf-42e8-b347-b151b31e5454}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Loader">
+      <UniqueIdentifier>{a36805f2-2749-48d3-aac0-acc7794e4333}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">
@@ -117,9 +120,6 @@
     <ClCompile Include="src\Vulkan\DescriptorsManager.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Assets\TextureImage.cpp">
-      <Filter>Assets</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vulkan\Buffer.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
@@ -131,6 +131,21 @@
     </ClCompile>
     <ClCompile Include="src\Vulkan\DepthBuffer.cpp">
       <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Loader\Loader.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assets\Texture.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assets\Mesh.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\TextureImage.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\Camera.cpp">
+      <Filter>Tracer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -212,9 +227,6 @@
     <ClInclude Include="src\Vulkan\DescriptorsManager.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Assets\TextureImage.h">
-      <Filter>Assets</Filter>
-    </ClInclude>
     <ClInclude Include="src\Vulkan\Buffer.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
@@ -226,6 +238,30 @@
     </ClInclude>
     <ClInclude Include="src\Vulkan\DepthBuffer.h">
       <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Loader\Loader.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\Material.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\Light.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\Texture.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\Mesh.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Loader\RenderOptions.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\TextureImage.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\Camera.h">
+      <Filter>Tracer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -25,13 +25,17 @@
     <None Include="src\Assets\Shaders\Vertex.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Assets\TextureImage.cpp" />
+    <ClCompile Include="src\Assets\Mesh.cpp" />
+    <ClCompile Include="src\Assets\Texture.cpp" />
     <ClCompile Include="src\ImGui\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\ImGui\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="src\Loader\Loader.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Tracer\Camera.cpp" />
     <ClCompile Include="src\Tracer\Menu.cpp" />
     <ClCompile Include="src\Tracer\RayTracer.cpp" />
     <ClCompile Include="src\Tracer\Scene.cpp" />
+    <ClCompile Include="src\Tracer\TextureImage.cpp" />
     <ClCompile Include="src\Vulkan\Application.cpp" />
     <ClCompile Include="src\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Vulkan\Command.cpp" />
@@ -58,14 +62,21 @@
     <ClCompile Include="src\Vulkan\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Assets\TextureImage.h" />
+    <ClInclude Include="src\Assets\Light.h" />
+    <ClInclude Include="src\Assets\Material.h" />
+    <ClInclude Include="src\Assets\Mesh.h" />
+    <ClInclude Include="src\Assets\Texture.h" />
     <ClInclude Include="src\Geometry\MVP.h" />
     <ClInclude Include="src\Geometry\Vertex.h" />
     <ClInclude Include="src\ImGui\imgui_impl_glfw.h" />
     <ClInclude Include="src\ImGui\imgui_impl_vulkan.h" />
+    <ClInclude Include="src\Loader\Loader.h" />
+    <ClInclude Include="src\Loader\RenderOptions.h" />
+    <ClInclude Include="src\Tracer\Camera.h" />
     <ClInclude Include="src\Tracer\Menu.h" />
     <ClInclude Include="src\Tracer\RayTracer.h" />
     <ClInclude Include="src\Tracer\Scene.h" />
+    <ClInclude Include="src\Tracer\TextureImage.h" />
     <ClInclude Include="src\Vulkan\Application.h" />
     <ClInclude Include="src\Vulkan\Buffer.h" />
     <ClInclude Include="src\Vulkan\CommandBuffers.h" />
@@ -186,7 +197,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.148.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -211,7 +222,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.148.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
