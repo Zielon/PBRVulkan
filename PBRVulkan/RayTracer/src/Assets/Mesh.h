@@ -22,16 +22,6 @@ namespace Assets
 			return indices;
 		}
 
-		[[nodiscard]] uint32_t GetVerticesSize() const
-		{
-			return vertices.size();
-		}
-
-		[[nodiscard]] uint32_t GetIndeciesSize() const
-		{
-			return indices.size();
-		}
-
 	private:
 		std::vector<Geometry::Vertex> vertices;
 		std::vector<uint32_t> indices;

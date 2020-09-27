@@ -46,5 +46,6 @@ namespace Assets
 	Texture::~Texture()
 	{
 		stbi_image_free(pixels);
+		pixels = nullptr;
 	}
 }

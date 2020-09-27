@@ -69,8 +69,6 @@ namespace Tracer
 			meshMap[path] = id;
 		}
 
-		verticesSize += meshes[id]->GetVerticesSize();
-		indeciesSize += meshes[id]->GetIndeciesSize();
 		return id;
 	}
 
@@ -111,6 +109,9 @@ namespace Tracer
 			vertices.insert(vertices.end(), mesh->GetVertices().begin(), mesh->GetVertices().end());
 			indices.insert(indices.end(), mesh->GetIndecies().begin(), mesh->GetIndecies().end());
 		}
+
+		verticesSize = vertices.size();
+		indeciesSize = indices.size();
 
 		// =============== VERTEX BUFFER ===============
 
