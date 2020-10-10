@@ -5,9 +5,12 @@
 #include <vector>
 #include <string>
 
+#define GLM_SWIZZLE 
+#include <glm/glm.hpp>
 
 #include "../Assets/Mesh.h"
 #include "../Geometry/Vertex.h"
+#include "../Loader/Loader.h"
 
 #include "../Vulkan/CommandBuffers.h"
 #include "../Vulkan/Vulkan.h"
@@ -31,7 +34,7 @@ namespace Assets
 
 namespace Tracer
 {
-	class Scene final
+	class Scene final : public Loader::SceneBase
 	{
 	public:
 		NON_COPIABLE(Scene)
@@ -39,13 +42,23 @@ namespace Tracer
 		Scene(const std::string& config, const class Vulkan::Device& device, const Vulkan::CommandPool& commandPool);
 		~Scene();
 
-		void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov);
-		void AddHDR(const std::string& path);
-		int AddMesh(const std::string& path);
-		int AddTexture(const std::string& path);
-		int AddMaterial(Assets::Material material);
-		int AddLight(Assets::Light light);
-		int AddMeshInstance(class Assets::MeshInstance meshInstance);
+		void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov) override;
+		void AddHDR(const std::string& path) override;
+		int AddMesh(const std::string& path) override;
+		int AddTexture(const std::string& path) override;
+		int AddMaterial(Assets::Material material) override;
+		int AddLight(Assets::Light light) override;
+		int AddMeshInstance(class Assets::MeshInstance meshInstance) override;
+
+		[[nodiscard]] const std::vector<std::unique_ptr<Assets::Mesh>>& GetMeshes() const
+		{
+			return meshes;
+		}
+
+		[[nodiscard]] class Camera& GetCamera() const
+		{
+			return *camera;
+		}
 
 		[[nodiscard]] const class Vulkan::Buffer& GetVertexBuffer() const
 		{
@@ -98,6 +111,7 @@ namespace Tracer
 		std::unique_ptr<class Vulkan::Image> image;
 
 		void Load();
+		void Process();
 		void CreateBuffers();
 	};
 }

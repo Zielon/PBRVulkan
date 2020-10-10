@@ -43,7 +43,7 @@ namespace Loader
 	static const int kMaxLineLength = 2048;
 	int (*Log)(const char* szFormat, ...) = printf;
 
-	bool LoadSceneFromFile(const std::string& filename, Tracer::Scene& scene, RenderOptions& renderOptions)
+	bool LoadSceneFromFile(const std::string& filename, SceneBase& scene, RenderOptions& renderOptions)
 	{
 		FILE* file;
 		file = fopen(filename.c_str(), "r");
@@ -178,33 +178,6 @@ namespace Loader
 			}
 
 			//--------------------------------------------
-			// Camera
-
-			if (strstr(line, "Camera"))
-			{
-				glm::vec3 position;
-				glm::vec3 lookAt;
-				float fov;
-				float aperture = 0, focalDist = 1;
-
-				while (fgets(line, kMaxLineLength, file))
-				{
-					// end group
-					if (strchr(line, '}'))
-						break;
-
-					sscanf(line, " position %f %f %f", &position.x, &position.y, &position.z);
-					sscanf(line, " lookAt %f %f %f", &lookAt.x, &lookAt.y, &lookAt.z);
-					sscanf(line, " aperture %f ", &aperture);
-					sscanf(line, " focaldist %f", &focalDist);
-					sscanf(line, " fov %f", &fov);
-				}
-
-				scene.AddCamera(position, lookAt, fov);
-				cameraAdded = true;
-			}
-
-			//--------------------------------------------
 			// Renderer
 
 			if (strstr(line, "Renderer"))
@@ -232,6 +205,33 @@ namespace Loader
 				}
 			}
 
+			//--------------------------------------------
+			// Camera
+
+			if (strstr(line, "Camera"))
+			{
+				glm::vec3 position{};
+				glm::vec3 lookAt{};
+				float fov{};
+				float aperture = 0, focalDist = 1;
+
+				while (fgets(line, kMaxLineLength, file))
+				{
+					// end group
+					if (strchr(line, '}'))
+						break;
+
+					sscanf(line, " position %f %f %f", &position.x, &position.y, &position.z);
+					sscanf(line, " lookAt %f %f %f", &lookAt.x, &lookAt.y, &lookAt.z);
+					sscanf(line, " aperture %f ", &aperture);
+					sscanf(line, " focaldist %f", &focalDist);
+					sscanf(line, " fov %f", &fov);
+				}
+
+				scene.AddCamera(position, lookAt, fov);
+				cameraAdded = true;
+			}
+
 
 			//--------------------------------------------
 			// Mesh
@@ -241,7 +241,7 @@ namespace Loader
 				std::string filename;
 				glm::vec3 pos;
 				glm::vec3 scale;
-				glm::mat4 xform;
+				glm::mat4 xform = glm::mat4(1.f);
 				int material_id = 0; // Default Material ID
 				while (fgets(line, kMaxLineLength, file))
 				{
@@ -254,8 +254,7 @@ namespace Loader
 
 					if (sscanf(line, " file %s", file) == 1)
 					{
-						//meshPath = std::string("./assets/") + path;
-						filename = file;
+						filename = std::string(file);
 					}
 
 					if (sscanf(line, " material %s", matName) == 1)
@@ -279,8 +278,8 @@ namespace Loader
 					int mesh_id = scene.AddMesh(filename);
 					if (mesh_id != -1)
 					{
-						Assets::MeshInstance instance1(mesh_id, xform, material_id);
-						scene.AddMeshInstance(instance1);
+						Assets::MeshInstance instance(mesh_id, xform, material_id);
+						scene.AddMeshInstance(instance);
 					}
 				}
 			}

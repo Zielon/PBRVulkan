@@ -19,7 +19,7 @@ namespace Tracer
 		void LoadScene() override;
 
 		// User interface API
-		void OnKeyChanged(int key, int scancode, int action, int mods) override;
+		void OnKeyChanged(int key, int scanCode, int action, int mods) override;
 		void OnCursorPositionChanged(double xpos, double ypos) override;
 		void OnMouseButtonChanged(int button, int action, int mods) override;
 		void OnScrollChanged(double xoffset, double yoffset) override;

@@ -36,7 +36,7 @@ namespace Vulkan
 			createInfo.ppEnabledLayerNames = validationLayers.data();
 		}
 
-		VK_CHECK(vkCreateInstance(&createInfo, nullptr, &instance), "Vulkan instance creation");
+		VK_CHECK(vkCreateInstance(&createInfo, nullptr, &instance), "Vulkan MeshInstance creation");
 
 		CheckPhysicalDevice();
 	}

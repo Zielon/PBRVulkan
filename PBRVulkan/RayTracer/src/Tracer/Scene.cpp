@@ -26,6 +26,7 @@ namespace Tracer
 		: config(config), device(device), commandPool(commandPool)
 	{
 		Load();
+		Process();
 		CreateBuffers();
 	}
 
@@ -38,6 +39,34 @@ namespace Tracer
 
 		// Release loaded pixles from Texture objects
 		textures.clear();
+	}
+
+	void Scene::Process()
+	{
+		auto unit = glm::mat4(1.f);
+
+#pragma omp parallel for
+		for (auto& meshInstance : meshInstances)
+		{
+			glm::mat4 modelMatrix = meshInstance.modelTransform;
+
+			if (modelMatrix == unit) continue;
+
+			for (auto& vertex : meshes[meshInstance.meshId]->GetVertices())
+			{
+				vertex.position = modelMatrix * glm::vec4(vertex.position.xyz(), 1.f);
+
+				/*
+				 * Translation of position does not affect normals.
+				 * Rotation is applied to normals just like it is to position.
+				 * Uniform scaling of position does not affect the direction of normals
+				 * Non-uniform scaling of position does affect the direction of normals!
+				 *
+				 * vertex.normal = ...
+				 * 
+				 */
+			}
+		}
 	}
 
 	void Scene::AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov)
@@ -65,7 +94,7 @@ namespace Tracer
 		else
 		{
 			id = meshes.size();
-			meshes.emplace_back(new Assets::Mesh(path));
+			meshes.emplace_back(new Assets::Mesh("../Assets/Scenes/" + path));
 			meshMap[path] = id;
 		}
 
@@ -80,7 +109,7 @@ namespace Tracer
 		}
 
 		int id = textures.size();
-		textures.emplace_back(new Assets::Texture(path));
+		textures.emplace_back(new Assets::Texture("../Assets/Scenes/" + path));
 		textureMap[path] = id;
 		return id;
 	}

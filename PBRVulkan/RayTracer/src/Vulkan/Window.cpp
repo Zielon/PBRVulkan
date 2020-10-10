@@ -4,36 +4,37 @@
 
 namespace Vulkan
 {
-	void GlfwErrorCallback(const int error, const char* const description)
+	void Window::GlfwErrorCallback(const int error, const char* const description)
 	{
 		std::cerr << "ERROR: GLFW: " << description << " (code: " << error << ")" << std::endl;
 	}
 
-	void GlfwKeyCallback(GLFWwindow* window, const int key, const int scancode, const int action, const int mods)
+	void Window::GlfwKeyCallback(GLFWwindow* window, const int key, const int scancode, const int action,
+	                             const int mods)
 	{
-		auto* const me = static_cast<Window*>(glfwGetWindowUserPointer(window));
-		for (auto& callback : me->OnKeyChanged)
+		auto* const this_ = static_cast<Window*>(glfwGetWindowUserPointer(window));
+		for (auto& callback : this_->onKeyChanged)
 			callback(key, scancode, action, mods);
 	}
 
-	void GlfwCursorPositionCallback(GLFWwindow* window, const double xpos, const double ypos)
+	void Window::GlfwCursorPositionCallback(GLFWwindow* window, const double xpos, const double ypos)
 	{
-		auto* const me = static_cast<Window*>(glfwGetWindowUserPointer(window));
-		for (auto& callback : me->OnCursorPositionChanged)
+		auto* const this_ = static_cast<Window*>(glfwGetWindowUserPointer(window));
+		for (auto& callback : this_->onCursorPositionChanged)
 			callback(xpos, ypos);
 	}
 
-	void GlfwMouseButtonCallback(GLFWwindow* window, const int button, const int action, const int mods)
+	void Window::GlfwMouseButtonCallback(GLFWwindow* window, const int button, const int action, const int mods)
 	{
-		auto* const me = static_cast<Window*>(glfwGetWindowUserPointer(window));
-		for (auto& callback : me->OnMouseButtonChanged)
+		auto* const this_ = static_cast<Window*>(glfwGetWindowUserPointer(window));
+		for (auto& callback : this_->onMouseButtonChanged)
 			callback(button, action, mods);
 	}
 
-	void GlfwScrollCallback(GLFWwindow* window, const double xoffset, const double yoffset)
+	void Window::GlfwScrollCallback(GLFWwindow* window, const double xoffset, const double yoffset)
 	{
-		auto* const me = static_cast<Window*>(glfwGetWindowUserPointer(window));
-		for (auto& callback : me->OnScrollChanged)
+		auto* const this_ = static_cast<Window*>(glfwGetWindowUserPointer(window));
+		for (auto& callback : this_->onScrollChanged)
 			callback(xoffset, yoffset);
 	}
 
@@ -54,7 +55,7 @@ namespace Vulkan
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		window = glfwCreateWindow(1200, 800, "PBRVulkan", nullptr, nullptr);
+		window = glfwCreateWindow(1280, 720, "PBRVulkan", nullptr, nullptr);
 
 		if (window == nullptr)
 		{
@@ -88,4 +89,24 @@ namespace Vulkan
 	}
 
 	void Window::Run() { }
+
+	void Window::AddOnKeyChanged(std::function<void(int key, int scancode, int action, int mods)> callback)
+	{
+		onKeyChanged.emplace_back(callback);
+	}
+
+	void Window::AddOnCursorPositionChanged(std::function<void(double xpos, double ypos)> callback)
+	{
+		onCursorPositionChanged.emplace_back(callback);
+	}
+
+	void Window::AddOnMouseButtonChanged(std::function<void(int button, int action, int mods)> callback)
+	{
+		onMouseButtonChanged.emplace_back(callback);
+	}
+
+	void Window::AddOnScrollChanged(std::function<void(double xoffset, double yoffset)> callback)
+	{
+		onScrollChanged.emplace_back(callback);
+	}
 }
