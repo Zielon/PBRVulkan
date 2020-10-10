@@ -5,7 +5,7 @@
 
 namespace Assets
 {
-	Texture::Texture(const std::string& path)
+	Texture::Texture(const std::string& path): path(path)
 	{
 		pixels = stbi_load(path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		imageSize = texHeight * texWidth * 4;
@@ -18,6 +18,7 @@ namespace Assets
 
 	Texture::Texture(Texture&& texture) noexcept
 	{
+		path = std::move(texture.path);
 		texHeight = texture.texHeight;
 		texWidth = texture.texWidth;
 		texChannels = texture.texChannels;
@@ -31,6 +32,7 @@ namespace Assets
 	{
 		if (this != &texture)
 		{
+			path = std::move(texture.path);
 			texHeight = texture.texHeight;
 			texWidth = texture.texWidth;
 			texChannels = texture.texChannels;

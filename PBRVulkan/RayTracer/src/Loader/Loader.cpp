@@ -106,11 +106,11 @@ namespace Loader
 					sscanf(line, " color %f %f %f", &material.albedo.x, &material.albedo.y, &material.albedo.z);
 					sscanf(line, " emission %f %f %f", &material.emission.x, &material.emission.y,
 					       &material.emission.z);
-					sscanf(line, " materialType %f", &material.materialType);
+					sscanf(line, " materialType %f", &material.albedo.w);
 					sscanf(line, " metallic %f", &material.metallic);
 					sscanf(line, " roughness %f", &material.roughness);
 					sscanf(line, " ior %f", &material.ior);
-					//sscanf(line, " transmittance %f", &material.transmittance);
+					sscanf(line, " transmittance %f", &material.transmittance);
 
 					sscanf(line, " albedoTexture %s", &albedoTexName);
 					sscanf(line, " metallicRoughnessTexture %s", &metallicRoughnessTexName);

@@ -5,7 +5,6 @@
 #include "Structs.glsl"
 
 layout(binding = 0) uniform UniformBufferObject { Uniform ubo; };
-layout(binding = 1) buffer MaterialArray { Material[] materials; };
 
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inNormal;
@@ -15,7 +14,7 @@ layout(location = 3) in int inMaterialId;
 layout(location = 0) out vec2 outTexCoord;
 layout(location = 1) out vec3 outNormal;
 layout(location = 2) out vec3 outDirection;
-layout(location = 3) out Material outMaterial;
+layout(location = 3) out flat int outMaterialId;
 
 void main() 
 {
@@ -24,5 +23,5 @@ void main()
     outNormal = inNormal;
     outTexCoord = inTexCoord;
     outDirection = ubo.direction;
-    outMaterial = materials[inMaterialId];
+    outMaterialId = inMaterialId;
 }

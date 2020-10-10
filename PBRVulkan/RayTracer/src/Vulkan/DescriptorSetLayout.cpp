@@ -22,7 +22,7 @@ namespace Vulkan
 		materialLayoutBinding.binding = 1;
 		materialLayoutBinding.descriptorCount = 1;
 		materialLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-		materialLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+		materialLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		materialLayoutBinding.pImmutableSamplers = nullptr;
 
 		// Textures layout

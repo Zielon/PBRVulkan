@@ -46,8 +46,6 @@ namespace Tracer
 
 	void Scene::Process()
 	{
-		const auto identity = glm::mat4(1.f);
-
 		/*
 		 * Translation of position does not affect normals.
 		 * Rotation is applied to normals just like it is to position.
@@ -58,8 +56,6 @@ namespace Tracer
 		for (auto& meshInstance : meshInstances)
 		{
 			glm::mat4 modelMatrix = meshInstance.modelTransform;
-
-			if (modelMatrix == identity) continue;
 
 			for (auto& vertex : meshes[meshInstance.meshId]->GetVertices())
 			{
@@ -162,7 +158,7 @@ namespace Tracer
 
 	int Scene::AddMesh(const std::string& path)
 	{
-		int id = -1;
+		int id;
 
 		if (meshMap.find(path) != meshMap.end())
 		{
@@ -172,6 +168,7 @@ namespace Tracer
 		{
 			const auto file = "../Assets/Scenes/" + path;
 			std::cout << "[MESH] " + file + " has been added!" << std::endl;
+			
 			id = meshes.size();
 			meshes.emplace_back(new Assets::Mesh(file));
 			meshMap[path] = id;
@@ -182,17 +179,23 @@ namespace Tracer
 
 	int Scene::AddTexture(const std::string& path)
 	{
+		int id;
+
 		if (textureMap.find(path) != textureMap.end())
 		{
-			return meshMap[path];
+			id = meshMap[path];
+		}
+		else
+		{
+			const auto file = "../Assets/Scenes/" + path;
+			std::cout << "[TEXTURE] " + file + " has been added!" << std::endl;
+
+			id = textures.size();
+			textures.emplace_back(new Assets::Texture(file));
+			textureImages.emplace_back(new TextureImage(device, commandPool, *textures[id]));
+			textureMap[path] = id;
 		}
 
-		int id = textures.size();
-		const auto file = "../Assets/Scenes/" + path;
-		std::cout << "[TEXTURE] " + file + " has been added!" << std::endl;
-		textures.emplace_back(new Assets::Texture(file));
-		textureImages.emplace_back(new TextureImage(device, commandPool, *textures[id++]));
-		textureMap[path] = id;
 		return id;
 	}
 

@@ -11,31 +11,27 @@ namespace Assets
 	};
 
 	// Material data structure layout is 32 * 4 bytes
-	class Material
+	struct alignas(16) Material final
 	{
-	public:
 		Material()
 		{
-			albedo = glm::vec3(1.0f, 1.0f, 1.0f);
-			materialType = DISNEY;
-			emission = glm::vec3(0.0f, 0.0f, 0.0f);
+			albedo = glm::vec4(1.0f, 1.0f, 1.0f, DISNEY);
+			emission = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 			metallic = 0.0f;
 			roughness = 0.5f;
 			ior = 1.45f;
 			transmittance = 0.0f;
-			albedoTexID = -1.0f;
-			metallicRoughnessTexID = -1.0f;
-			normalmapTexID = -1.0f;
-			heightmapTexID = -1.0f;
+			albedoTexID = -1;
+			metallicRoughnessTexID = -1;
+			normalmapTexID = -1;
+			heightmapTexID = -1;
 		};
 
 		// 32 bytes
-		glm::vec3 albedo{};
-		float materialType;
+		glm::vec4 albedo{};
 
 		// 32 bytes
-		glm::vec3 emission{};
-		float unused{};
+		glm::vec4 emission{};
 
 		// 32 bytes
 		float metallic;
@@ -44,9 +40,9 @@ namespace Assets
 		float transmittance;
 
 		// 32 bytes
-		float albedoTexID;
-		float metallicRoughnessTexID;
-		float normalmapTexID;
-		float heightmapTexID;
+		int32_t albedoTexID;
+		int32_t metallicRoughnessTexID;
+		int32_t normalmapTexID;
+		int32_t heightmapTexID;
 	};
 }

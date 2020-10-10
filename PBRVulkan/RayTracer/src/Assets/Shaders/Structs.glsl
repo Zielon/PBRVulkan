@@ -5,7 +5,7 @@ struct Material
     vec4 albedo; 
     vec4 emission; 
     vec4 param; 
-    vec4 texIDs; 
+    ivec4 texIDs; 
 };
 
 struct Uniform

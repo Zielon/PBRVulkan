@@ -42,6 +42,7 @@ namespace Assets
 		};
 
 	private:
+		std::string path;
 		void* pixels;
 		int texWidth{};
 		int texHeight{};
