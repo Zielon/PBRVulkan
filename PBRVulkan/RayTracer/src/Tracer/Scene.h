@@ -70,9 +70,14 @@ namespace Tracer
 			return *indexBuffer;
 		}
 
-		[[nodiscard]] const class TextureImage& GetTexture() const
+		[[nodiscard]] const Vulkan::Buffer& GetMaterialBuffer() const
 		{
-			return *textureImages[0];
+			return *materialBuffer;
+		}
+
+		[[nodiscard]] const std::vector<std::unique_ptr<class TextureImage>>& GetTextures() const
+		{
+			return textureImages;
 		}
 
 		[[nodiscard]] uint32_t GetIndexSize() const
@@ -108,6 +113,8 @@ namespace Tracer
 
 		std::unique_ptr<class Vulkan::Buffer> vertexBuffer;
 		std::unique_ptr<class Vulkan::Buffer> indexBuffer;
+		std::unique_ptr<class Vulkan::Buffer> materialBuffer;
+
 		std::unique_ptr<class Vulkan::Image> image;
 
 		void Load();

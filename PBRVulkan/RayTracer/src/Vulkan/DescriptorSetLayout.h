@@ -2,6 +2,11 @@
 
 #include "Vulkan.h"
 
+namespace Tracer
+{
+	class Scene;
+}
+
 namespace Vulkan
 {
 	/**
@@ -13,7 +18,7 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(DescriptorSetLayout)
 
-		DescriptorSetLayout(const class Device& device);
+		DescriptorSetLayout(const class Device& device, const Tracer::Scene& scene);
 		~DescriptorSetLayout();
 
 		[[nodiscard]] VkDescriptorSetLayout Get() const

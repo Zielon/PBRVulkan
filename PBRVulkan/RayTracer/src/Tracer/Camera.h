@@ -28,12 +28,12 @@ namespace Tracer
 		void Update();
 
 		glm::vec3 position;
-		glm::vec3 front;
-		glm::vec3 worldUp;
-		glm::vec3 right;
-		glm::vec3 up;
+		glm::vec3 front{};
+		glm::vec3 worldUp{};
+		glm::vec3 right{};
+		glm::vec3 up{};
 
-		glm::vec3 pivot;
+		glm::vec3 pivot{};
 
 		float lastX{};
 		float lastY{};

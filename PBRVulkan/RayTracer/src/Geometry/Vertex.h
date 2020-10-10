@@ -13,6 +13,7 @@ namespace Geometry
 		glm::vec3 position;
 		glm::vec3 normal;
 		glm::vec2 texCoords;
+		int32_t materialId;
 
 		static VkVertexInputBindingDescription GetBindingDescription()
 		{
@@ -23,9 +24,9 @@ namespace Geometry
 			return bindingDescription;
 		}
 
-		static std::array<VkVertexInputAttributeDescription, 3> GetAttributeDescriptions()
+		static std::array<VkVertexInputAttributeDescription, 4> GetAttributeDescriptions()
 		{
-			std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = {};
+			std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions = {};
 
 			attributeDescriptions[0].binding = 0;
 			attributeDescriptions[0].location = 0;
@@ -42,12 +43,20 @@ namespace Geometry
 			attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
 			attributeDescriptions[2].offset = offsetof(Vertex, texCoords);
 
+			attributeDescriptions[3].binding = 0;
+			attributeDescriptions[3].location = 3;
+			attributeDescriptions[3].format = VK_FORMAT_R32_SINT;
+			attributeDescriptions[3].offset = offsetof(Vertex, materialId);
+
 			return attributeDescriptions;
 		}
 
 		bool operator==(const Vertex& other) const
 		{
-			return position == other.position && normal == other.normal && texCoords == other.texCoords;
+			return position == other.position &&
+				normal == other.normal &&
+				texCoords == other.texCoords &&
+				materialId == other.materialId;
 		}
 	};
 }

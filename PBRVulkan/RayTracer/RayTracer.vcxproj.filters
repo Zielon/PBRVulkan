@@ -33,13 +33,13 @@
     <None Include="Scripts\Compile.py">
       <Filter>Scripts</Filter>
     </None>
-    <None Include="Scripts\Run.bat">
-      <Filter>Scripts</Filter>
-    </None>
     <None Include="src\Assets\Shaders\Fragment.frag">
       <Filter>Assets\Shaders</Filter>
     </None>
     <None Include="src\Assets\Shaders\Vertex.vert">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Structs.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>

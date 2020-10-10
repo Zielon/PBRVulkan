@@ -45,7 +45,7 @@ namespace Vulkan
 		std::vector<VkDescriptorSet> descriptorSets;
 		std::unique_ptr<class DescriptorSetLayout> descriptorSetLayout;
 
-		void CreateDescriptorPool();
+		void CreateDescriptorPool(const Tracer::Scene& scene);
 		void CreateDescriptorSets(const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers,
 		                          const Tracer::Scene& scene);
 	};

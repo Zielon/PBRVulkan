@@ -50,11 +50,11 @@ namespace Loader
 
 		if (!file)
 		{
-			Log("Couldn't open %s for reading\n", filename.c_str());
+			Log("[ERROR] Couldn't open %s for reading\n", filename.c_str());
 			return false;
 		}
 
-		Log("Loading Scene..\n");
+		Log("[INFO] Loading Scene has begun!\n");
 
 		struct MaterialData
 		{

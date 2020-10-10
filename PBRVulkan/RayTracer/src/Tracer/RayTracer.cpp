@@ -82,7 +82,8 @@ namespace Tracer
 
 	void RayTracer::LoadScene()
 	{
-		const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
+		//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
+		const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
 		scene.reset(new Scene(CONFIG, *device, *commandPool));
 	}
 

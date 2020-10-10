@@ -10,6 +10,7 @@ namespace Assets
 		GLASS
 	};
 
+	// Material data structure layout is 32 * 4 bytes
 	class Material
 	{
 	public:
@@ -28,14 +29,21 @@ namespace Assets
 			heightmapTexID = -1.0f;
 		};
 
+		// 32 bytes
 		glm::vec3 albedo{};
 		float materialType;
+
+		// 32 bytes
 		glm::vec3 emission{};
 		float unused{};
+
+		// 32 bytes
 		float metallic;
 		float roughness;
 		float ior;
 		float transmittance;
+
+		// 32 bytes
 		float albedoTexID;
 		float metallicRoughnessTexID;
 		float normalmapTexID;

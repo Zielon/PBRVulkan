@@ -20,8 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py" />
-    <None Include="Scripts\Run.bat" />
     <None Include="src\Assets\Shaders\Fragment.frag" />
+    <None Include="src\Assets\Shaders\Structs.glsl" />
     <None Include="src\Assets\Shaders\Vertex.vert" />
   </ItemGroup>
   <ItemGroup>
@@ -209,7 +209,8 @@
       <AdditionalDependencies>C:\VulkanSDK\1.2.148.1\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>call $(ProjectDir)Scripts\Run.bat</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -236,7 +237,8 @@
       <AdditionalDependencies>C:\VulkanSDK\1.2.148.1\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>call $(ProjectDir)Scripts\Run.bat</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>

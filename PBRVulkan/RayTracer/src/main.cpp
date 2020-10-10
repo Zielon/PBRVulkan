@@ -2,6 +2,9 @@
 
 int main()
 {
-    Tracer::RayTracer tracer;
-    tracer.Run();
+	// Compile all shaders from Assets folder
+	std::system("python ./Scripts/Compile.py");
+
+	Tracer::RayTracer tracer;
+	tracer.Run();
 }
