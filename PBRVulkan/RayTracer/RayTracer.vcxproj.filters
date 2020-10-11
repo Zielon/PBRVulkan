@@ -28,6 +28,9 @@
     <Filter Include="Loader">
       <UniqueIdentifier>{a36805f2-2749-48d3-aac0-acc7794e4333}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Acceleration">
+      <UniqueIdentifier>{07960728-a512-4715-9578-e102e42df377}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">

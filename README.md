@@ -20,3 +20,4 @@ The scene description and assets are taken from GLSL-PathTracer project [4].
 [2] [PBR Book](http://www.pbr-book.org/3ed-2018/contents.html) \
 [4] [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) \
 [5] [RayTracingInVulkan](https://github.com/GPSnoopy/RayTracingInVulkan) \
+[6] [Vulkan Ray Tracing Tutorial](https://nvpro-samples.github.io/vk_raytracing_tutorial_KHR/)
