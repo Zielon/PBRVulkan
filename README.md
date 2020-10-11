@@ -12,11 +12,11 @@ Real-time path tracer based on the extension `VK_KHR_ray_tracing`.
 C++17 is needed to compile the project.
 
 #### Assets
-The scene description and assets are taken from GLSL-PathTracer project.
+The scene description and assets are taken from GLSL-PathTracer project [4].
 
 #### References/Credits:
 [0] [Vulkan Tutorial](https://vulkan-tutorial.com/)\
 [1] [Vulkan Ray Tracing](https://nvpro-samples.github.io/vk_raytracing_tutorial_KHR/)\
-[2] [PBR Book](http://www.pbr-book.org/3ed-2018/contents.html)
-[4] [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer)
-[5] [RayTracingInVulkan](https://github.com/GPSnoopy/RayTracingInVulkan)
+[2] [PBR Book](http://www.pbr-book.org/3ed-2018/contents.html) \
+[4] [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) \
+[5] [RayTracingInVulkan](https://github.com/GPSnoopy/RayTracingInVulkan) \
