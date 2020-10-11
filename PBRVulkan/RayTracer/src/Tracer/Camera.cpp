@@ -5,7 +5,7 @@
 
 float Tracer::Camera::DELTA_TIME = 0;
 float Tracer::Camera::LAST_FRAME_TIME = 0;
-float SPEED = 15.5f;
+float SPEED = 5.f;
 float SENSITIVITY = 0.10f;
 
 namespace Tracer
@@ -32,36 +32,32 @@ namespace Tracer
 
 	void Camera::OnKeyChanged(int key, int scanCode, int action, int mod)
 	{
-		const float velocity = SPEED * DELTA_TIME;
-
 		switch (key)
 		{
 		case GLFW_KEY_S:
-			position -= front * velocity;
+			isCameraDown = action != GLFW_RELEASE;
 			break;
 		case GLFW_KEY_W:
-			position += front * velocity;
+			isCameraUp = action != GLFW_RELEASE;
 			break;
 		case GLFW_KEY_A:
-			position -= right * velocity;
+			isCameraLeft = action != GLFW_RELEASE;
 			break;
 		case GLFW_KEY_D:
-			position += right * velocity;
+			isCameraRight = action != GLFW_RELEASE;
 			break;
 		default:
 			break;
 		}
-
-		Update();
 	}
 
 	void Camera::OnCursorPositionChanged(double xpos, double ypos)
 	{
-		if (firstMouse)
+		if (isFirstMouseEvent)
 		{
 			lastX = xpos;
 			lastY = ypos;
-			firstMouse = false;
+			isFirstMouseEvent = false;
 			return;
 		}
 
@@ -71,7 +67,7 @@ namespace Tracer
 		lastX = xpos;
 		lastY = ypos;
 
-		if (!activeMouse) return;
+		if (!isMousePressed) return;
 
 		xoffset *= SENSITIVITY;
 		yoffset *= SENSITIVITY;
@@ -89,8 +85,16 @@ namespace Tracer
 	{
 		if (button == GLFW_MOUSE_BUTTON_LEFT)
 		{
-			activeMouse = action == GLFW_PRESS;
+			isMousePressed = action == GLFW_PRESS;
 		}
+	}
+
+	void Camera::OnEventChanged()
+	{
+		if (isCameraDown) Move(DOWN);
+		if (isCameraLeft) Move(LEFT);
+		if (isCameraRight) Move(RIGHT);
+		if (isCameraUp) Move(UP);
 	}
 
 	glm::mat4 Camera::GetView() const
@@ -100,7 +104,7 @@ namespace Tracer
 
 	glm::mat4 Camera::GetProjection() const
 	{
-		auto projection = glm::perspective(glm::radians(fov), 1.f, 0.1f, 100.0f);
+		auto projection = glm::perspective(glm::radians(fov), 1.f, 0.1f, 1000.0f);
 		projection[1][1] *= -1;
 
 		return projection;
@@ -121,13 +125,36 @@ namespace Tracer
 	void Camera::Update()
 	{
 		glm::vec3 direction;
+
 		direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 		direction.y = sin(glm::radians(pitch));
 		direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 
 		front = normalize(direction);
-
 		right = normalize(cross(front, worldUp));
 		up = normalize(cross(right, front));
+	}
+
+	void Camera::Move(Action action)
+	{
+		const float distance = SPEED * DELTA_TIME;
+
+		switch (action)
+		{
+		case DOWN:
+			position -= front * distance;
+			break;
+		case UP:
+			position += front * distance;
+			break;
+		case LEFT:
+			position -= right * distance;
+			break;
+		case RIGHT:
+			position += right * distance;
+			break;
+		default:
+			break;
+		}
 	}
 }

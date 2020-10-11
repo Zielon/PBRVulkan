@@ -4,6 +4,14 @@
 
 namespace Tracer
 {
+	enum Action
+	{
+		LEFT,
+		RIGHT,
+		UP,
+		DOWN
+	};
+
 	class Camera
 	{
 	public:
@@ -16,16 +24,20 @@ namespace Tracer
 
 		void OnMouseButtonChanged(int button, int action, int mods);
 
+		void OnEventChanged();
+
+		void static UpdateTime();
+
 		[[nodiscard]] glm::mat4 GetView() const;
 
 		[[nodiscard]] glm::mat4 GetProjection() const;
 
 		[[nodiscard]] glm::vec3 GetDirection() const;
 
-		void static UpdateTime();
-
 	private:
 		void Update();
+
+		void Move(Action action);
 
 		glm::vec3 position;
 		glm::vec3 front{};
@@ -37,8 +49,13 @@ namespace Tracer
 
 		float lastX{};
 		float lastY{};
-		bool firstMouse = false;
-		bool activeMouse = false;
+
+		bool isFirstMouseEvent = false;
+		bool isMousePressed = false;
+		bool isCameraLeft = false;
+		bool isCameraRight = false;
+		bool isCameraUp = false;
+		bool isCameraDown = false;
 
 		float pitch, yaw, fov, focalDist, aperture, radius;
 

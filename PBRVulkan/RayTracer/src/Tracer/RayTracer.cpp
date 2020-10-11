@@ -77,6 +77,8 @@ namespace Tracer
 		}
 		vkCmdEndRenderPass(commandBuffer);
 
+		scene->GetCamera().OnEventChanged();
+
 		menu->Render(framebuffer, commandBuffer);
 	}
 

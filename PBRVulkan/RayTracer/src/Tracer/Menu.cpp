@@ -135,10 +135,9 @@ namespace Tracer
 		{
 			ImGui::Text("Controls");
 			ImGui::Separator();
-			ImGui::Text("Help");
-			ImGui::Separator();
-			ImGui::Text("Scene");
-			ImGui::Separator();
+			ImGui::Text("Program usage: \n"
+				" 1) Camera keys: \n   W - forward \n   D - right \n   A - left \n   S - back \n"
+				" 2) Mouse: \n   use scroll \n   press left button [move] \n");
 		}
 
 		ImGui::End();
