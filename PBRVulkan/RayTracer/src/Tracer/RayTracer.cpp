@@ -16,7 +16,6 @@
 #include "../Vulkan/Window.h"
 #include "../Vulkan/Buffer.h"
 #include "../Vulkan/Device.h"
-#include "../Vulkan/DescriptorsManager.h"
 
 namespace Tracer
 {

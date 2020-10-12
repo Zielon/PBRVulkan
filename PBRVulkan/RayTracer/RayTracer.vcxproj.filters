@@ -28,28 +28,46 @@
     <Filter Include="Loader">
       <UniqueIdentifier>{a36805f2-2749-48d3-aac0-acc7794e4333}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Acceleration">
-      <UniqueIdentifier>{07960728-a512-4715-9578-e102e42df377}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Rasterizer">
       <UniqueIdentifier>{e5c9479e-0615-4f95-b113-a9fc661e3f16}</UniqueIdentifier>
     </Filter>
     <Filter Include="Raytracer">
       <UniqueIdentifier>{bb8e4efb-61f9-4c60-80f9-8009398b5485}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Shaders\Rasterizer">
+      <UniqueIdentifier>{2a31afd0-b9b0-4aab-8217-ecc41d1b0bf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders\Raytracer">
+      <UniqueIdentifier>{beb57e8b-a27e-4c33-ae4f-1e97dfb6dec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders\Raytracer\Integrators">
+      <UniqueIdentifier>{10be8f5e-c6dd-4315-aaa8-3cb1291d48b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">
       <Filter>Scripts</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Fragment.frag">
-      <Filter>Assets\Shaders</Filter>
+    <None Include="src\Assets\Shaders\Rasterizer\Fragment.frag">
+      <Filter>Assets\Shaders\Rasterizer</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Vertex.vert">
-      <Filter>Assets\Shaders</Filter>
+    <None Include="src\Assets\Shaders\Rasterizer\Structs.glsl">
+      <Filter>Assets\Shaders\Rasterizer</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Structs.glsl">
-      <Filter>Assets\Shaders</Filter>
+    <None Include="src\Assets\Shaders\Rasterizer\Vertex.vert">
+      <Filter>Assets\Shaders\Rasterizer</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Raytracer\Raytracing.rchit">
+      <Filter>Assets\Shaders\Raytracer</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Raytracer\Raytracing.rgen">
+      <Filter>Assets\Shaders\Raytracer</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Raytracer\Raytracing.rmiss">
+      <Filter>Assets\Shaders\Raytracer</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Raytracer\Integrators\Default.glsl">
+      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -153,16 +171,16 @@
     <ClCompile Include="src\Tracer\Camera.cpp">
       <Filter>Tracer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vulkan\Extensions.cpp">
-      <Filter>Acceleration</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Vulkan\ShaderBindingTable.cpp">
-      <Filter>Acceleration</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vulkan\RasterizerGraphicsPipeline.cpp">
       <Filter>Rasterizer</Filter>
     </ClCompile>
     <ClCompile Include="src\Vulkan\RaytracerGraphicsPipeline.cpp">
+      <Filter>Raytracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Extensions.cpp">
+      <Filter>Raytracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\ShaderBindingTable.cpp">
       <Filter>Raytracer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -278,16 +296,16 @@
     <ClInclude Include="src\Tracer\Camera.h">
       <Filter>Tracer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vulkan\Extensions.h">
-      <Filter>Acceleration</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Vulkan\ShaderBindingTable.h">
-      <Filter>Acceleration</Filter>
-    </ClInclude>
     <ClInclude Include="src\Vulkan\RasterizerGraphicsPipeline.h">
       <Filter>Rasterizer</Filter>
     </ClInclude>
     <ClInclude Include="src\Vulkan\RaytracerGraphicsPipeline.h">
+      <Filter>Raytracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\ShaderBindingTable.h">
+      <Filter>Raytracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Extensions.h">
       <Filter>Raytracer</Filter>
     </ClInclude>
   </ItemGroup>

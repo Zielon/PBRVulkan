@@ -36,11 +36,6 @@ namespace Vulkan
 			return pipeline;
 		}
 
-		[[nodiscard]] const class Device& GetDevice() const
-		{
-			return device;
-		}
-
 		[[nodiscard]] const std::vector<VkDescriptorSet>& GetDescriptorSets() const
 		{
 			return descriptorSets;

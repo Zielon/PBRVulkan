@@ -25,8 +25,8 @@ namespace Vulkan
 		renderPass(new RenderPass(device, swapChain, true, true))
 	{
 		// Load shaders.
-		const Shader vertShader(device, "Vertex.spv");
-		const Shader fragShader(device, "Fragment.spv");
+		const Shader vertShader(device, "Vertex.vert.spv");
+		const Shader fragShader(device, "Fragment.frag.spv");
 
 		VkPipelineShaderStageCreateInfo shaderStages[] =
 		{

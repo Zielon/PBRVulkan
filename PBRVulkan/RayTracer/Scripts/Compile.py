@@ -1,24 +1,27 @@
 import os
+import glob
 import subprocess
 from shutil import copyfile
 
 # The root is \PBRVulkan\Vulkan\
 
-root = os.path.dirname(os.path.abspath(__file__)) 
-shaders = root + "/../src/Assets/Shaders/"
+output_folder = os.path.dirname(os.path.abspath(__file__)) 
+shaders = output_folder + "/../src/Assets/Shaders/"
 assets = "/../../Assets/Shaders/"
 
-mk = root + assets
+mk = output_folder + assets
 if not os.path.exists(mk):
     os.makedirs(mk)
 
-extensionsToCheck = ('.frag', '.vert')
+extensionsToCheck = ('.frag', '.vert', 'rchit', 'rgen', 'rmiss')
 
-for filename in os.listdir(shaders):
-    if not filename.endswith(extensionsToCheck):
+for path in glob.iglob(shaders + '**/*', recursive=True):
+
+    if not path.endswith(extensionsToCheck):
         continue
-    path = shaders + filename
-    output = root + assets + filename.split(".")[0] + ".spv"
+
+    shader_name = os.path.split(path)[-1] + ".spv"
+    output = output_folder + assets + shader_name
     cmd = "glslc " + path + " -o " + output
     subprocess.run(cmd.split())
-    print("[INFO] {} has been compiled".format(filename))
+    print("[INFO] {} has been compiled".format(shader_name))
