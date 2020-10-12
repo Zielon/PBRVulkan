@@ -5,6 +5,9 @@
 
 namespace Vulkan
 {
+	/*
+	 * Raytracer assumes that swap chain is already initialized by rasterizer.
+	 */
 	class Raytracer : public Rasterizer
 	{
 	public:

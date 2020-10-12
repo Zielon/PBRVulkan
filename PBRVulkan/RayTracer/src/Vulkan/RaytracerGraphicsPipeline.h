@@ -26,6 +26,10 @@ namespace Vulkan
 		const Device& device;
 		const SwapChain& swapChain;
 
+		uint32_t rayGenIndex;
+		uint32_t missIndex;
+		uint32_t triangleHitGroupIndex;
+
 		VkPipeline pipeline{};
 		VkPipelineLayout pipelineLayout{};
 

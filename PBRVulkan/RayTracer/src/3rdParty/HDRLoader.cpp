@@ -53,7 +53,7 @@ int LowerBound(const float* array, int lower, int upper, const float value)
 	return lower;
 }
 
-void HDRLoader::buildDistributions(HDRData* res)
+void HDRLoader::BuildDistributions(HDRData* res)
 {
 	int width = res->width;
 	int height = res->height;
@@ -131,7 +131,7 @@ void HDRLoader::buildDistributions(HDRData* res)
 	delete[] cdf1D;
 }
 
-HDRData* HDRLoader::load(const char* fileName)
+HDRData* HDRLoader::Load(const char* fileName)
 {
 	int i;
 	char str[200];
@@ -206,7 +206,7 @@ HDRData* HDRLoader::load(const char* fileName)
 	delete [] scanline;
 	fclose(file);
 
-	buildDistributions(res);
+	BuildDistributions(res);
 	return res;
 }
 

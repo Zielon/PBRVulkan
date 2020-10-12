@@ -13,7 +13,7 @@ namespace Vulkan
 	{
 		Rasterizer::CreateSwapChain();
 
-		// TODO
+		raytracerGraphicsPipeline.reset(new RaytracerGraphicsPipeline(*swapChain, *device, *scene, uniformBuffers));
 	}
 
 	void Raytracer::DeleteSwapChain() {}
