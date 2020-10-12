@@ -4,7 +4,7 @@ namespace Vulkan
 {
 	Instance::Instance(const Window& window, const std::vector<const char*>& validationLayers): window(window)
 	{
-		// Application info
+		// Core info
 		VkApplicationInfo appInfo = {};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		appInfo.pApplicationName = "VulkanRayTracer";

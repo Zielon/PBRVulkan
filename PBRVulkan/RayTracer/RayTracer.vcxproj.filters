@@ -71,9 +71,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Vulkan\Application.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vulkan\Device.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
@@ -102,9 +99,6 @@
       <Filter>Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Tracer\Menu.cpp">
-      <Filter>Tracer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tracer\RayTracer.cpp">
       <Filter>Tracer</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGui\imgui_impl_glfw.cpp">
@@ -183,11 +177,20 @@
     <ClCompile Include="src\Vulkan\ShaderBindingTable.cpp">
       <Filter>Raytracer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vulkan\Core.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\Application.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Raytracer.cpp">
+      <Filter>Raytracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Rasterizer.cpp">
+      <Filter>Rasterizer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Vulkan\Application.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="src\Vulkan\Device.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
@@ -216,9 +219,6 @@
       <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Tracer\Menu.h">
-      <Filter>Tracer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Tracer\RayTracer.h">
       <Filter>Tracer</Filter>
     </ClInclude>
     <ClInclude Include="src\ImGui\imgui_impl_glfw.h">
@@ -307,6 +307,18 @@
     </ClInclude>
     <ClInclude Include="src\Vulkan\Extensions.h">
       <Filter>Raytracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Core.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\Application.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Raytracer.h">
+      <Filter>Raytracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Rasterizer.h">
+      <Filter>Rasterizer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

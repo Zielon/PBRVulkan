@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "Core.h"
 
 #include <array>
 
@@ -16,26 +16,20 @@
 #include "Buffer.h"
 #include "CommandPool.h"
 #include "DepthBuffer.h"
-#include "DescriptorsManager.h"
 
 #include "../Geometry/MVP.h"
 #include "../Tracer/Scene.h"
 
 namespace Vulkan
 {
-	Application::Application()
+	Core::Core()
 	{
 		CreateInstance();
 		CreatePhysicalDevice();
 	}
 
-	Application::~Application()
+	Core::~Core()
 	{
-		// Destructor has to call in the right order all graphics components
-		scene.reset();
-
-		DeleteSwapChain();
-
 		commandPool.reset();
 		device.reset();
 		surface.reset();
@@ -43,7 +37,7 @@ namespace Vulkan
 		window.reset();
 	}
 
-	void Application::DrawFrame()
+	void Core::DrawFrame()
 	{
 		auto& inFlightFence = inFlightFences[currentFrame];
 
@@ -79,7 +73,7 @@ namespace Vulkan
 		currentFrame = (currentFrame + 1) % inFlightFences.size();
 	}
 
-	void Application::Run()
+	void Core::Run()
 	{
 		while (!glfwWindowShouldClose(window->Get()))
 		{
@@ -88,7 +82,7 @@ namespace Vulkan
 		}
 	}
 
-	void Application::Present(uint32_t imageIndex)
+	void Core::Present(uint32_t imageIndex)
 	{
 		VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame]->Get() };
 		VkSwapchainKHR swapChains[] = { swapChain->Get() };
@@ -108,7 +102,7 @@ namespace Vulkan
 		}
 	}
 
-	void Application::QueueSubmit(VkCommandBuffer commandBuffer)
+	void Core::QueueSubmit(VkCommandBuffer commandBuffer)
 	{
 		auto& fence = inFlightFences[currentFrame];
 
@@ -130,7 +124,7 @@ namespace Vulkan
 		VK_CHECK(vkQueueSubmit(device->GraphicsQueue, 1, &submitInfo, fence->Get()), "Failed to submit!");
 	}
 
-	void Application::CreateInstance()
+	void Core::CreateInstance()
 	{
 #ifdef NDEBUG
 		const std::vector<const char*> validationLayers = {};
@@ -142,65 +136,19 @@ namespace Vulkan
 		surface.reset(new Surface(*instance));
 	}
 
-	void Application::DeleteSwapChain()
-	{
-		commandBuffers.reset();
-		swapChainFrameBuffers.clear();
-		rasterizerGraphicsPipeline.reset();
-		uniformBuffers.clear();
-		inFlightFences.clear();
-		renderFinishedSemaphores.clear();
-		imageAvailableSemaphores.clear();
-		depthBuffer.reset();
-		swapChain.reset();
-	}
-
-	void Application::UpdateSwapChain()
+	void Core::UpdateSwapChain()
 	{
 		device->WaitIdle();
-		
+
 		DeleteSwapChain();
 		CreateSwapChain();
 	}
 
-	void Application::CreateSwapChain()
-	{
-		swapChain.reset(new SwapChain(*device));
-		depthBuffer.reset(new DepthBuffer(*commandPool, swapChain->Extent));
-
-		for (const auto& _ : swapChain->GetImageViews())
-		{
-			inFlightFences.emplace_back(new Fence(*device));
-			imageAvailableSemaphores.emplace_back(new Semaphore(*device));
-			renderFinishedSemaphores.emplace_back(new Semaphore(*device));
-			uniformBuffers.emplace_back(
-				new Buffer(*device, sizeof(Uniforms::MVP),
-				           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-				           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
-		}
-
-		CreateGraphicsPipeline();
-	}
-
-	void Application::CreatePhysicalDevice()
+	void Core::CreatePhysicalDevice()
 	{
 		auto* physicalDevice = instance->GetDevices().front();
 
 		device.reset(new Device(physicalDevice, *surface));
 		commandPool.reset(new CommandPool(*device));
-	}
-
-	void Application::CreateGraphicsPipeline()
-	{
-		rasterizerGraphicsPipeline.reset(
-			new RasterizerGraphicsPipeline(*swapChain, *device, *scene, uniformBuffers));
-
-		for (const auto& imageView : swapChain->GetImageViews())
-		{
-			swapChainFrameBuffers.emplace_back(
-				new Framebuffer(*imageView, *swapChain, *depthBuffer, rasterizerGraphicsPipeline->GetRenderPass()));
-		}
-
-		commandBuffers.reset(new CommandBuffers(*commandPool, static_cast<uint32_t>(swapChainFrameBuffers.size())));
 	}
 }

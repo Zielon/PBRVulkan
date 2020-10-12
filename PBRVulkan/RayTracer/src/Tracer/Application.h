@@ -1,14 +1,19 @@
 #pragma once
 
-#include "../Vulkan/Application.h"
+#include "../Vulkan/Raytracer.h"
 
 namespace Tracer
 {
-	class RayTracer final : public Vulkan::Application
+	/**
+	 * The inheritance chain is as follows:
+	 *
+	 * [Application -> Raytracer -> Rasterizer -> Core]
+	 */
+	class Application final : public Vulkan::Raytracer
 	{
 	public:
-		RayTracer();
-		~RayTracer();
+		Application();
+		~Application();
 
 		void Run() override;
 

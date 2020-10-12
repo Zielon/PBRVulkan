@@ -12,23 +12,22 @@ namespace Tracer
 
 namespace Vulkan
 {
-	class Application
+	class Core
 	{
 	public:
-		NON_COPIABLE(Application)
+		NON_COPIABLE(Core)
 
-		explicit Application();
-		virtual ~Application();
+		explicit Core();
+		virtual ~Core();
 
 		virtual void Run() = 0;
 
-		void CreateSwapChain();
-		void DeleteSwapChain();
+		virtual void CreateSwapChain() = 0;
+		virtual void DeleteSwapChain() = 0;
 		void UpdateSwapChain();
 
 	protected:
 		void DrawFrame();
-		void CreateGraphicsPipeline();
 		void CreatePhysicalDevice();
 		void CreateInstance();
 		void QueueSubmit(VkCommandBuffer commandBuffer);
@@ -52,7 +51,6 @@ namespace Vulkan
 		std::unique_ptr<class Device> device;
 		std::unique_ptr<class Surface> surface;
 		std::unique_ptr<class SwapChain> swapChain;
-		std::unique_ptr<class RasterizerGraphicsPipeline> rasterizerGraphicsPipeline;
 		std::unique_ptr<class CommandBuffers> commandBuffers;
 		std::unique_ptr<class CommandPool> commandPool;
 		std::unique_ptr<class DepthBuffer> depthBuffer;
