@@ -43,6 +43,9 @@
     <Filter Include="Assets\Shaders\Raytracer\Integrators">
       <UniqueIdentifier>{10be8f5e-c6dd-4315-aaa8-3cb1291d48b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3rdParty">
+      <UniqueIdentifier>{26bdf9b1-5805-4c41-92bd-53cbff40afbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">
@@ -189,6 +192,9 @@
     <ClCompile Include="src\Vulkan\Rasterizer.cpp">
       <Filter>Rasterizer</Filter>
     </ClCompile>
+    <ClCompile Include="src\3rdParty\HDRLoader.cpp">
+      <Filter>3rdParty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vulkan\Device.h">
@@ -319,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="src\Vulkan\Rasterizer.h">
       <Filter>Rasterizer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3rdParty\HDRLoader.h">
+      <Filter>3rdParty</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

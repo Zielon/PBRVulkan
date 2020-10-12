@@ -29,6 +29,7 @@
     <None Include="src\Assets\Shaders\Raytracer\Raytracing.rmiss" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\3rdParty\HDRLoader.cpp" />
     <ClCompile Include="src\Assets\Mesh.cpp" />
     <ClCompile Include="src\Assets\Texture.cpp" />
     <ClCompile Include="src\ImGui\imgui_impl_glfw.cpp" />
@@ -71,6 +72,7 @@
     <ClCompile Include="src\Vulkan\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\3rdParty\HDRLoader.h" />
     <ClInclude Include="src\Assets\Light.h" />
     <ClInclude Include="src\Assets\Material.h" />
     <ClInclude Include="src\Assets\Mesh.h" />
