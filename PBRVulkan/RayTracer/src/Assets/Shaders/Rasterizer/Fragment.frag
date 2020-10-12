@@ -30,6 +30,6 @@ void main()
 	}
 	else
 	{
-		discard;
+		outColor = vec4(material.albedo.xyz * d, 1.0);
 	}
 }
