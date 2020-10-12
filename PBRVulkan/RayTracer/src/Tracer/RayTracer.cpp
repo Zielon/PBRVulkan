@@ -48,7 +48,7 @@ namespace Tracer
 
 		VkBuffer vertexBuffers[] = { scene->GetVertexBuffer().Get() };
 		const VkBuffer indexBuffer = scene->GetIndexBuffer().Get();
-		VkDescriptorSet descriptorSets[] = { descriptorsManager->GetDescriptorSets()[imageIndex] };
+		VkDescriptorSet descriptorSets[] = { rasterizerGraphicsPipeline->GetDescriptorSets()[imageIndex] };
 		VkDeviceSize offsets[] = { 0 };
 
 		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);

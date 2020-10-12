@@ -12,6 +12,20 @@ namespace Tracer
 
 namespace Vulkan
 {
+	/*
+	 * Descriptor configuration used for:
+	 *	VkDescriptorPoolSize
+	 *	VkDescriptorBufferInfo
+	 *	VkDescriptorImageInfo
+	 */
+	struct DescriptorBinding
+	{
+		uint32_t Binding;
+		uint32_t DescriptorCount;
+		VkDescriptorType Type;
+		VkShaderStageFlags Stage;
+	};
+
 	class DescriptorsManager final
 	{
 	public:
@@ -19,8 +33,7 @@ namespace Vulkan
 
 		DescriptorsManager(const class Device& device,
 		                   const class SwapChain& swapChain,
-		                   const class Tracer::Scene& scene,
-		                   const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers);
+		                   const std::vector<DescriptorBinding>& descriptorBindings);
 		~DescriptorsManager();
 
 		[[nodiscard]] VkDescriptorPool GetDescriptorPool() const
@@ -33,20 +46,12 @@ namespace Vulkan
 			return *descriptorSetLayout;
 		}
 
-		[[nodiscard]] const std::vector<VkDescriptorSet>& GetDescriptorSets() const
-		{
-			return descriptorSets;
-		}
-
 	private:
 		const Device& device;
 		const SwapChain& swapChain;
 		VkDescriptorPool descriptorPool{};
-		std::vector<VkDescriptorSet> descriptorSets;
 		std::unique_ptr<class DescriptorSetLayout> descriptorSetLayout;
 
-		void CreateDescriptorPool(const Tracer::Scene& scene);
-		void CreateDescriptorSets(const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers,
-		                          const Tracer::Scene& scene);
+		void CreateDescriptorPool(const std::vector<DescriptorBinding>& descriptorBindings);
 	};
 }

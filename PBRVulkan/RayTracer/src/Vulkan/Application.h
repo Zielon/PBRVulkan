@@ -24,6 +24,7 @@ namespace Vulkan
 
 		void CreateSwapChain();
 		void DeleteSwapChain();
+		void UpdateSwapChain();
 
 	protected:
 		void DrawFrame();
@@ -54,7 +55,6 @@ namespace Vulkan
 		std::unique_ptr<class RasterizerGraphicsPipeline> rasterizerGraphicsPipeline;
 		std::unique_ptr<class CommandBuffers> commandBuffers;
 		std::unique_ptr<class CommandPool> commandPool;
-		std::unique_ptr<class DescriptorsManager> descriptorsManager;
 		std::unique_ptr<class DepthBuffer> depthBuffer;
 
 		// Per image in swap chain specific components	

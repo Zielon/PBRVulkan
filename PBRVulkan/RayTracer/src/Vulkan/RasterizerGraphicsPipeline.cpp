@@ -5,26 +5,24 @@
 #include "Shader.h"
 #include "RenderPass.h"
 #include "DescriptorSetLayout.h"
+#include "DescriptorsManager.h"
+#include "Buffer.h"
 
+#include "../Tracer/Scene.h"
+#include "../Tracer/TextureImage.h"
+#include "../Geometry/MVP.h"
 #include "../Geometry/Vertex.h"
 
 namespace Vulkan
 {
-	RasterizerGraphicsPipeline::RasterizerGraphicsPipeline(const SwapChain& swapChain,
-	                                   const Device& device,
-	                                   const DescriptorSetLayout& descriptorSetLayout):
-		device(device), swapChain(swapChain), descriptorSetLayout(descriptorSetLayout),
+	RasterizerGraphicsPipeline::RasterizerGraphicsPipeline(
+		const SwapChain& swapChain,
+		const Device& device,
+		const Tracer::Scene& scene,
+		const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers):
+		device(device),
+		swapChain(swapChain),
 		renderPass(new RenderPass(device, swapChain, true, true))
-	{
-		CreatePipeline();
-	}
-
-	VkRenderPass RasterizerGraphicsPipeline::GetRenderPass() const
-	{
-		return renderPass->Get();
-	}
-
-	void RasterizerGraphicsPipeline::CreatePipeline()
 	{
 		// Load shaders.
 		const Shader vertShader(device, "Vertex.spv");
@@ -126,7 +124,83 @@ namespace Vulkan
 		colorBlending.blendConstants[2] = 0.0f;
 		colorBlending.blendConstants[3] = 0.0f;
 
-		VkDescriptorSetLayout descriptorSetLayouts[] = { descriptorSetLayout.Get() };
+		std::vector<DescriptorBinding> descriptorBindings =
+		{
+			{ 0, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT },
+			{ 1, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT },
+			{ 2, scene.GetTextureSize(), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT }
+		};
+
+		descriptorsManager.reset(new DescriptorsManager(device, swapChain, descriptorBindings));
+
+		std::vector<VkDescriptorSetLayout> layouts(swapChain.GetImage().size(),
+		                                           descriptorsManager->GetDescriptorSetLayout().Get());
+
+		VkDescriptorSetAllocateInfo allocInfo = {};
+		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+		allocInfo.descriptorPool = descriptorsManager->GetDescriptorPool();
+		allocInfo.descriptorSetCount = static_cast<uint32_t>(swapChain.GetImage().size());
+		allocInfo.pSetLayouts = layouts.data();
+
+		descriptorSets.resize(swapChain.GetImage().size());
+
+		VK_CHECK(vkAllocateDescriptorSets(device.Get(), &allocInfo, descriptorSets.data()),
+		         "Allocate descriptor sets");
+
+		for (size_t imageIndex = 0; imageIndex < swapChain.GetImage().size(); imageIndex++)
+		{
+			std::array<VkWriteDescriptorSet, 3> descriptorWrites{};
+
+			// Uniforms descriptor
+			VkDescriptorBufferInfo bufferInfo{};
+			bufferInfo.buffer = uniformBuffers[imageIndex]->Get();
+			bufferInfo.offset = 0;
+			bufferInfo.range = sizeof(Uniforms::MVP);
+
+			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[0].dstSet = descriptorSets[imageIndex];
+			descriptorWrites[0].dstBinding = 0;
+			descriptorWrites[0].dstArrayElement = 0;
+			descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			descriptorWrites[0].descriptorCount = 1;
+			descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+			// Material descriptor
+			VkDescriptorBufferInfo materialInfo = {};
+			materialInfo.buffer = scene.GetMaterialBuffer().Get();
+			materialInfo.range = VK_WHOLE_SIZE;
+
+			descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[1].dstSet = descriptorSets[imageIndex];
+			descriptorWrites[1].dstBinding = 1;
+			descriptorWrites[1].dstArrayElement = 0;
+			descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+			descriptorWrites[1].descriptorCount = 1;
+			descriptorWrites[1].pBufferInfo = &materialInfo;
+
+			// Texture descriptor
+			std::vector<VkDescriptorImageInfo> imageInfos(scene.GetTextures().size());
+
+			for (size_t t = 0; t < imageInfos.size(); ++t)
+			{
+				imageInfos[t].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+				imageInfos[t].imageView = scene.GetTextures()[t]->GetImageView();
+				imageInfos[t].sampler = scene.GetTextures()[t]->GetTextureSampler();
+			}
+
+			descriptorWrites[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[2].dstSet = descriptorSets[imageIndex];
+			descriptorWrites[2].dstBinding = 2;
+			descriptorWrites[2].dstArrayElement = 0;
+			descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			descriptorWrites[2].descriptorCount = static_cast<uint32_t>(imageInfos.size());
+			descriptorWrites[2].pImageInfo = imageInfos.data();
+
+			vkUpdateDescriptorSets(device.Get(), static_cast<uint32_t>(descriptorWrites.size()),
+			                       descriptorWrites.data(), 0, nullptr);
+		}
+
+		VkDescriptorSetLayout descriptorSetLayouts[] = { descriptorsManager->GetDescriptorSetLayout().Get() };
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -160,6 +234,11 @@ namespace Vulkan
 		         "Create graphics pipeline");
 	}
 
+	VkRenderPass RasterizerGraphicsPipeline::GetRenderPass() const
+	{
+		return renderPass->Get();
+	}
+
 	RasterizerGraphicsPipeline::~RasterizerGraphicsPipeline()
 	{
 		if (pipeline != nullptr)
@@ -175,5 +254,7 @@ namespace Vulkan
 			vkDestroyPipelineLayout(device.Get(), pipelineLayout, nullptr);
 			pipelineLayout = nullptr;
 		}
+
+		descriptorSets.clear();
 	}
 }

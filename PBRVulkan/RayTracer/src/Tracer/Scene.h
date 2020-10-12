@@ -80,6 +80,11 @@ namespace Tracer
 			return textureImages;
 		}
 
+		[[nodiscard]] uint32_t GetTextureSize() const
+		{
+			return textureImages.size();
+		}
+
 		[[nodiscard]] uint32_t GetIndexSize() const
 		{
 			return indeciesSize;

@@ -147,13 +147,20 @@ namespace Vulkan
 		commandBuffers.reset();
 		swapChainFrameBuffers.clear();
 		rasterizerGraphicsPipeline.reset();
-		descriptorsManager.reset();
 		uniformBuffers.clear();
 		inFlightFences.clear();
 		renderFinishedSemaphores.clear();
 		imageAvailableSemaphores.clear();
 		depthBuffer.reset();
 		swapChain.reset();
+	}
+
+	void Application::UpdateSwapChain()
+	{
+		device->WaitIdle();
+		
+		DeleteSwapChain();
+		CreateSwapChain();
 	}
 
 	void Application::CreateSwapChain()
@@ -185,9 +192,8 @@ namespace Vulkan
 
 	void Application::CreateGraphicsPipeline()
 	{
-		descriptorsManager.reset(new DescriptorsManager(*device, *swapChain, *scene, uniformBuffers));
 		rasterizerGraphicsPipeline.reset(
-			new RasterizerGraphicsPipeline(*swapChain, *device, descriptorsManager->GetDescriptorSetLayout()));
+			new RasterizerGraphicsPipeline(*swapChain, *device, *scene, uniformBuffers));
 
 		for (const auto& imageView : swapChain->GetImageViews())
 		{

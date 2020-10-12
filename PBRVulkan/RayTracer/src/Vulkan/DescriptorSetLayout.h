@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DescriptorsManager.h"
 #include "Vulkan.h"
 
 namespace Tracer
@@ -18,7 +19,7 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(DescriptorSetLayout)
 
-		DescriptorSetLayout(const class Device& device, const Tracer::Scene& scene);
+		DescriptorSetLayout(const class Device& device, const std::vector<DescriptorBinding>& descriptorBindings);
 		~DescriptorSetLayout();
 
 		[[nodiscard]] VkDescriptorSetLayout Get() const
