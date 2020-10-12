@@ -9,15 +9,15 @@ namespace Vulkan
 	 *  The graphics pipeline is the sequence of operations that take the vertices and
 	 *  textures of your meshes all the way to the pixels in the render targets.
 	 */
-	class GraphicsPipeline final
+	class RasterizerGraphicsPipeline final
 	{
 	public:
-		NON_COPIABLE(GraphicsPipeline)
+		NON_COPIABLE(RasterizerGraphicsPipeline)
 
-		GraphicsPipeline(const class SwapChain& swapChain,
+		RasterizerGraphicsPipeline(const class SwapChain& swapChain,
 		                 const class Device& device,
 		                 const class DescriptorSetLayout& descriptorSetLayout);
-		~GraphicsPipeline();
+		~RasterizerGraphicsPipeline();
 
 		[[nodiscard]] VkPipelineLayout GetPipelineLayout() const
 		{
@@ -42,8 +42,8 @@ namespace Vulkan
 		const Device& device;
 		const SwapChain& swapChain;
 		const DescriptorSetLayout& descriptorSetLayout;
-		VkPipeline pipeline;
-		VkPipelineLayout pipelineLayout;
+		VkPipeline pipeline{};
+		VkPipelineLayout pipelineLayout{};
 		std::unique_ptr<class RenderPass> renderPass;
 	};
 }

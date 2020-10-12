@@ -11,7 +11,7 @@
 
 #include "../Geometry/MVP.h"
 
-#include "../Vulkan/GraphicsPipeline.h"
+#include "../Vulkan/RasterizerGraphicsPipeline.h"
 #include "../Vulkan/SwapChain.h"
 #include "../Vulkan/Window.h"
 #include "../Vulkan/Buffer.h"
@@ -24,7 +24,6 @@ namespace Tracer
 	{
 		LoadScene();
 		CreateSwapChain();
-		CreateGraphicsPipeline(*scene);
 		RegisterCallbacks();
 
 		menu.reset(new Menu(*device, *swapChain, *commandPool));
@@ -40,7 +39,7 @@ namespace Tracer
 
 		VkRenderPassBeginInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = graphicsPipeline->GetRenderPass();
+		renderPassInfo.renderPass = rasterizerGraphicsPipeline->GetRenderPass();
 		renderPassInfo.framebuffer = framebuffer;
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = swapChain->Extent;
@@ -54,11 +53,11 @@ namespace Tracer
 
 		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 		{
-			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetPipeline());
+			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, rasterizerGraphicsPipeline->GetPipeline());
 			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 			vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-			                        graphicsPipeline->GetPipelineLayout(), 0, 1, descriptorSets, 0, nullptr);
+			                        rasterizerGraphicsPipeline->GetPipelineLayout(), 0, 1, descriptorSets, 0, nullptr);
 
 			uint32_t vertexOffset = 0;
 			uint32_t indexOffset = 0;

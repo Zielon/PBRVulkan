@@ -31,6 +31,12 @@
     <Filter Include="Acceleration">
       <UniqueIdentifier>{07960728-a512-4715-9578-e102e42df377}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rasterizer">
+      <UniqueIdentifier>{e5c9479e-0615-4f95-b113-a9fc661e3f16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raytracer">
+      <UniqueIdentifier>{bb8e4efb-61f9-4c60-80f9-8009398b5485}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">
@@ -51,9 +57,6 @@
       <Filter>Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Vulkan\Device.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Vulkan\GraphicsPipeline.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Vulkan\Image.cpp">
@@ -150,15 +153,24 @@
     <ClCompile Include="src\Tracer\Camera.cpp">
       <Filter>Tracer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vulkan\Extensions.cpp">
+      <Filter>Acceleration</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\ShaderBindingTable.cpp">
+      <Filter>Acceleration</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\RasterizerGraphicsPipeline.cpp">
+      <Filter>Rasterizer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\RaytracerGraphicsPipeline.cpp">
+      <Filter>Raytracer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vulkan\Application.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Vulkan\Device.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Vulkan\GraphicsPipeline.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Vulkan\Image.h">
@@ -265,6 +277,18 @@
     </ClInclude>
     <ClInclude Include="src\Tracer\Camera.h">
       <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Extensions.h">
+      <Filter>Acceleration</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\ShaderBindingTable.h">
+      <Filter>Acceleration</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\RasterizerGraphicsPipeline.h">
+      <Filter>Rasterizer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\RaytracerGraphicsPipeline.h">
+      <Filter>Raytracer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

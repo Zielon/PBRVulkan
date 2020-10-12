@@ -23,10 +23,11 @@ namespace Vulkan
 		virtual void Run() = 0;
 
 		void CreateSwapChain();
-		void CreateGraphicsPipeline(const Tracer::Scene& scene);
+		void DeleteSwapChain();
 
 	protected:
 		void DrawFrame();
+		void CreateGraphicsPipeline();
 		void CreatePhysicalDevice();
 		void CreateInstance();
 		void QueueSubmit(VkCommandBuffer commandBuffer);
@@ -44,12 +45,13 @@ namespace Vulkan
 
 		size_t currentFrame{};
 
+		std::unique_ptr<class Tracer::Scene> scene;
 		std::unique_ptr<class Window> window;
 		std::unique_ptr<class Instance> instance;
 		std::unique_ptr<class Device> device;
 		std::unique_ptr<class Surface> surface;
 		std::unique_ptr<class SwapChain> swapChain;
-		std::unique_ptr<class GraphicsPipeline> graphicsPipeline;
+		std::unique_ptr<class RasterizerGraphicsPipeline> rasterizerGraphicsPipeline;
 		std::unique_ptr<class CommandBuffers> commandBuffers;
 		std::unique_ptr<class CommandPool> commandPool;
 		std::unique_ptr<class DescriptorsManager> descriptorsManager;

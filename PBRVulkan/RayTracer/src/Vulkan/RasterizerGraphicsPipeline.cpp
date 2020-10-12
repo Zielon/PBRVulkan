@@ -1,4 +1,4 @@
-#include "GraphicsPipeline.h"
+#include "RasterizerGraphicsPipeline.h"
 
 #include "SwapChain.h"
 #include "Device.h"
@@ -10,7 +10,7 @@
 
 namespace Vulkan
 {
-	GraphicsPipeline::GraphicsPipeline(const SwapChain& swapChain,
+	RasterizerGraphicsPipeline::RasterizerGraphicsPipeline(const SwapChain& swapChain,
 	                                   const Device& device,
 	                                   const DescriptorSetLayout& descriptorSetLayout):
 		device(device), swapChain(swapChain), descriptorSetLayout(descriptorSetLayout),
@@ -19,12 +19,12 @@ namespace Vulkan
 		CreatePipeline();
 	}
 
-	VkRenderPass GraphicsPipeline::GetRenderPass() const
+	VkRenderPass RasterizerGraphicsPipeline::GetRenderPass() const
 	{
 		return renderPass->Get();
 	}
 
-	void GraphicsPipeline::CreatePipeline()
+	void RasterizerGraphicsPipeline::CreatePipeline()
 	{
 		// Load shaders.
 		const Shader vertShader(device, "Vertex.spv");
@@ -160,7 +160,7 @@ namespace Vulkan
 		         "Create graphics pipeline");
 	}
 
-	GraphicsPipeline::~GraphicsPipeline()
+	RasterizerGraphicsPipeline::~RasterizerGraphicsPipeline()
 	{
 		if (pipeline != nullptr)
 		{

@@ -8,7 +8,7 @@
 #include "Device.h"
 #include "Surface.h"
 #include "SwapChain.h"
-#include "GraphicsPipeline.h"
+#include "RasterizerGraphicsPipeline.h"
 #include "CommandBuffers.h"
 #include "Semaphore.h"
 #include "Fence.h"
@@ -19,6 +19,7 @@
 #include "DescriptorsManager.h"
 
 #include "../Geometry/MVP.h"
+#include "../Tracer/Scene.h"
 
 namespace Vulkan
 {
@@ -31,18 +32,11 @@ namespace Vulkan
 	Application::~Application()
 	{
 		// Destructor has to call in the right order all graphics components
-		commandBuffers.reset();
-		swapChainFrameBuffers.clear();
-		depthBuffer.reset();
-		graphicsPipeline.reset();
-		descriptorsManager.reset();
-		uniformBuffers.clear();
-		inFlightFences.clear();
-		renderFinishedSemaphores.clear();
-		imageAvailableSemaphores.clear();
-		swapChain.reset();
+		scene.reset();
+
+		DeleteSwapChain();
+
 		commandPool.reset();
-		commandBuffers.reset();
 		device.reset();
 		surface.reset();
 		instance.reset();
@@ -148,6 +142,20 @@ namespace Vulkan
 		surface.reset(new Surface(*instance));
 	}
 
+	void Application::DeleteSwapChain()
+	{
+		commandBuffers.reset();
+		swapChainFrameBuffers.clear();
+		rasterizerGraphicsPipeline.reset();
+		descriptorsManager.reset();
+		uniformBuffers.clear();
+		inFlightFences.clear();
+		renderFinishedSemaphores.clear();
+		imageAvailableSemaphores.clear();
+		depthBuffer.reset();
+		swapChain.reset();
+	}
+
 	void Application::CreateSwapChain()
 	{
 		swapChain.reset(new SwapChain(*device));
@@ -163,6 +171,8 @@ namespace Vulkan
 				           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 		}
+
+		CreateGraphicsPipeline();
 	}
 
 	void Application::CreatePhysicalDevice()
@@ -173,15 +183,16 @@ namespace Vulkan
 		commandPool.reset(new CommandPool(*device));
 	}
 
-	void Application::CreateGraphicsPipeline(const Tracer::Scene& scene)
+	void Application::CreateGraphicsPipeline()
 	{
-		descriptorsManager.reset(new DescriptorsManager(*device, *swapChain, scene, uniformBuffers));
-		graphicsPipeline.reset(new GraphicsPipeline(*swapChain, *device, descriptorsManager->GetDescriptorSetLayout()));
+		descriptorsManager.reset(new DescriptorsManager(*device, *swapChain, *scene, uniformBuffers));
+		rasterizerGraphicsPipeline.reset(
+			new RasterizerGraphicsPipeline(*swapChain, *device, descriptorsManager->GetDescriptorSetLayout()));
 
 		for (const auto& imageView : swapChain->GetImageViews())
 		{
 			swapChainFrameBuffers.emplace_back(
-				new Framebuffer(*imageView, *swapChain, *depthBuffer, graphicsPipeline->GetRenderPass()));
+				new Framebuffer(*imageView, *swapChain, *depthBuffer, rasterizerGraphicsPipeline->GetRenderPass()));
 		}
 
 		commandBuffers.reset(new CommandBuffers(*commandPool, static_cast<uint32_t>(swapChainFrameBuffers.size())));
