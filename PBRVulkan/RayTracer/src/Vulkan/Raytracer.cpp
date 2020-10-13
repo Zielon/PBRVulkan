@@ -1,5 +1,8 @@
 #include "Raytracer.h"
 
+#include "ShaderBindingTable.h"
+#include "RaytracerGraphicsPipeline.h"
+
 namespace Vulkan
 {
 	Raytracer::Raytracer() { }
@@ -14,6 +17,7 @@ namespace Vulkan
 		Rasterizer::CreateSwapChain();
 
 		raytracerGraphicsPipeline.reset(new RaytracerGraphicsPipeline(*swapChain, *device, *scene, uniformBuffers));
+		shaderBindingTable.reset(new ShaderBindingTable(*raytracerGraphicsPipeline));
 	}
 
 	void Raytracer::DeleteSwapChain() {}

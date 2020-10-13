@@ -39,32 +39,44 @@ namespace Vulkan
 		rayGenGroupInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV;
 		rayGenGroupInfo.pNext = nullptr;
 		rayGenGroupInfo.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV;
-		rayGenGroupInfo.generalShader = 0;
+		rayGenGroupInfo.generalShader = GetRayGenShaderIndex();
 		rayGenGroupInfo.closestHitShader = VK_SHADER_UNUSED_NV;
 		rayGenGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
 		rayGenGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
-		rayGenIndex = 0;
 
 		VkRayTracingShaderGroupCreateInfoNV missGroupInfo = {};
 		missGroupInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV;
 		missGroupInfo.pNext = nullptr;
 		missGroupInfo.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV;
-		missGroupInfo.generalShader = 1;
+		missGroupInfo.generalShader = GetMissShaderIndex();
 		missGroupInfo.closestHitShader = VK_SHADER_UNUSED_NV;
 		missGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
 		missGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
-		missIndex = 1;
 
 		VkRayTracingShaderGroupCreateInfoNV triangleHitGroupInfo = {};
 		triangleHitGroupInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV;
 		triangleHitGroupInfo.pNext = nullptr;
 		triangleHitGroupInfo.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV;
 		triangleHitGroupInfo.generalShader = VK_SHADER_UNUSED_NV;
-		triangleHitGroupInfo.closestHitShader = 2;
+		triangleHitGroupInfo.closestHitShader = GetHitShaderIndex();
 		triangleHitGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
 		triangleHitGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
-		triangleHitGroupIndex = 2;
 	}
 
 	RaytracerGraphicsPipeline::~RaytracerGraphicsPipeline() { }
+
+	int RaytracerGraphicsPipeline::GetRayGenShaderIndex()
+	{
+		return 0;
+	}
+
+	int RaytracerGraphicsPipeline::GetMissShaderIndex()
+	{
+		return 1;
+	}
+
+	int RaytracerGraphicsPipeline::GetHitShaderIndex()
+	{
+		return 2;
+	}
 }

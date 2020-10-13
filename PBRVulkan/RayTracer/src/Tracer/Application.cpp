@@ -35,10 +35,6 @@ namespace Tracer
 
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
 	{
-		static auto startTime = std::chrono::high_resolution_clock::now();
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
 		Uniforms::MVP ubo{};
 		ubo.view = scene->GetCamera().GetView();
 		ubo.projection = scene->GetCamera().GetProjection();

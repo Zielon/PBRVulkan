@@ -1,15 +1,13 @@
 #pragma once
 
-#include "../Vulkan/Vulkan.h"
+#include "Vulkan.h"
 
 namespace Vulkan
 {
-	class Device;
-
 	class Extensions final
 	{
 	public:
-		Extensions(const Device& device);
+		Extensions(const class Device& device);
 
 		PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT{};
 

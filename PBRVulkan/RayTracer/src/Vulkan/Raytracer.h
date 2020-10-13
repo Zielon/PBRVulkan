@@ -23,6 +23,7 @@ namespace Vulkan
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex) override;
 
 	private:
+		std::unique_ptr<class ShaderBindingTable> shaderBindingTable;
 		std::unique_ptr<class RaytracerGraphicsPipeline> raytracerGraphicsPipeline;
 	};
 }

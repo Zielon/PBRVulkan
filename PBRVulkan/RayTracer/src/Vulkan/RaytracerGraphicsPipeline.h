@@ -22,13 +22,18 @@ namespace Vulkan
 		                          const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers);
 		~RaytracerGraphicsPipeline();
 
+		[[nodiscard]] static int GetRayGenShaderIndex();
+		[[nodiscard]] static int GetMissShaderIndex();
+		[[nodiscard]] static int GetHitShaderIndex();
+
+		[[nodiscard]] const class Device& GetDevice() const
+		{
+			return device;
+		}
+
 	private:
 		const Device& device;
 		const SwapChain& swapChain;
-
-		uint32_t rayGenIndex;
-		uint32_t missIndex;
-		uint32_t triangleHitGroupIndex;
 
 		VkPipeline pipeline{};
 		VkPipelineLayout pipelineLayout{};
