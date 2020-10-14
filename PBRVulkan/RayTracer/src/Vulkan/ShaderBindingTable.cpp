@@ -44,13 +44,15 @@ namespace Vulkan
 		vkGetPhysicalDeviceProperties2(raytracerPipeline.GetDevice().GetPhysical(), &properties);
 
 		extensions.reset(new Extensions(raytracerPipeline.GetDevice()));
-		stbBuffer.reset(new Buffer(raytracerPipeline.GetDevice(), 3, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-		                           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
 
-		const auto entrySize = SBT::RoundUp(propertiesNV.shaderGroupHandleSize,
-		                                    propertiesNV.shaderGroupBaseAlignment);
+		entrySize = SBT::RoundUp(propertiesNV.shaderGroupHandleSize,
+		                         propertiesNV.shaderGroupBaseAlignment);
+		
 		const size_t stbSize = 3 * entrySize;
 
+		stbBuffer.reset(new Buffer(raytracerPipeline.GetDevice(), stbSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
+		
 		std::vector<uint8_t> shaderHandleStorage(uint32_t(3) * propertiesNV.shaderGroupHandleSize);
 
 		VK_CHECK(extensions->vkGetRayTracingShaderGroupHandlesNV(

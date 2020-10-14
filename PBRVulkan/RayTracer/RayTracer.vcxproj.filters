@@ -49,15 +49,15 @@
     <Filter Include="Raytracer\Acceleration">
       <UniqueIdentifier>{d08eccb9-727c-4bf1-8138-326f3e5385c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Shaders\Common">
+      <UniqueIdentifier>{1d5dedbf-eddc-42b7-90fa-7145e63a5717}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">
       <Filter>Scripts</Filter>
     </None>
     <None Include="src\Assets\Shaders\Rasterizer\Fragment.frag">
-      <Filter>Assets\Shaders\Rasterizer</Filter>
-    </None>
-    <None Include="src\Assets\Shaders\Rasterizer\Structs.glsl">
       <Filter>Assets\Shaders\Rasterizer</Filter>
     </None>
     <None Include="src\Assets\Shaders\Rasterizer\Vertex.vert">
@@ -74,6 +74,9 @@
     </None>
     <None Include="src\Assets\Shaders\Raytracer\Integrators\Default.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\Structs.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

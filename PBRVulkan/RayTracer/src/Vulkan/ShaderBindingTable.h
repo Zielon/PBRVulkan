@@ -17,9 +17,20 @@ namespace Vulkan
 		ShaderBindingTable(const class RaytracerGraphicsPipeline& raytracerPipeline);
 		~ShaderBindingTable();
 
+		[[nodiscard]] size_t GetEntrySize() const
+		{
+			return entrySize;
+		}
+		
+		[[nodiscard]] const class Buffer& GetBuffer() const
+		{
+			return *stbBuffer;
+		}
+
 	private:
 		const RaytracerGraphicsPipeline& raytracerPipeline;
 
+		size_t entrySize;
 		std::unique_ptr<class Extensions> extensions;
 		std::unique_ptr<class Buffer> stbBuffer;
 	};

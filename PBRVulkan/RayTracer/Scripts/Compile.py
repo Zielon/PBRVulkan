@@ -24,4 +24,4 @@ for path in glob.iglob(shaders + '**/*', recursive=True):
     output = output_folder + assets + shader_name
     cmd = "glslc " + path + " -o " + output
     subprocess.run(cmd.split())
-    print("[INFO] {} has been compiled".format(shader_name))
+    print("[INFO] {} has been processed".format(shader_name))

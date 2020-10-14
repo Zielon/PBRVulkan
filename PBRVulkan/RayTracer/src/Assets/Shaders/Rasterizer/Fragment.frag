@@ -3,7 +3,7 @@
 #extension GL_EXT_nonuniform_qualifier : require
 #extension GL_GOOGLE_include_directive : require
 
-#include "Structs.glsl"
+#include "../Common/Structs.glsl"
 
 layout(binding = 1) buffer MaterialArray { Material[] materials; };
 layout(binding = 2) uniform sampler2D[] textureSamplers;

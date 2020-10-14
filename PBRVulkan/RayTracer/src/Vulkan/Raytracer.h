@@ -39,6 +39,7 @@ namespace Vulkan
 		std::unique_ptr<class Buffer> instanceBuffer;
 		std::unique_ptr<class Buffer> BLASBuffer;
 		std::unique_ptr<class Buffer> TLASBuffer;
+		std::unique_ptr<class Extensions> extensions;
 		std::unique_ptr<class ShaderBindingTable> shaderBindingTable;
 		std::unique_ptr<class RaytracerGraphicsPipeline> raytracerGraphicsPipeline;
 	};

@@ -56,7 +56,7 @@ namespace Vulkan
 	{
 		if (updateOnly && !allowUpdate)
 		{
-			throw std::invalid_argument("cannot update readonly structure");
+			throw std::invalid_argument("Cannot update readonly structure");
 		}
 
 		const VkAccelerationStructureNV previousStructure = updateOnly ? accelerationStructure : nullptr;
@@ -71,8 +71,8 @@ namespace Vulkan
 		bindInfo.sType = VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV;
 		bindInfo.pNext = nullptr;
 		bindInfo.accelerationStructure = accelerationStructure;
-		bindInfo.memory = instanceBuffer.GetMemory().Get();
-		bindInfo.memoryOffset = instanceOffset;
+		bindInfo.memory = topBuffer.GetMemory().Get();
+		bindInfo.memoryOffset = topOffset;
 		bindInfo.deviceIndexCount = 0;
 		bindInfo.pDeviceIndices = nullptr;
 

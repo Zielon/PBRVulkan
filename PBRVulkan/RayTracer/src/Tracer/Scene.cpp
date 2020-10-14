@@ -99,6 +99,8 @@ namespace Tracer
 
 		buffer_staging->Fill(vertices.data());
 
+
+		
 		vertexBuffer.reset(
 			new Vulkan::Buffer(
 				device, size,

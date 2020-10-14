@@ -20,8 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py" />
+    <None Include="src\Assets\Shaders\Common\Structs.glsl" />
     <None Include="src\Assets\Shaders\Rasterizer\Fragment.frag" />
-    <None Include="src\Assets\Shaders\Rasterizer\Structs.glsl" />
     <None Include="src\Assets\Shaders\Rasterizer\Vertex.vert" />
     <None Include="src\Assets\Shaders\Raytracer\Integrators\Default.glsl" />
     <None Include="src\Assets\Shaders\Raytracer\Raytracing.rchit" />

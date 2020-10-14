@@ -45,6 +45,16 @@ namespace Vulkan
 		{
 			return pipeline;
 		}
+		
+		[[nodiscard]] VkPipelineLayout GetPipelineLayout() const
+		{
+			return pipelineLayout;
+		}
+		
+		[[nodiscard]] const std::vector<VkDescriptorSet>& GetDescriptorsSets() const
+		{
+			return descriptorSets;
+		}
 
 	private:
 		const Device& device;
