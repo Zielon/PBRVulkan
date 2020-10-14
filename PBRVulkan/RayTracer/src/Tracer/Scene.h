@@ -75,6 +75,11 @@ namespace Tracer
 			return *materialBuffer;
 		}
 
+		[[nodiscard]] const Vulkan::Buffer& GetOffsetBuffer() const
+		{
+			return *offsetBuffer;
+		}
+
 		[[nodiscard]] const std::vector<std::unique_ptr<class TextureImage>>& GetTextures() const
 		{
 			return textureImages;
@@ -119,6 +124,7 @@ namespace Tracer
 		std::unique_ptr<class Vulkan::Buffer> vertexBuffer;
 		std::unique_ptr<class Vulkan::Buffer> indexBuffer;
 		std::unique_ptr<class Vulkan::Buffer> materialBuffer;
+		std::unique_ptr<class Vulkan::Buffer> offsetBuffer;
 
 		std::unique_ptr<class Vulkan::Image> image;
 

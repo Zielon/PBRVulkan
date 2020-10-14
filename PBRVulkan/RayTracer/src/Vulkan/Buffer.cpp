@@ -8,7 +8,7 @@
 namespace Vulkan
 {
 	Buffer::Buffer(const Device& device, size_t size, VkBufferUsageFlagBits usage,
-	               VkMemoryPropertyFlags properties) : device(device), size(size)
+	               VkMemoryPropertyFlags properties) : size(size), device(device)
 	{
 		VkBufferCreateInfo bufferInfo{};
 		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -48,6 +48,16 @@ namespace Vulkan
 	void Buffer::Fill(const void* data) const
 	{
 		memory->Fill(data, size);
+	}
+
+	void Buffer::Unmap() const
+	{
+		memory->Unmap();
+	}
+
+	void* Buffer::Map(size_t offset, size_t size) const
+	{
+		return memory->Map(offset, size);
 	}
 
 	VkMemoryRequirements Buffer::GetMemoryRequirements() const

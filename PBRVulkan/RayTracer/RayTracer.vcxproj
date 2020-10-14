@@ -41,6 +41,8 @@
     <ClCompile Include="src\Tracer\Application.cpp" />
     <ClCompile Include="src\Tracer\Scene.cpp" />
     <ClCompile Include="src\Tracer\TextureImage.cpp" />
+    <ClCompile Include="src\Vulkan\AccelerationStructure.cpp" />
+    <ClCompile Include="src\Vulkan\BLAS.cpp" />
     <ClCompile Include="src\Vulkan\Core.cpp" />
     <ClCompile Include="src\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Vulkan\Command.cpp" />
@@ -68,6 +70,7 @@
     <ClCompile Include="src\Vulkan\Surface.cpp" />
     <ClCompile Include="src\Vulkan\SwapChain.cpp" />
     <ClCompile Include="src\Vulkan\TextureSampler.cpp" />
+    <ClCompile Include="src\Vulkan\TLAS.cpp" />
     <ClCompile Include="src\Vulkan\Vulkan.cpp" />
     <ClCompile Include="src\Vulkan\Window.cpp" />
   </ItemGroup>
@@ -88,6 +91,8 @@
     <ClInclude Include="src\Tracer\Application.h" />
     <ClInclude Include="src\Tracer\Scene.h" />
     <ClInclude Include="src\Tracer\TextureImage.h" />
+    <ClInclude Include="src\Vulkan\AccelerationStructure.h" />
+    <ClInclude Include="src\Vulkan\BLAS.h" />
     <ClInclude Include="src\Vulkan\Core.h" />
     <ClInclude Include="src\Vulkan\Buffer.h" />
     <ClInclude Include="src\Vulkan\CommandBuffers.h" />
@@ -114,6 +119,7 @@
     <ClInclude Include="src\Vulkan\Surface.h" />
     <ClInclude Include="src\Vulkan\SwapChain.h" />
     <ClInclude Include="src\Vulkan\TextureSampler.h" />
+    <ClInclude Include="src\Vulkan\TLAS.h" />
     <ClInclude Include="src\Vulkan\Vulkan.h" />
     <ClInclude Include="src\Vulkan\Window.h" />
   </ItemGroup>

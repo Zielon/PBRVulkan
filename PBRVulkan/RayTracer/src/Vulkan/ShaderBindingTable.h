@@ -6,6 +6,9 @@
 
 namespace Vulkan
 {
+	/*
+	 * The SBT is an array containing the handles to the shader groups used in the ray tracing pipeline.
+	 */
 	class ShaderBindingTable
 	{
 	public:

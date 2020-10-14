@@ -20,6 +20,7 @@ namespace Tracer
 	Application::Application()
 	{
 		LoadScene();
+		CreateAS();
 		Raytracer::CreateSwapChain();
 		RegisterCallbacks();
 
@@ -28,8 +29,8 @@ namespace Tracer
 
 	void Application::LoadScene()
 	{
-		//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
-		const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
+		const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
+		//const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
 		scene.reset(new Scene(CONFIG, *device, *commandPool));
 	}
 
@@ -45,7 +46,7 @@ namespace Tracer
 
 	void Application::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
 	{
-		Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
+		//Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
 		Raytracer::Render(framebuffer, commandBuffer, imageIndex);
 		
 		scene->GetCamera().OnEventChanged();

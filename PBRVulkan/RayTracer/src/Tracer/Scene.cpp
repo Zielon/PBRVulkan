@@ -69,9 +69,15 @@ namespace Tracer
 	{
 		std::vector<uint32_t> indices;
 		std::vector<Geometry::Vertex> vertices;
+		std::vector<glm::uvec2> offsets;
 
 		for (const auto& mesh : meshes)
 		{
+			const auto indexOffset = static_cast<uint32_t>(indices.size());
+			const auto vertexOffset = static_cast<uint32_t>(vertices.size());
+
+			offsets.emplace_back(indexOffset, vertexOffset);
+
 			vertices.insert(vertices.end(), mesh->GetVertices().begin(), mesh->GetVertices().end());
 			indices.insert(indices.end(), mesh->GetIndecies().begin(), mesh->GetIndecies().end());
 		}
@@ -96,7 +102,7 @@ namespace Tracer
 		vertexBuffer.reset(
 			new Vulkan::Buffer(
 				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT),
+				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT),
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		vertexBuffer->Copy(commandPool, *buffer_staging);
@@ -116,7 +122,7 @@ namespace Tracer
 		indexBuffer.reset(
 			new Vulkan::Buffer(
 				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT),
+				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT),
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		indexBuffer->Copy(commandPool, *buffer_staging);
@@ -140,6 +146,26 @@ namespace Tracer
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		materialBuffer->Copy(commandPool, *buffer_staging);
+
+		// =============== OFFSET BUFFER ===============
+
+		size = sizeof(offsets[0]) * offsets.size();
+
+		buffer_staging.reset(
+			new Vulkan::Buffer(
+				device, size,
+				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
+
+		buffer_staging->Fill(offsets.data());
+
+		offsetBuffer.reset(
+			new Vulkan::Buffer(
+				device, size,
+				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT),
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
+		offsetBuffer->Copy(commandPool, *buffer_staging);
 	}
 
 	void Scene::AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov)
@@ -168,7 +194,7 @@ namespace Tracer
 		{
 			const auto file = "../Assets/Scenes/" + path;
 			std::cout << "[MESH] " + file + " has been added!" << std::endl;
-			
+
 			id = meshes.size();
 			meshes.emplace_back(new Assets::Mesh(file));
 			meshMap[path] = id;

@@ -46,6 +46,9 @@
     <Filter Include="3rdParty">
       <UniqueIdentifier>{26bdf9b1-5805-4c41-92bd-53cbff40afbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Raytracer\Acceleration">
+      <UniqueIdentifier>{d08eccb9-727c-4bf1-8138-326f3e5385c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">
@@ -195,6 +198,15 @@
     <ClCompile Include="src\3rdParty\HDRLoader.cpp">
       <Filter>3rdParty</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vulkan\AccelerationStructure.cpp">
+      <Filter>Raytracer\Acceleration</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\BLAS.cpp">
+      <Filter>Raytracer\Acceleration</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\TLAS.cpp">
+      <Filter>Raytracer\Acceleration</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vulkan\Device.h">
@@ -328,6 +340,15 @@
     </ClInclude>
     <ClInclude Include="src\3rdParty\HDRLoader.h">
       <Filter>3rdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\AccelerationStructure.h">
+      <Filter>Raytracer\Acceleration</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\TLAS.h">
+      <Filter>Raytracer\Acceleration</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\BLAS.h">
+      <Filter>Raytracer\Acceleration</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

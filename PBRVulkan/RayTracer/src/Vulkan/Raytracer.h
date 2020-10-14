@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vulkan.h"
+
 #include "Rasterizer.h"
 #include "RaytracerGraphicsPipeline.h"
 
@@ -21,8 +23,22 @@ namespace Vulkan
 
 	protected:
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex) override;
+		void CreateOutputTexture();
+		void CreateAS();
 
 	private:
+		void CreateBLAS(VkCommandBuffer commandBuffer);
+		void CreateTLAS(VkCommandBuffer commandBuffer);
+
+		std::vector<class TLAS> TLASs;
+		std::vector<class BLAS> BLASs;
+		std::unique_ptr<class Image> accumulationImage;
+		std::unique_ptr<class ImageView> accumulationImageView;
+		std::unique_ptr<class Image> outputImage;
+		std::unique_ptr<class ImageView> outputImageView;
+		std::unique_ptr<class Buffer> instanceBuffer;
+		std::unique_ptr<class Buffer> BLASBuffer;
+		std::unique_ptr<class Buffer> TLASBuffer;
 		std::unique_ptr<class ShaderBindingTable> shaderBindingTable;
 		std::unique_ptr<class RaytracerGraphicsPipeline> raytracerGraphicsPipeline;
 	};

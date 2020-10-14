@@ -18,6 +18,9 @@ namespace Vulkan
 		~Memory();
 
 		void Fill(const void* data, size_t size) const;
+		void Unmap() const;
+		
+		[[nodiscard]] void* Map(size_t offset, size_t size) const;
 
 		[[nodiscard]] const VkDeviceMemory& Get() const
 		{

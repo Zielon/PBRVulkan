@@ -33,6 +33,18 @@ namespace Vulkan
 		vkUnmapMemory(device.Get(), memory);
 	}
 
+	void* Memory::Map(size_t offset, size_t size) const
+	{
+		void* data;
+		VK_CHECK(vkMapMemory(device.Get(), memory, offset, size, 0, &data), "Map memory");
+		return data;
+	}
+
+	void Memory::Unmap() const
+	{
+		vkUnmapMemory(device.Get(), memory);
+	}
+
 	uint32_t Memory::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const
 	{
 		VkPhysicalDeviceMemoryProperties memProperties;
