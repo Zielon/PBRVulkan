@@ -1,5 +1,8 @@
 #include "Raytracer.h"
 
+#include <chrono>
+#include <iostream>
+
 #include "BLAS.h"
 #include "TLAS.h"
 #include "Image.h"
@@ -93,6 +96,7 @@ namespace Vulkan
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
 		                  raytracerGraphicsPipeline->GetPipeline());
+		
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
 		                        raytracerGraphicsPipeline->GetPipelineLayout(), 0, 1, descriptorSets, 0, nullptr);
 
@@ -153,12 +157,19 @@ namespace Vulkan
 
 	void Raytracer::CreateAS()
 	{
+		auto start = std::chrono::high_resolution_clock::now();
+
 		Command::Submit(*commandPool, [this](VkCommandBuffer commandBuffer)
 		{
 			CreateBLAS(commandBuffer);
 			AccelerationStructure::MemoryBarrier(commandBuffer);
 			CreateTLAS(commandBuffer);
 		});
+
+		auto stop = std::chrono::high_resolution_clock::now();
+		
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+		std::cout << "[INFO] Acceleration data structure build: " << duration.count() << " milliseconds" << std::endl;
 	}
 
 	void Raytracer::CreateBLAS(VkCommandBuffer commandBuffer)

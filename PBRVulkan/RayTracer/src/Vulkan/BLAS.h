@@ -19,7 +19,7 @@ namespace Vulkan
 		BLAS& operator =(BLAS&&) = delete;
 		BLAS(const class Device& device, const std::vector<VkGeometryNV>& geometries, bool allowUpdate);
 		BLAS(BLAS&& other) noexcept;
-		~BLAS();
+		~BLAS() = default;
 
 		void Generate(
 			VkCommandBuffer commandBuffer,

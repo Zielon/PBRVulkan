@@ -20,7 +20,6 @@ namespace Vulkan
 		AccelerationStructure(const AccelerationStructure&) = delete;
 		AccelerationStructure& operator =(const AccelerationStructure&) = delete;
 		AccelerationStructure& operator =(AccelerationStructure&&) = delete;
-
 		AccelerationStructure(AccelerationStructure&& other) noexcept;
 		virtual ~AccelerationStructure();
 

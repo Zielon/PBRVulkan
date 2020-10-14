@@ -12,7 +12,7 @@
 
 namespace Vulkan
 {
-	namespace
+	namespace BLASHelper
 	{
 		VkAccelerationStructureCreateInfoNV GetCreateInfo(const std::vector<VkGeometryNV>& geometries,
 		                                                  const bool allowUpdate)
@@ -38,16 +38,11 @@ namespace Vulkan
 	}
 
 	BLAS::BLAS(const class Device& device, const std::vector<VkGeometryNV>& geometries, const bool allowUpdate) :
-		AccelerationStructure(device, GetCreateInfo(geometries, allowUpdate)), geometries(geometries) {}
+		AccelerationStructure(device, BLASHelper::GetCreateInfo(geometries, allowUpdate)), geometries(geometries) {}
 
 	BLAS::BLAS(BLAS&& other) noexcept :
 		AccelerationStructure(std::move(other)),
-		geometries(std::move(other.geometries))
-	{
-		int i = 0;
-	}
-
-	BLAS::~BLAS() { }
+		geometries(std::move(other.geometries)) {}
 
 	void BLAS::Generate(
 		VkCommandBuffer commandBuffer,

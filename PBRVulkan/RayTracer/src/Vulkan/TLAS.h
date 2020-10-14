@@ -7,20 +7,20 @@
 
 namespace Vulkan
 {
-	/// Geometry instance, with the layout expected by VK_NV_ray_tracing
+	// Geometry instance, with the layout expected by VK_NV_ray_tracing
 	struct VkGeometryInstance
 	{
-		/// Transform matrix, containing only the top 3 rows
+		// Transform matrix, containing only the top 3 rows
 		float transform[12];
-		/// Instance index
+		// Instance index
 		uint32_t instanceCustomIndex : 24;
-		/// Visibility mask
+		// Visibility mask
 		uint32_t mask : 8;
-		/// Index of the hit group which will be invoked when a ray hits the instance
+		// Index of the hit group which will be invoked when a ray hits the instance
 		uint32_t instanceOffset : 24;
-		/// Instance flags, such as culling
+		// Instance flags, such as culling
 		uint32_t flags : 8;
-		/// Opaque handle of the bottom-level acceleration structure
+		// Opaque handle of the bottom-level acceleration structure
 		uint64_t accelerationStructureHandle;
 	};
 
@@ -32,7 +32,7 @@ namespace Vulkan
 		TLAS& operator =(TLAS&&) = delete;
 		TLAS(const class Device& device, const std::vector<VkGeometryInstance>& geometryInstances, bool allowUpdate);
 		TLAS(TLAS&& other) noexcept;
-		virtual ~TLAS();
+		~TLAS() = default;
 
 		[[nodiscard]] const std::vector<VkGeometryInstance>& GeometryInstances() const
 		{

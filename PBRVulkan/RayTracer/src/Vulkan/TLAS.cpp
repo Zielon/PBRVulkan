@@ -1,6 +1,6 @@
 #include "TLAS.h"
-#include "BLAS.h"
 
+#include "BLAS.h"
 #include "Device.h"
 #include "Buffer.h"
 #include "Memory.h"
@@ -8,7 +8,7 @@
 
 namespace Vulkan
 {
-	namespace
+	namespace TLASHelper
 	{
 		VkAccelerationStructureCreateInfoNV GetCreateInfo(const size_t instanceCount, const bool allowUpdate)
 		{
@@ -35,14 +35,12 @@ namespace Vulkan
 		const class Device& device,
 		const std::vector<VkGeometryInstance>& geometryInstances,
 		const bool allowUpdate) :
-		AccelerationStructure(device, GetCreateInfo(geometryInstances.size(), allowUpdate)),
+		AccelerationStructure(device, TLASHelper::GetCreateInfo(geometryInstances.size(), allowUpdate)),
 		geometryInstances(geometryInstances) {}
 
 	TLAS::TLAS(TLAS&& other) noexcept :
 		AccelerationStructure(std::move(other)),
 		geometryInstances(std::move(other.geometryInstances)) {}
-
-	TLAS::~TLAS() { }
 
 	void TLAS::Generate(
 		VkCommandBuffer commandBuffer,
