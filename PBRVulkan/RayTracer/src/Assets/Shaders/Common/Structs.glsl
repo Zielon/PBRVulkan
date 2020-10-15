@@ -14,3 +14,16 @@ struct Uniform
     mat4 proj;
     vec3 direction;
 };
+
+struct RayPayload
+{
+	vec4 colorAndDistance;
+};
+
+struct Vertex
+{
+    vec3 position;
+    vec3 normal;
+    vec2 texCoord;
+    int materialIndex;
+};

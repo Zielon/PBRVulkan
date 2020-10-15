@@ -50,6 +50,29 @@ namespace Vulkan
 		}
 	}
 
+	void Image::MemoryBarrier(
+		VkCommandBuffer commandBuffer, VkImage image,
+		VkImageSubresourceRange subresourceRange, VkAccessFlags srcAccessMask,
+		VkAccessFlags dstAccessMask,
+		VkImageLayout oldLayout, VkImageLayout newLayout)
+	{
+		VkImageMemoryBarrier barrier;
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.pNext = nullptr;
+		barrier.srcAccessMask = srcAccessMask;
+		barrier.dstAccessMask = dstAccessMask;
+		barrier.oldLayout = oldLayout;
+		barrier.newLayout = newLayout;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.image = image;
+		barrier.subresourceRange = subresourceRange;
+
+		vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+		                     VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 0, nullptr, 1,
+		                     &barrier);
+	}
+
 	void Image::Copy(const CommandPool& commandPool, const Buffer& buffer)
 	{
 		Command::Submit(commandPool, [&](VkCommandBuffer commandBuffer)-> void

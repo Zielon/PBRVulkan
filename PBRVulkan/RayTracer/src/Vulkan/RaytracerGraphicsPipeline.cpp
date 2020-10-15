@@ -46,7 +46,7 @@ namespace Vulkan
 		rayGenGroupInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV;
 		rayGenGroupInfo.pNext = nullptr;
 		rayGenGroupInfo.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV;
-		rayGenGroupInfo.generalShader = GetRayGenShaderIndex();
+		rayGenGroupInfo.generalShader = 0;
 		rayGenGroupInfo.closestHitShader = VK_SHADER_UNUSED_NV;
 		rayGenGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
 		rayGenGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
@@ -55,7 +55,7 @@ namespace Vulkan
 		missGroupInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV;
 		missGroupInfo.pNext = nullptr;
 		missGroupInfo.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV;
-		missGroupInfo.generalShader = GetMissShaderIndex();
+		missGroupInfo.generalShader = 1;
 		missGroupInfo.closestHitShader = VK_SHADER_UNUSED_NV;
 		missGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
 		missGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
@@ -65,7 +65,7 @@ namespace Vulkan
 		triangleHitGroupInfo.pNext = nullptr;
 		triangleHitGroupInfo.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV;
 		triangleHitGroupInfo.generalShader = VK_SHADER_UNUSED_NV;
-		triangleHitGroupInfo.closestHitShader = GetHitShaderIndex();
+		triangleHitGroupInfo.closestHitShader = 2;
 		triangleHitGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
 		triangleHitGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
 
@@ -273,7 +273,7 @@ namespace Vulkan
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV;
 		pipelineInfo.pNext = nullptr;
 		pipelineInfo.flags = 0;
-		pipelineInfo.stageCount = 3;
+		pipelineInfo.stageCount = uint32_t(3);
 		pipelineInfo.pStages = shaderStages;
 		pipelineInfo.groupCount = static_cast<uint32_t>(groups.size());
 		pipelineInfo.pGroups = groups.data();
@@ -286,7 +286,7 @@ namespace Vulkan
 		         "Create ray tracing pipeline");
 	}
 
-	RaytracerGraphicsPipeline::~RaytracerGraphicsPipeline() { }
+	RaytracerGraphicsPipeline::~RaytracerGraphicsPipeline() {}
 
 	uint32_t RaytracerGraphicsPipeline::GetRayGenShaderIndex()
 	{

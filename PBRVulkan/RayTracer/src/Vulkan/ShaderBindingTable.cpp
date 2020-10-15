@@ -21,12 +21,14 @@ namespace Vulkan
 			uint32_t shaderGroupHandleSize,
 			uint32_t groupIndex,
 			const size_t entrySize,
-			const uint8_t* const shaderHandleStorage)
+			const uint8_t* const src)
 		{
 			uint8_t* pDst = dst;
 
+			std::vector<unsigned char> inlineData;
+
 			// Copy the shader identifier that was previously obtained with vkGetRayTracingShaderGroupHandlesNV.
-			std::memcpy(pDst, shaderHandleStorage + groupIndex * shaderGroupHandleSize, shaderGroupHandleSize);
+			std::memcpy(pDst, src + groupIndex * shaderGroupHandleSize, shaderGroupHandleSize);
 
 			return entrySize;
 		}
@@ -45,15 +47,16 @@ namespace Vulkan
 
 		extensions.reset(new Extensions(raytracerPipeline.GetDevice()));
 
-		entrySize = SBT::RoundUp(propertiesNV.shaderGroupHandleSize,
-		                         propertiesNV.shaderGroupBaseAlignment);
-		
+		uint32_t handleSize = propertiesNV.shaderGroupHandleSize;
+
+		entrySize = SBT::RoundUp(handleSize, propertiesNV.shaderGroupBaseAlignment);
+
 		const size_t stbSize = 3 * entrySize;
 
 		stbBuffer.reset(new Buffer(raytracerPipeline.GetDevice(), stbSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
-		
-		std::vector<uint8_t> shaderHandleStorage(uint32_t(3) * propertiesNV.shaderGroupHandleSize);
+		                           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
+
+		std::vector<uint8_t> shaderHandleStorage(3 * handleSize);
 
 		VK_CHECK(extensions->vkGetRayTracingShaderGroupHandlesNV(
 			         raytracerPipeline.GetDevice().Get(),
@@ -62,18 +65,17 @@ namespace Vulkan
 			         shaderHandleStorage.data()),
 		         "Get ray tracing shader group handles");
 
-		auto* data = static_cast<uint8_t*>(stbBuffer->Map(0, 3));
+		// =============== COPY SHADER GROUP ===============
 
-		data += SBT::CopyShaderData(data, propertiesNV.shaderGroupHandleSize,
-		                            RaytracerGraphicsPipeline::GetRayGenShaderIndex(), entrySize,
-		                            shaderHandleStorage.data());
+		auto* dst = static_cast<uint8_t*>(stbBuffer->Map(0, stbSize));
 
-		data += SBT::CopyShaderData(data, propertiesNV.shaderGroupHandleSize,
-		                            RaytracerGraphicsPipeline::GetMissShaderIndex(), entrySize,
-		                            shaderHandleStorage.data());
+		auto genRayIndex = RaytracerGraphicsPipeline::GetRayGenShaderIndex();
+		auto missRayIndex = RaytracerGraphicsPipeline::GetMissShaderIndex();
+		auto hitRayIndex = RaytracerGraphicsPipeline::GetHitShaderIndex();
 
-		SBT::CopyShaderData(data, propertiesNV.shaderGroupHandleSize, RaytracerGraphicsPipeline::GetHitShaderIndex(),
-		                    entrySize, shaderHandleStorage.data());
+		dst += SBT::CopyShaderData(dst, handleSize, genRayIndex, entrySize, shaderHandleStorage.data());
+		dst += SBT::CopyShaderData(dst, handleSize, missRayIndex, entrySize, shaderHandleStorage.data());
+		SBT::CopyShaderData(dst, handleSize, hitRayIndex, entrySize, shaderHandleStorage.data());
 
 		stbBuffer->Unmap();
 	}

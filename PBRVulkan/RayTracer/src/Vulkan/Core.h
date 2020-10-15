@@ -24,6 +24,8 @@ namespace Vulkan
 
 		virtual void CreateSwapChain() = 0;
 		virtual void DeleteSwapChain() = 0;
+		virtual void CreateGraphicsPipeline() = 0;
+		
 		void UpdateSwapChain();
 
 	protected:

@@ -26,6 +26,16 @@ material red
 	color 0.63 0.065 0.05
 }
 
+material gray
+{
+	color 0.5 0.5 0.5
+}
+
+material blue
+{
+	color 0 0 0.75
+}
+
 material green
 {
 	color 0.14 0.45 0.091
@@ -50,7 +60,7 @@ mesh
 mesh
 {
 	file cornell_box/cbox_back.obj
-	material white
+	material gray
 	position .2764 .2744 .5592
 	scale 0.01 0.01 0.01
 }
@@ -58,7 +68,7 @@ mesh
 mesh
 {
 	file cornell_box/cbox_smallbox.obj
-	material white
+	material red
 	position .1855 .0825 .169
 	scale 0.01 0.01 0.01
 }
@@ -66,7 +76,7 @@ mesh
 mesh
 {
 	file cornell_box/cbox_largebox.obj
-	material white
+	material blue
 	position .3685 .165 .35125
 	scale 0.01 0.01 0.01
 }

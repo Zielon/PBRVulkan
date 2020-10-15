@@ -6,7 +6,6 @@
 #include "BLAS.h"
 #include "TLAS.h"
 #include "Image.h"
-#include "Device.h"
 #include "Command.cpp"
 #include "Buffer.h"
 #include "SwapChain.h"
@@ -19,32 +18,6 @@
 
 namespace Vulkan
 {
-	static void ImageMemoryBarrier(
-		const VkCommandBuffer commandBuffer,
-		const VkImage image,
-		const VkImageSubresourceRange subresourceRange,
-		const VkAccessFlags srcAccessMask,
-		const VkAccessFlags dstAccessMask,
-		const VkImageLayout oldLayout,
-		const VkImageLayout newLayout)
-	{
-		VkImageMemoryBarrier barrier;
-		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		barrier.pNext = nullptr;
-		barrier.srcAccessMask = srcAccessMask;
-		barrier.dstAccessMask = dstAccessMask;
-		barrier.oldLayout = oldLayout;
-		barrier.newLayout = newLayout;
-		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		barrier.image = image;
-		barrier.subresourceRange = subresourceRange;
-
-		vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-		                     VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 0, nullptr, 1,
-		                     &barrier);
-	}
-
 	Raytracer::Raytracer()
 	{
 		extensions.reset(new Extensions(*device));
@@ -59,7 +32,13 @@ namespace Vulkan
 	{
 		Rasterizer::CreateSwapChain();
 		CreateOutputTexture();
+		Raytracer::CreateGraphicsPipeline();
+	}
 
+	void Raytracer::DeleteSwapChain() {}
+
+	void Raytracer::CreateGraphicsPipeline()
+	{
 		raytracerGraphicsPipeline.reset(
 			new RaytracerGraphicsPipeline(
 				*swapChain,
@@ -72,8 +51,6 @@ namespace Vulkan
 
 		shaderBindingTable.reset(new ShaderBindingTable(*raytracerGraphicsPipeline));
 	}
-
-	void Raytracer::DeleteSwapChain() {}
 
 	void Raytracer::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
 	{
@@ -88,35 +65,33 @@ namespace Vulkan
 		subresourceRange.baseArrayLayer = 0;
 		subresourceRange.layerCount = 1;
 
-		ImageMemoryBarrier(commandBuffer, accumulationImage->Get(), subresourceRange, 0,
-		                   VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
+		Image::MemoryBarrier(commandBuffer, accumulationImage->Get(), subresourceRange, 0,
+		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
-		ImageMemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange, 0,
-		                   VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
+		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange, 0,
+		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
 		                  raytracerGraphicsPipeline->GetPipeline());
-		
+
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
 		                        raytracerGraphicsPipeline->GetPipelineLayout(), 0, 1, descriptorSets, 0, nullptr);
 
 		extensions->vkCmdTraceRaysNV(
 			commandBuffer,
-			shaderBindingTable->GetBuffer().Get(), 0,
-			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize(),
-			shaderBindingTable->GetEntrySize(),
-			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize() * 2,
-			shaderBindingTable->GetEntrySize(),
+			shaderBindingTable->GetBuffer().Get(), size_t(0),
+			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize(), shaderBindingTable->GetEntrySize(),
+			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize() * 2, shaderBindingTable->GetEntrySize(),
 			nullptr, 0, 0,
 			extent.width, extent.height, 1);
 
-		ImageMemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
-		                   VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT, VK_IMAGE_LAYOUT_GENERAL,
-		                   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
+		                     VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT, VK_IMAGE_LAYOUT_GENERAL,
+		                     VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
 
-		ImageMemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange, 0,
-		                   VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
-		                   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+		Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange, 0,
+		                     VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
+		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 		VkImageCopy copyRegion;
 		copyRegion.srcSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
@@ -130,9 +105,9 @@ namespace Vulkan
 		               swapChain->GetImage()[imageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		               1, &copyRegion);
 
-		ImageMemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange,
-		                   VK_ACCESS_TRANSFER_WRITE_BIT,
-		                   0, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+		Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange,
+		                     VK_ACCESS_TRANSFER_WRITE_BIT,
+		                     0, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 	}
 
 	void Raytracer::CreateOutputTexture()
@@ -167,7 +142,7 @@ namespace Vulkan
 		});
 
 		auto stop = std::chrono::high_resolution_clock::now();
-		
+
 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 		std::cout << "[INFO] Acceleration data structure build: " << duration.count() << " milliseconds" << std::endl;
 	}

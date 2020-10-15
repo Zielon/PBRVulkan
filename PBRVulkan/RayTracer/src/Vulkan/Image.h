@@ -46,6 +46,15 @@ namespace Vulkan
 			return device;
 		}
 
+		static void MemoryBarrier(
+			VkCommandBuffer commandBuffer,
+			VkImage image,
+			VkImageSubresourceRange subresourceRange,
+			VkAccessFlags srcAccessMask,
+			VkAccessFlags dstAccessMask,
+			VkImageLayout oldLayout,
+			VkImageLayout newLayout);
+
 	private:
 		VkImage image{};
 		VkExtent2D extent;

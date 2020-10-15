@@ -94,7 +94,7 @@ namespace Vulkan
 				           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 		}
 
-		CreateGraphicsPipeline();
+		Rasterizer::CreateGraphicsPipeline();
 	}
 
 	void Rasterizer::DeleteSwapChain()
