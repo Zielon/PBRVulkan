@@ -32,14 +32,14 @@ namespace Tracer
 	void Application::LoadScene()
 	{
 		//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
-		const std::string CONFIG = "../Assets/Scenes/bedroom.scene";
+		const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
 		scene.reset(new Scene(CONFIG, *device, *commandPool));
 	}
 
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
 	{
 		Uniforms::MVP ubo{};
-		
+
 		ubo.view = scene->GetCamera().GetView();
 		ubo.projection = scene->GetCamera().GetProjection();
 		ubo.direction = scene->GetCamera().GetDirection();
