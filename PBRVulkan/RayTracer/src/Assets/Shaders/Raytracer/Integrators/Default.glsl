@@ -1,3 +1,8 @@
+//
 // Path tracing integral
+//
 
-void integrate(){}
+void integrate()
+{
+
+}

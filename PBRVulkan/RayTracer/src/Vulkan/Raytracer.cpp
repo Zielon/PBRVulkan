@@ -157,7 +157,8 @@ namespace Vulkan
 		uint32_t vertexOffset = 0;
 		uint32_t indexOffset = 0;
 
-		constexpr bool ALLOW_UPDATES = false;
+		// Prefer fast ray tracking option
+		constexpr bool ALLOW_UPDATE_BIT_NV = false;
 
 		std::vector<ASMemoryRequirementsNV> requirements;
 
@@ -171,7 +172,7 @@ namespace Vulkan
 				BLAS::CreateGeometry(*scene, vertexOffset, vertexCount, indexOffset, indexCount, true)
 			};
 
-			BLASs.emplace_back(*device, geometries, ALLOW_UPDATES);
+			BLASs.emplace_back(*device, geometries, ALLOW_UPDATE_BIT_NV);
 			requirements.push_back(BLASs.back().GetMemoryRequirements());
 
 			vertexOffset += vertexCount * sizeof(Geometry::Vertex);

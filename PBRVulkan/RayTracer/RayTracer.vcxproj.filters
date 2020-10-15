@@ -78,6 +78,12 @@
     <None Include="src\Assets\Shaders\Common\Structs.glsl">
       <Filter>Assets\Shaders\Common</Filter>
     </None>
+    <None Include="src\Assets\Shaders\Common\Math.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\Vertex.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Vulkan\Device.cpp">

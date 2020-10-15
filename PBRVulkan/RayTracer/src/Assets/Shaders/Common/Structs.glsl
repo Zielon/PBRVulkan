@@ -1,4 +1,6 @@
+//
 // Global structure used in shaders
+//
 
 struct Material 
 { 
@@ -20,10 +22,3 @@ struct RayPayload
 	vec3 color;
 };
 
-struct Vertex
-{
-    vec3 position;
-    vec3 normal;
-    vec2 texCoord;
-    int materialIndex;
-};
