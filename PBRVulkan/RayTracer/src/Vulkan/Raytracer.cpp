@@ -25,6 +25,8 @@ namespace Vulkan
 
 	Raytracer::~Raytracer()
 	{
+		scene.reset();
+		
 		Raytracer::DeleteSwapChain();
 	}
 
@@ -80,8 +82,10 @@ namespace Vulkan
 		extensions->vkCmdTraceRaysNV(
 			commandBuffer,
 			shaderBindingTable->GetBuffer().Get(), size_t(0),
-			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize(), shaderBindingTable->GetEntrySize(),
-			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize() * 2, shaderBindingTable->GetEntrySize(),
+			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize(),
+			shaderBindingTable->GetEntrySize(),
+			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize() * 2,
+			shaderBindingTable->GetEntrySize(),
 			nullptr, 0, 0,
 			extent.width, extent.height, 1);
 
@@ -152,6 +156,8 @@ namespace Vulkan
 		uint32_t vertexOffset = 0;
 		uint32_t indexOffset = 0;
 
+		constexpr bool ALLOW_UPDATES = true;
+
 		std::vector<ASMemoryRequirements> requirements;
 
 		for (const auto& model : scene->GetMeshes())
@@ -163,7 +169,7 @@ namespace Vulkan
 				BLAS::CreateGeometry(*scene, vertexOffset, vertexCount, indexOffset, indexCount, true)
 			};
 
-			BLASs.emplace_back(*device, geometries, false);
+			BLASs.emplace_back(*device, geometries, ALLOW_UPDATES);
 			requirements.push_back(BLASs.back().GetMemoryRequirements());
 
 			vertexOffset += vertexCount * sizeof(Geometry::Vertex);

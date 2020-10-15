@@ -34,7 +34,7 @@ namespace Vulkan
 	TLAS::TLAS(
 		const class Device& device,
 		const std::vector<VkGeometryInstance>& geometryInstances,
-		const bool allowUpdate) :
+		bool allowUpdate) :
 		AccelerationStructure(device, TLASHelper::GetCreateInfo(geometryInstances.size(), allowUpdate)),
 		geometryInstances(geometryInstances) {}
 
@@ -99,7 +99,7 @@ namespace Vulkan
 	VkGeometryInstance TLAS::CreateGeometryInstance(
 		const BLAS& blas,
 		const glm::mat4& transform,
-		const uint32_t instanceId)
+		uint32_t instanceId)
 	{
 		const auto& device = blas.GetDevice();
 		const auto& extenstion = blas.GetExtensions();

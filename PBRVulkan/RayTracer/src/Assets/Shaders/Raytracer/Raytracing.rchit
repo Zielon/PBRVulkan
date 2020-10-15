@@ -20,19 +20,24 @@ Vertex unpack(uint index)
 	const uint vertexSize = 9;
 	const uint offset = index * vertexSize;
 	
-	Vertex v;
+	Vertex vertex;
 	
-	v.position = vec3(Vertices[offset + 0], Vertices[offset + 1], Vertices[offset + 2]);
-	v.normal = vec3(Vertices[offset + 3], Vertices[offset + 4], Vertices[offset + 5]);
-	v.texCoord = vec2(Vertices[offset + 6], Vertices[offset + 7]);
-	v.materialIndex = floatBitsToInt(Vertices[offset + 8]);
+	vertex.position = vec3(Vertices[offset + 0], Vertices[offset + 1], Vertices[offset + 2]);
+	vertex.normal = vec3(Vertices[offset + 3], Vertices[offset + 4], Vertices[offset + 5]);
+	vertex.texCoord = vec2(Vertices[offset + 6], Vertices[offset + 7]);
+	vertex.materialIndex = floatBitsToInt(Vertices[offset + 8]);
 
-	return v;
+	return vertex;
 }
 
 vec3 mix(vec3 a, vec3 b, vec3 c, vec3 barycentrics) 
 {
     return a * barycentrics.x + b * barycentrics.y + c * barycentrics.z;
+}
+
+vec2 mix(vec2 a, vec2 b, vec2 c, vec3 barycentrics)
+{
+	return a * barycentrics.x + b * barycentrics.y + c * barycentrics.z;
 }
 
 void main()
@@ -49,9 +54,17 @@ void main()
 
 	const vec3 barycentrics = vec3(1.0 - Hit.x - Hit.y, Hit.x, Hit.y);
 	const vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
+	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 
-//	Ray.colorAndDistance = vec4(material.albedo.rgb, 1);
-	Ray.colorAndDistance = vec4(abs(normal.rgb), 1);
+	int textureId = material.texIDs.x; // Albedo
 
+	if (textureId >= 0)
+	{
+		Ray.color = texture(TextureSamplers[textureId], texCoord).rgb;
+	}
+	else
+	{
+		Ray.color = material.albedo.xyz;
+	}
 }
 

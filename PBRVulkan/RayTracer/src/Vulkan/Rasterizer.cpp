@@ -21,8 +21,6 @@ namespace Vulkan
 
 	Rasterizer::~Rasterizer()
 	{
-		scene.reset();
-
 		Rasterizer::DeleteSwapChain();
 	}
 

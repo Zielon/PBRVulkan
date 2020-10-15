@@ -8,5 +8,5 @@ layout(location = 0) rayPayloadInNV RayPayload Ray;
 
 void main()
 {
-	Ray.colorAndDistance = vec4(0, 0, 0, -1);
+	Ray.color = vec3(0, 0, 0);
 }

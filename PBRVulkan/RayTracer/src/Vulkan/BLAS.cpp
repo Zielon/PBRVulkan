@@ -37,7 +37,7 @@ namespace Vulkan
 		}
 	}
 
-	BLAS::BLAS(const class Device& device, const std::vector<VkGeometryNV>& geometries, const bool allowUpdate) :
+	BLAS::BLAS(const class Device& device, const std::vector<VkGeometryNV>& geometries, bool allowUpdate) :
 		AccelerationStructure(device, BLASHelper::GetCreateInfo(geometries, allowUpdate)), geometries(geometries) {}
 
 	BLAS::BLAS(BLAS&& other) noexcept :
@@ -47,10 +47,10 @@ namespace Vulkan
 	void BLAS::Generate(
 		VkCommandBuffer commandBuffer,
 		const Buffer& scratchBuffer,
-		const VkDeviceSize scratchOffset,
+		VkDeviceSize scratchOffset,
 		const Buffer& blasBuffer,
-		const VkDeviceSize resultOffset,
-		const bool updateOnly) const
+		VkDeviceSize resultOffset,
+		bool updateOnly) const
 	{
 		if (updateOnly && !allowUpdate)
 		{
@@ -72,7 +72,7 @@ namespace Vulkan
 		VK_CHECK(extensions->vkBindAccelerationStructureMemoryNV(device.Get(), 1, &bindInfo),
 		         "Bind acceleration structure");
 
-		// Build the actual bottom-level acceleration structure
+		// TODO Using PREFER_FAST_TRACE_BIT creates error in some of the scenes.
 		const auto flags = allowUpdate
 			                   ? VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV
 			                   : VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV;
@@ -87,15 +87,24 @@ namespace Vulkan
 		buildInfo.pGeometries = geometries.data();
 
 		extensions->vkCmdBuildAccelerationStructureNV(
-			commandBuffer, &buildInfo, nullptr, 0, updateOnly, accelerationStructure, previousStructure,
-			scratchBuffer.Get(), scratchOffset);
+			commandBuffer,
+			&buildInfo,
+			nullptr,
+			0,
+			updateOnly,
+			accelerationStructure,
+			previousStructure,
+			scratchBuffer.Get(),
+			scratchOffset);
 	}
 
 	VkGeometryNV BLAS::CreateGeometry(
 		const Tracer::Scene& scene,
-		const uint32_t vertexOffset, const uint32_t vertexCount,
-		const uint32_t indexOffset, const uint32_t indexCount,
-		const bool isOpaque)
+		uint32_t vertexOffset,
+		uint32_t vertexCount,
+		uint32_t indexOffset,
+		uint32_t indexCount,
+		bool isOpaque)
 	{
 		VkGeometryNV geometry = {};
 		geometry.sType = VK_STRUCTURE_TYPE_GEOMETRY_NV;

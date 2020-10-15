@@ -17,7 +17,7 @@ struct Uniform
 
 struct RayPayload
 {
-	vec4 colorAndDistance;
+	vec3 color;
 };
 
 struct Vertex

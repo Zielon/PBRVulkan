@@ -281,12 +281,29 @@ namespace Vulkan
 		pipelineInfo.layout = pipelineLayout;
 		pipelineInfo.basePipelineHandle = nullptr;
 		pipelineInfo.basePipelineIndex = 0;
-		
+
 		VK_CHECK(extensions->vkCreateRayTracingPipelinesNV(device.Get(), nullptr, 1, &pipelineInfo, nullptr, &pipeline),
 		         "Create ray tracing pipeline");
 	}
 
-	RaytracerGraphicsPipeline::~RaytracerGraphicsPipeline() {}
+	RaytracerGraphicsPipeline::~RaytracerGraphicsPipeline()
+	{
+		if (pipeline != nullptr)
+		{
+			vkDestroyPipeline(device.Get(), pipeline, nullptr);
+			pipeline = nullptr;
+		}
+
+		renderPass.reset();
+
+		if (pipelineLayout != nullptr)
+		{
+			vkDestroyPipelineLayout(device.Get(), pipelineLayout, nullptr);
+			pipelineLayout = nullptr;
+		}
+
+		descriptorSets.clear();
+	}
 
 	uint32_t RaytracerGraphicsPipeline::GetRayGenShaderIndex()
 	{

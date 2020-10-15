@@ -40,6 +40,6 @@ void main()
           0               // payload (location = 0)
 	);
 
-	imageStore(AccumulationImage, ivec2(gl_LaunchIDNV.xy), vec4(Ray.colorAndDistance.rgb, 0));
-    imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(Ray.colorAndDistance.rgb, 0));
+	imageStore(AccumulationImage, ivec2(gl_LaunchIDNV.xy), vec4(Ray.color, 1.0));
+    imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(Ray.color, 1.0));
 }
