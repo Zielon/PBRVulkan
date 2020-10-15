@@ -397,4 +397,8 @@ FodyWeavers.xsd
 
 Shadrec/
 
-!PBRVulkan/Assets/Models/*.obj
+!PBRVulkan/Assets/Models/coffee_cart/*
+!PBRVulkan/Assets/Models/coffee_cart.scene
+
+!PBRVulkan/Assets/Models/cornell_box/*
+!PBRVulkan/Assets/Models/cornell_box.scene

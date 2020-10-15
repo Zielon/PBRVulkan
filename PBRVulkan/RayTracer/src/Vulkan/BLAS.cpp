@@ -72,7 +72,6 @@ namespace Vulkan
 		VK_CHECK(extensions->vkBindAccelerationStructureMemoryNV(device.Get(), 1, &bindInfo),
 		         "Bind acceleration structure");
 
-		// TODO Using PREFER_FAST_TRACE_BIT creates error in some of the scenes.
 		const auto flags = allowUpdate
 			                   ? VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV
 			                   : VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV;

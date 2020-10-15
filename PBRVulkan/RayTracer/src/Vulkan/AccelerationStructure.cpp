@@ -37,30 +37,30 @@ namespace Vulkan
 		}
 	}
 
-	ASMemoryRequirements AccelerationStructure::GetMemoryRequirements() const
+	ASMemoryRequirementsNV AccelerationStructure::GetMemoryRequirements() const
 	{
-		VkAccelerationStructureMemoryRequirementsInfoNV memoryRequirementsInfo{};
-		memoryRequirementsInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV;
-		memoryRequirementsInfo.pNext = nullptr;
-		memoryRequirementsInfo.accelerationStructure = accelerationStructure;
+		VkAccelerationStructureMemoryRequirementsInfoNV ASMemoryRequirementsInfoNV{};
+		ASMemoryRequirementsInfoNV.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV;
+		ASMemoryRequirementsInfoNV.pNext = nullptr;
+		ASMemoryRequirementsInfoNV.accelerationStructure = accelerationStructure;
 
 		// If the descriptor already contains the geometry info, so we can directly compute the estimated size and required scratch memory.
 		VkMemoryRequirements2 memoryRequirements = {};
-		memoryRequirementsInfo.type = VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV;
+		ASMemoryRequirementsInfoNV.type = VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV;
 		extensions->vkGetAccelerationStructureMemoryRequirementsNV(
-			device.Get(), &memoryRequirementsInfo, &memoryRequirements);
+			device.Get(), &ASMemoryRequirementsInfoNV, &memoryRequirements);
 
 		const auto resultRequirements = memoryRequirements.memoryRequirements;
 
-		memoryRequirementsInfo.type = VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV;
+		ASMemoryRequirementsInfoNV.type = VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV;
 		extensions->vkGetAccelerationStructureMemoryRequirementsNV(
-			device.Get(), &memoryRequirementsInfo, &memoryRequirements);
+			device.Get(), &ASMemoryRequirementsInfoNV, &memoryRequirements);
 
 		const auto buildRequirements = memoryRequirements.memoryRequirements;
 
-		memoryRequirementsInfo.type = VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV;
+		ASMemoryRequirementsInfoNV.type = VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV;
 		extensions->vkGetAccelerationStructureMemoryRequirementsNV(
-			device.Get(), &memoryRequirementsInfo, &memoryRequirements);
+			device.Get(), &ASMemoryRequirementsInfoNV, &memoryRequirements);
 
 		const auto updateRequirements = memoryRequirements.memoryRequirements;
 
@@ -87,16 +87,16 @@ namespace Vulkan
 			0, 1, &memoryBarrier, 0, nullptr, 0, nullptr);
 	}
 
-	ASMemoryRequirements AccelerationStructure::GetTotalRequirements(
-		const std::vector<ASMemoryRequirements>& requirements)
+	ASMemoryRequirementsNV AccelerationStructure::GetTotalRequirements(
+		const std::vector<ASMemoryRequirementsNV>& requirements)
 	{
-		ASMemoryRequirements total{};
+		ASMemoryRequirementsNV total{};
 
 		for (const auto& req : requirements)
 		{
-			total.Result.size += req.Result.size;
-			total.Build.size += req.Build.size;
-			total.Update.size += req.Update.size;
+			total.result.size += req.result.size;
+			total.build.size += req.build.size;
+			total.update.size += req.update.size;
 		}
 
 		return total;

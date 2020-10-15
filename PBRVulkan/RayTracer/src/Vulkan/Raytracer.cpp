@@ -26,7 +26,7 @@ namespace Vulkan
 	Raytracer::~Raytracer()
 	{
 		scene.reset();
-		
+
 		Raytracer::DeleteSwapChain();
 	}
 
@@ -49,7 +49,8 @@ namespace Vulkan
 				*accumulationImageView,
 				*outputImageView,
 				uniformBuffers,
-				TLASs[0].Get()));
+				// For now assume only one instance of Top Level Instance
+				TLASs.front().Get()));
 
 		shaderBindingTable.reset(new ShaderBindingTable(*raytracerGraphicsPipeline));
 	}
@@ -136,7 +137,7 @@ namespace Vulkan
 
 	void Raytracer::CreateAS()
 	{
-		auto start = std::chrono::high_resolution_clock::now();
+		const auto start = std::chrono::high_resolution_clock::now();
 
 		Command::Submit(*commandPool, [this](VkCommandBuffer commandBuffer)
 		{
@@ -145,9 +146,9 @@ namespace Vulkan
 			CreateTLAS(commandBuffer);
 		});
 
-		auto stop = std::chrono::high_resolution_clock::now();
+		const auto stop = std::chrono::high_resolution_clock::now();
+		const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 		std::cout << "[INFO] Acceleration data structure build: " << duration.count() << " milliseconds" << std::endl;
 	}
 
@@ -156,14 +157,15 @@ namespace Vulkan
 		uint32_t vertexOffset = 0;
 		uint32_t indexOffset = 0;
 
-		constexpr bool ALLOW_UPDATES = true;
+		constexpr bool ALLOW_UPDATES = false;
 
-		std::vector<ASMemoryRequirements> requirements;
+		std::vector<ASMemoryRequirementsNV> requirements;
 
 		for (const auto& model : scene->GetMeshes())
 		{
 			const auto vertexCount = static_cast<uint32_t>(model->GetVerticesSize());
 			const auto indexCount = static_cast<uint32_t>(model->GetIndeciesSize());
+
 			const std::vector<VkGeometryNV> geometries =
 			{
 				BLAS::CreateGeometry(*scene, vertexOffset, vertexCount, indexOffset, indexCount, true)
@@ -180,9 +182,10 @@ namespace Vulkan
 		const auto total = AccelerationStructure::GetTotalRequirements(requirements);
 
 		BLASBuffer.reset(new Buffer(
-			*device, total.Result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-		const auto BLASScratchBuffer = std::make_unique<Buffer>(
-			*device, total.Result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+			*device, total.result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
+		ScratchBLASBuffer.reset(new Buffer(
+			*device, total.result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		// Generate the structures.
 		VkDeviceSize resultOffset = 0;
@@ -190,16 +193,16 @@ namespace Vulkan
 
 		for (size_t i = 0; i != BLASs.size(); ++i)
 		{
-			BLASs[i].Generate(commandBuffer, *BLASScratchBuffer, scratchOffset, *BLASBuffer, resultOffset, false);
-			resultOffset += requirements[i].Result.size;
-			scratchOffset += requirements[i].Build.size;
+			BLASs[i].Generate(commandBuffer, *ScratchBLASBuffer, scratchOffset, *BLASBuffer, resultOffset, false);
+			resultOffset += requirements[i].result.size;
+			scratchOffset += requirements[i].build.size;
 		}
 	}
 
 	void Raytracer::CreateTLAS(VkCommandBuffer commandBuffer)
 	{
 		std::vector<VkGeometryInstance> geometryInstances;
-		std::vector<ASMemoryRequirements> requirements;
+		std::vector<ASMemoryRequirementsNV> requirements;
 
 		geometryInstances.reserve(scene->GetMeshes().size());
 		for (auto instanceId = 0; instanceId < scene->GetMeshes().size(); ++instanceId)
@@ -214,13 +217,16 @@ namespace Vulkan
 		const size_t instancesBufferSize = sizeof(VkGeometryInstance) * geometryInstances.size();
 
 		TLASBuffer.reset(new Buffer(
-			*device, total.Result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-		const auto TLASScratchBuffer = std::make_unique<Buffer>(
-			*device, total.Result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+			*device, total.result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
+		ScratchTLASBuffer.reset(new Buffer(
+			*device, total.result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
 		instanceBuffer.reset(
 			new Buffer(*device, instancesBufferSize, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV,
 			           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 
-		TLASs.front().Generate(commandBuffer, *TLASScratchBuffer, 0, *TLASBuffer, 0, *instanceBuffer, 0, false);
+		// For now assume only one instance of Top Level Instance
+		TLASs.front().Generate(commandBuffer, *ScratchTLASBuffer, 0, *TLASBuffer, 0, *instanceBuffer, 0, false);
 	}
 }

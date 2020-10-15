@@ -7,11 +7,11 @@
 
 namespace Vulkan
 {
-	struct ASMemoryRequirements
+	struct ASMemoryRequirementsNV
 	{
-		VkMemoryRequirements Result;
-		VkMemoryRequirements Build;
-		VkMemoryRequirements Update;
+		VkMemoryRequirements result;
+		VkMemoryRequirements build;
+		VkMemoryRequirements update;
 	};
 	
 	class AccelerationStructure
@@ -24,9 +24,9 @@ namespace Vulkan
 		virtual ~AccelerationStructure();
 
 		static void MemoryBarrier(VkCommandBuffer commandBuffer);
-		static ASMemoryRequirements GetTotalRequirements(const std::vector<ASMemoryRequirements>& requirements);
+		static ASMemoryRequirementsNV GetTotalRequirements(const std::vector<ASMemoryRequirementsNV>& requirements);
 		
-		[[nodiscard]] ASMemoryRequirements GetMemoryRequirements() const;
+		[[nodiscard]] ASMemoryRequirementsNV GetMemoryRequirements() const;
 
 		[[nodiscard]] const class Device& GetDevice() const
 		{
