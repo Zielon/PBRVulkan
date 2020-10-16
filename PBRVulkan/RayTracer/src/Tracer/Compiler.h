@@ -8,7 +8,8 @@ namespace Tracer
 {
 	enum Integrator
 	{
-		PATH_TRACER_DEFAULT
+		PATH_TRACER_DEFAULT,
+		PATH_TRACER_MSM
 	};
 
 	class Compiler

@@ -72,9 +72,6 @@
     <None Include="src\Assets\Shaders\Raytracer\Raytracing.rmiss">
       <Filter>Assets\Shaders\Raytracer</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Raytracer\Integrators\Default.glsl">
-      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
-    </None>
     <None Include="src\Assets\Shaders\Common\Structs.glsl">
       <Filter>Assets\Shaders\Common</Filter>
     </None>
@@ -83,6 +80,12 @@
     </None>
     <None Include="src\Assets\Shaders\Common\Vertex.glsl">
       <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracer.glsl">
+      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl">
+      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,8 @@
 #include "Compiler.h"
 
+#include <map>
 #include <fstream>
 #include <iostream>
-#include <map>
-#include <sstream>
 #include <string>
 
 namespace Tracer
@@ -14,7 +13,8 @@ namespace Tracer
 		std::string RAY_HIT_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing.rchit";
 
 		std::map<Integrator, std::string> INTEGRATORS = {
-			{ PATH_TRACER_DEFAULT, "#include \"Integrators/Default.glsl\"" }
+			{ PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
+			{ PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" }
 		};
 	}
 
