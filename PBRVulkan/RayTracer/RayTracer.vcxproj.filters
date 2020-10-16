@@ -216,6 +216,9 @@
     <ClCompile Include="src\Vulkan\TLAS.cpp">
       <Filter>Raytracer\Acceleration</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tracer\Compiler.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vulkan\Device.h">
@@ -358,6 +361,9 @@
     </ClInclude>
     <ClInclude Include="src\Vulkan\BLAS.h">
       <Filter>Raytracer\Acceleration</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\Compiler.h">
+      <Filter>Tracer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

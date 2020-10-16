@@ -39,6 +39,7 @@
     <ClCompile Include="src\Loader\Loader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Tracer\Camera.cpp" />
+    <ClCompile Include="src\Tracer\Compiler.cpp" />
     <ClCompile Include="src\Tracer\Menu.cpp" />
     <ClCompile Include="src\Tracer\Application.cpp" />
     <ClCompile Include="src\Tracer\Scene.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="src\Loader\Loader.h" />
     <ClInclude Include="src\Loader\RenderOptions.h" />
     <ClInclude Include="src\Tracer\Camera.h" />
+    <ClInclude Include="src\Tracer\Compiler.h" />
     <ClInclude Include="src\Tracer\Menu.h" />
     <ClInclude Include="src\Tracer\Application.h" />
     <ClInclude Include="src\Tracer\Scene.h" />

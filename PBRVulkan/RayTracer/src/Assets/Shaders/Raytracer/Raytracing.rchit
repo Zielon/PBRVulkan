@@ -32,7 +32,6 @@ void main()
 
 	const Material material = Materials[v0.materialIndex];
 
-	#ifdef INTGRATOR_PATH_TRACER
-	#include "Integrators/Default.glsl"
-	#endif
+	// Replaced by Compiler.h
+	====== INTEGRATOR ======
 }

@@ -30,5 +30,6 @@ namespace Tracer
 		void OnScrollChanged(double xoffset, double yoffset) override;
 
 		std::unique_ptr<class Menu> menu;
+		std::unique_ptr<class Compiler> compiler;
 	};
 }

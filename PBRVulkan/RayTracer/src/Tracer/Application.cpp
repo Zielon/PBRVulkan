@@ -11,6 +11,8 @@
 
 #include "../Geometry/MVP.h"
 
+#include "Compiler.h"
+
 #include "../Vulkan/Window.h"
 #include "../Vulkan/Buffer.h"
 #include "../Vulkan/Device.h"
@@ -19,6 +21,9 @@ namespace Tracer
 {
 	Application::Application()
 	{
+		compiler.reset(new Compiler(PATH_TRACER_DEFAULT));
+		compiler->Compile();
+
 		LoadScene();
 		CreateAS();
 		RegisterCallbacks();
