@@ -24,6 +24,9 @@ namespace Vulkan
 		uint64_t accelerationStructureHandle;
 	};
 
+	/**
+	 * Top Level Acceleration Structure
+	 */
 	class TLAS final : public AccelerationStructure
 	{
 	public:

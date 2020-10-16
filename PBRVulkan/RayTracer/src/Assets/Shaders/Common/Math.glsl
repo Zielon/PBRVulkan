@@ -1,6 +1,6 @@
-//
-// Math helpers functions
-//
+/*
+ * Math helpers functions
+ */
 
 vec3 mix(vec3 a, vec3 b, vec3 c, vec3 barycentrics) 
 {

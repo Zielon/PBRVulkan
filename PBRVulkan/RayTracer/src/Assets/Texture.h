@@ -11,6 +11,7 @@ namespace Assets
 	public:
 		Texture(const Texture&) = delete;
 		Texture& operator =(const Texture&) = delete;
+		Texture();
 		Texture(const std::string& path);
 		Texture(Texture&&) noexcept;
 		Texture& operator =(Texture&&) noexcept;

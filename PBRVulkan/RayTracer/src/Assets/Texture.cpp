@@ -5,6 +5,18 @@
 
 namespace Assets
 {
+	/*
+	 * Create an empty small texture
+	 */
+	Texture::Texture()
+	{
+		texHeight = 32;
+		texWidth = 32;
+		texChannels = 4;
+		pixels = new unsigned char[texHeight * texWidth * texChannels];
+		imageSize = texHeight * texWidth * texChannels;
+	}
+
 	Texture::Texture(const std::string& path): path(path)
 	{
 		pixels = stbi_load(path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);

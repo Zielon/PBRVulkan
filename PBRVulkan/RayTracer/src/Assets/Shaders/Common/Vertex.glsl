@@ -1,7 +1,7 @@
-//
-// General vertex structure
-// For reference check Geometry/Vertex.h files
-//
+/*
+ * General vertex structure
+ * For reference check Geometry/Vertex.h files
+ */
 
 struct Vertex
 {

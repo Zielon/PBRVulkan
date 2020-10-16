@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-
 #include "TextureImage.h"
 #include "Camera.h"
 
@@ -30,6 +29,7 @@ namespace Tracer
 	{
 		Load();
 		Process();
+		FillEmptyTextures();
 		CreateBuffers();
 
 		std::cout << "[INFO] Scene has been loaded!" << std::endl;
@@ -42,6 +42,16 @@ namespace Tracer
 
 		// Release loaded pixles from Texture objects
 		textures.clear();
+	}
+
+	void Scene::FillEmptyTextures()
+	{
+		// Add a dummy texture for texture samplers in Vulkan
+		if (textures.empty())
+		{
+			const auto texture = std::make_unique<Assets::Texture>();
+			textureImages.emplace_back(new TextureImage(device, commandPool, *texture));
+		}
 	}
 
 	void Scene::Process()

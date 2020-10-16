@@ -18,7 +18,6 @@ Camera
 material white
 {
 	color 0.725 0.71 0.68
-	albedoTexture cornell_box/textures/viking_room.png
 }
 
 material red

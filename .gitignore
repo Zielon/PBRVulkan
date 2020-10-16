@@ -396,6 +396,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 Shadrec/
+PBRVulkan/Assets/Models/*
 
 !PBRVulkan/Assets/Models/coffee_cart/*
 !PBRVulkan/Assets/Models/coffee_cart.scene

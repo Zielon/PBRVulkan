@@ -1,6 +1,6 @@
-//
-// Global structure used in shaders
-//
+/*
+ *  Global structure used in shaders
+ */
 
 struct Material 
 { 

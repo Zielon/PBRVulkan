@@ -11,6 +11,9 @@ namespace Tracer
 
 namespace Vulkan
 {
+	/**
+	 * Bottom Level Acceleration Structure
+	 */
 	class BLAS final : public AccelerationStructure
 	{
 	public:

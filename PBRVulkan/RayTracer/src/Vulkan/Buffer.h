@@ -6,14 +6,12 @@
 
 namespace Vulkan
 {
-	class Device;
-
 	class Buffer final
 	{
 	public:
 		NON_COPIABLE(Buffer)
 
-		Buffer(const Device& device, size_t size, VkBufferUsageFlagBits usage, VkMemoryPropertyFlags properties);
+		Buffer(const class Device& device, size_t size, VkBufferUsageFlagBits usage, VkMemoryPropertyFlags properties);
 		~Buffer();
 
 		void Copy(const class CommandPool& commandPool, const Buffer& src);

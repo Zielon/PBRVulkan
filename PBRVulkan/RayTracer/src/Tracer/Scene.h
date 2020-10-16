@@ -115,6 +115,7 @@ namespace Tracer
 
 		std::vector<std::unique_ptr<Assets::Mesh>> meshes;
 		std::vector<std::unique_ptr<Assets::Texture>> textures;
+		
 		std::vector<std::unique_ptr<TextureImage>> textureImages;
 
 		std::vector<Assets::MeshInstance> meshInstances;
@@ -129,6 +130,7 @@ namespace Tracer
 		std::unique_ptr<class Vulkan::Image> image;
 
 		void Load();
+		void FillEmptyTextures();
 		void Process();
 		void CreateBuffers();
 	};
