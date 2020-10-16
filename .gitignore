@@ -5,7 +5,7 @@
 *.slo
 *.lo
 *.o
-
+*.obj
 
 # Precompiled Headers
 *.gch
@@ -395,4 +395,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 Shadrec/
-#PBRVulkan/Assets/
+PBRVulkan/Assets/
