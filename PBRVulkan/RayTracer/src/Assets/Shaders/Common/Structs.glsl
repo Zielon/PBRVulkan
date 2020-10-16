@@ -4,10 +4,18 @@
 
 struct Material 
 { 
-    vec4 albedo; 
-    vec4 emission; 
-    vec4 param; 
-    ivec4 texIDs; 
+    vec4 albedo;
+    vec4 emission;
+	// Parameters
+	float metallic;
+	float roughness;
+	float ior;
+	float transmittance;
+	// Textures
+    int albedoTexID;
+	int metallicRoughnessTexID;
+	int normalmapTexID;
+	int heightmapTexID;
 };
 
 struct Uniform

@@ -21,7 +21,7 @@ void main()
 	vec3 normal = normalize(inNormal);
 	Material material = materials[inMaterialId];
 
-	int textureId = material.texIDs.x; // Albedo
+	int textureId = material.albedoTexID;
 	float d = max(dot(inDirection, normalize(normal)), 0.2);
 
 	if (textureId >= 0)

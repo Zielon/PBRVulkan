@@ -7,7 +7,7 @@
 	const vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 
-	int textureId = material.texIDs.x; // Albedo
+	int textureId = material.albedoTexID; // Albedo
 
 	if (textureId >= 0)
 	{
