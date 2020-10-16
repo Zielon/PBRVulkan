@@ -15,23 +15,6 @@ namespace Vulkan
 		{
 			return (size + powerOf2Alignment - 1) & ~(powerOf2Alignment - 1);
 		}
-
-		size_t CopyShaderData(
-			uint8_t* const dst,
-			uint32_t shaderGroupHandleSize,
-			uint32_t groupIndex,
-			const size_t entrySize,
-			const uint8_t* const src)
-		{
-			uint8_t* pDst = dst;
-
-			std::vector<unsigned char> inlineData;
-
-			// Copy the shader identifier that was previously obtained with vkGetRayTracingShaderGroupHandlesNV.
-			std::memcpy(pDst, src + groupIndex * shaderGroupHandleSize, shaderGroupHandleSize);
-
-			return entrySize;
-		}
 	}
 
 	ShaderBindingTable::ShaderBindingTable(const RaytracerGraphicsPipeline& raytracerPipeline)
@@ -69,20 +52,17 @@ namespace Vulkan
 
 		auto* dst = static_cast<uint8_t*>(stbBuffer->Map(0, stbSize));
 
-		auto genRayIndex = RaytracerGraphicsPipeline::GetRayGenShaderIndex();
-		auto missRayIndex = RaytracerGraphicsPipeline::GetMissShaderIndex();
-		auto hitRayIndex = RaytracerGraphicsPipeline::GetHitShaderIndex();
-
-		dst += SBT::CopyShaderData(dst, handleSize, genRayIndex, entrySize, shaderHandleStorage.data());
-		dst += SBT::CopyShaderData(dst, handleSize, missRayIndex, entrySize, shaderHandleStorage.data());
-		SBT::CopyShaderData(dst, handleSize, hitRayIndex, entrySize, shaderHandleStorage.data());
+		std::memcpy(
+			dst, shaderHandleStorage.data() + RaytracerGraphicsPipeline::GetRayGenShaderIndex() * handleSize, handleSize);
+		dst += entrySize;
+		std::memcpy(
+			dst, shaderHandleStorage.data() + RaytracerGraphicsPipeline::GetMissShaderIndex() * handleSize, handleSize);
+		dst += entrySize;
+		std::memcpy(
+			dst, shaderHandleStorage.data() + RaytracerGraphicsPipeline::GetHitShaderIndex() * handleSize, handleSize);
 
 		stbBuffer->Unmap();
 	}
 
-	ShaderBindingTable::~ShaderBindingTable()
-	{
-		extensions.reset();
-		stbBuffer.reset();
-	}
+	ShaderBindingTable::~ShaderBindingTable() { }
 }
