@@ -65,7 +65,7 @@ namespace Tracer
 
 	void Application::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
 	{
-		Camera::UpdateTime();
+		Camera::OnBeforeRender();
 		UpdatePipeline();
 
 		if (type == RAYTRACER)
@@ -73,7 +73,7 @@ namespace Tracer
 		if (type == RASTERIZER)
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
 
-		scene->GetCamera().OnEventChanged();
+		scene->GetCamera().OnAfterRender();
 		menu->Render(framebuffer, commandBuffer);
 	}
 

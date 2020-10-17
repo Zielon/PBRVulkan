@@ -1,9 +1,10 @@
 #include "Scene.h"
 
 #include <iostream>
+#include <future> 
 
-#include "TextureImage.h"
 #include "Camera.h"
+#include "TextureImage.h"
 
 #include "../Vulkan/Device.h"
 #include "../Vulkan/CommandPool.h"

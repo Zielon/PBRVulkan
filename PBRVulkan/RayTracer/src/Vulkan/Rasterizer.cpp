@@ -29,7 +29,7 @@ namespace Vulkan
 
 	void Rasterizer::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
 	{
-		Tracer::Camera::UpdateTime();
+		Tracer::Camera::OnBeforeRender();
 
 		std::array<VkClearValue, 2> clearValues = {};
 		clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 1.0f } };

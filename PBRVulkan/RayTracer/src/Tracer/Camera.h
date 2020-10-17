@@ -24,9 +24,9 @@ namespace Tracer
 
 		void OnMouseButtonChanged(int button, int action, int mods);
 
-		void OnEventChanged();
+		void OnAfterRender();
 
-		void static UpdateTime();
+		void static OnBeforeRender();
 
 		[[nodiscard]] glm::mat4 GetView() const;
 
