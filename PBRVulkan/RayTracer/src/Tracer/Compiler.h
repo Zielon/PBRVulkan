@@ -20,14 +20,13 @@ namespace Tracer
 		Compiler(Integrator integrator);
 		~Compiler() = default;
 
-		void Compile();
-
 	private:
 		Integrator integrator{};
 		std::vector<std::string> file;
 		int tokenPosition = 0;
 
 		void Read();
+		void Compile();
 		void Include();
 		void Restore();
 	};

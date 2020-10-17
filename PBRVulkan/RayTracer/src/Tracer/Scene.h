@@ -8,11 +8,10 @@
 #define GLM_SWIZZLE 
 #include <glm/glm.hpp>
 
-#include "../Assets/Mesh.h"
+#include "Application.h"
+
 #include "../Geometry/Vertex.h"
 #include "../Loader/Loader.h"
-
-#include "../Vulkan/CommandBuffers.h"
 #include "../Vulkan/Vulkan.h"
 
 namespace Vulkan
@@ -39,7 +38,11 @@ namespace Tracer
 	public:
 		NON_COPIABLE(Scene)
 
-		Scene(const std::string& config, const class Vulkan::Device& device, const Vulkan::CommandPool& commandPool);
+		Scene(
+			const std::string& config,
+			const class Vulkan::Device& device,
+			const Vulkan::CommandPool& commandPool,
+			Type type);
 		~Scene();
 
 		void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov) override;
@@ -101,6 +104,7 @@ namespace Tracer
 		}
 
 	private:
+		Type type;
 		std::string config;
 		uint32_t verticesSize{};
 		uint32_t indeciesSize{};
@@ -115,7 +119,7 @@ namespace Tracer
 
 		std::vector<std::unique_ptr<Assets::Mesh>> meshes;
 		std::vector<std::unique_ptr<Assets::Texture>> textures;
-		
+
 		std::vector<std::unique_ptr<TextureImage>> textureImages;
 
 		std::vector<Assets::MeshInstance> meshInstances;

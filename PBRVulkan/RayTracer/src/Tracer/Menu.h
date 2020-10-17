@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <memory>
 
+#include "Compiler.h"
 #include "../Vulkan/Vulkan.h"
 
 namespace Vulkan
@@ -15,6 +16,19 @@ namespace Vulkan
 
 namespace Tracer
 {
+	struct Settings
+	{
+		bool UseRasterizer{};
+		int IntegratorType{};
+		int MaxDepth{};
+		float Fov{};
+
+		bool operator==(const Settings& settings) const
+		{
+			return UseRasterizer == settings.UseRasterizer && IntegratorType == settings.IntegratorType;
+		}
+	};
+
 	class Menu
 	{
 	public:
@@ -26,7 +40,12 @@ namespace Tracer
 			const Vulkan::CommandPool& commandPool);
 		~Menu();
 
-		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) const;
+		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer);
+
+		[[nodiscard]] const Settings& GetSettings() const
+		{
+			return settings;
+		};
 
 		static bool WantCaptureMouse()
 		{
@@ -39,8 +58,9 @@ namespace Tracer
 		}
 
 	private:
-		void RenderSettings() const;
+		void RenderSettings();
 
+		Settings settings;
 		VkDescriptorPool descriptorPool;
 		const Vulkan::SwapChain& swapChain;
 		const Vulkan::Device& device;

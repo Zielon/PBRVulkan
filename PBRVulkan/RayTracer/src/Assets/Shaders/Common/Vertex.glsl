@@ -5,10 +5,10 @@
 
 struct Vertex
 {
-    vec3 position;
-    vec3 normal;
-    vec2 texCoord;
-    int materialIndex;
+	vec3 position;
+	vec3 normal;
+	vec2 texCoord;
+	int materialIndex;
 };
 
 Vertex unpack(uint index)

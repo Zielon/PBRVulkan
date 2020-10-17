@@ -90,7 +90,7 @@ namespace Tracer
 		ImGui::DestroyContext();
 	}
 
-	void Menu::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer) const
+	void Menu::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer)
 	{
 		ImGui_ImplGlfw_NewFrame();
 		ImGui_ImplVulkan_NewFrame();
@@ -116,7 +116,7 @@ namespace Tracer
 		vkCmdEndRenderPass(commandBuffer);
 	}
 
-	void Menu::RenderSettings() const
+	void Menu::RenderSettings()
 	{
 		bool open = true;
 		const float distance = 10.0f;
@@ -131,8 +131,15 @@ namespace Tracer
 
 		ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
 
+		const char* integrators[] = { "PATH TRACER", "PATH TRACER MSM" };
+
 		if (ImGui::Begin("Settings", &open, flags))
 		{
+			ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
+
+			if (ImGui::CollapsingHeader("Current shader"), ImGuiTreeNodeFlags_DefaultOpen)
+				ImGui::ListBox("", &settings.IntegratorType, integrators, IM_ARRAYSIZE(integrators), 2);
+
 			ImGui::Text("Controls");
 			ImGui::Separator();
 			ImGui::Text("Program usage: \n"

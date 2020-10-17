@@ -24,8 +24,9 @@ namespace Tracer
 	Scene::Scene(
 		const std::string& config,
 		const Vulkan::Device& device,
-		const Vulkan::CommandPool& commandPool)
-		: config(config), device(device), commandPool(commandPool)
+		const Vulkan::CommandPool& commandPool,
+		Type type)
+		: type(type), config(config), device(device), commandPool(commandPool)
 	{
 		Load();
 		Process();
@@ -109,10 +110,12 @@ namespace Tracer
 
 		buffer_staging->Fill(vertices.data());
 
+		auto bufferType = type == RASTERIZER ? VK_BUFFER_USAGE_VERTEX_BUFFER_BIT : VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+
 		vertexBuffer.reset(
 			new Vulkan::Buffer(
 				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT),
+				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | bufferType),
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		vertexBuffer->Copy(commandPool, *buffer_staging);
@@ -129,10 +132,12 @@ namespace Tracer
 
 		buffer_staging->Fill(indices.data());
 
+		bufferType = type == RASTERIZER ? VK_BUFFER_USAGE_INDEX_BUFFER_BIT : VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+
 		indexBuffer.reset(
 			new Vulkan::Buffer(
 				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT),
+				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | bufferType),
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		indexBuffer->Copy(commandPool, *buffer_staging);

@@ -14,6 +14,7 @@
 #include "ShaderBindingTable.h"
 #include "RaytracerGraphicsPipeline.h"
 
+#include "../Assets/Mesh.h"
 #include "../Tracer/Scene.h"
 
 namespace Vulkan

@@ -19,10 +19,10 @@ layout(location = 3) out flat int outMaterialId;
 
 void main() 
 {
-    gl_Position = ubo.proj * ubo.view * vec4(inPosition, 1.0);
+	gl_Position = ubo.proj * ubo.view * vec4(inPosition, 1.0);
 
-    outNormal = inNormal;
-    outTexCoord = inTexCoord;
-    outDirection = ubo.direction;
-    outMaterialId = inMaterialId;
+	outNormal = inNormal;
+	outTexCoord = inTexCoord;
+	outDirection = ubo.direction;
+	outMaterialId = inMaterialId;
 }

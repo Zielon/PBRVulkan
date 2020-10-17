@@ -2,6 +2,8 @@
 
 #include <array>
 
+#include "../Assets/Mesh.h"
+
 #include "../Tracer/Camera.h"
 #include "../Tracer/Scene.h"
 
@@ -11,6 +13,7 @@
 #include "Framebuffer.h"
 #include "SwapChain.h"
 #include "RasterizerGraphicsPipeline.h"
+#include "CommandBuffers.h"
 #include "Semaphore.h"
 
 #include "../Geometry/MVP.h"

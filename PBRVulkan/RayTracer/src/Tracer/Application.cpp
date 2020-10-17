@@ -19,10 +19,12 @@
 
 namespace Tracer
 {
+	//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
+	const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
+
 	Application::Application()
 	{
 		compiler.reset(new Compiler(PATH_TRACER_DEFAULT));
-		compiler->Compile();
 
 		LoadScene();
 		CreateAS();
@@ -36,9 +38,18 @@ namespace Tracer
 
 	void Application::LoadScene()
 	{
-		//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
-		const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
-		scene.reset(new Scene(CONFIG, *device, *commandPool));
+		scene.reset(new Scene(CONFIG, *device, *commandPool, RAYTRACER));
+	}
+
+	void Application::UpdatePipeline()
+	{
+		if (settings == menu->GetSettings())
+			return;
+
+		// Update scene
+		// Recreate swap chain
+
+		settings = menu->GetSettings();
 	}
 
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
@@ -55,9 +66,12 @@ namespace Tracer
 	void Application::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
 	{
 		Camera::UpdateTime();
+		UpdatePipeline();
 
-		//Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
-		Raytracer::Render(framebuffer, commandBuffer, imageIndex);
+		if (type == RAYTRACER)
+			Raytracer::Render(framebuffer, commandBuffer, imageIndex);
+		if (type == RASTERIZER)
+			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
 
 		scene->GetCamera().OnEventChanged();
 		menu->Render(framebuffer, commandBuffer);

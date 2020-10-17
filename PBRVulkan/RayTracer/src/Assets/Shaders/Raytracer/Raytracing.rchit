@@ -1,7 +1,5 @@
 #version 460
 
-#define INTGRATOR_PATH_TRACER
-
 #extension GL_EXT_nonuniform_qualifier : require
 #extension GL_GOOGLE_include_directive : require
 #extension GL_NV_ray_tracing : require

@@ -28,19 +28,19 @@ void main()
 	float tMin     = 0.001;
 	float tMax     = 10000.0;
 
-	traceNV(TLAS,         // acceleration structure
-          rayFlags,       // rayFlags
-          0xFF,           // cullMask
-          0,              // sbtRecordOffset
-          0,              // sbtRecordStride
-          0,              // missIndex
-          origin.xyz,     // ray origin
-          tMin,           // ray min range
-          direction.xyz,  // ray direction
-          tMax,           // ray max range
-          0               // payload (location = 0)
+	traceNV(TLAS,           // acceleration structure
+			rayFlags,       // rayFlags
+			0xFF,           // cullMask
+			0,              // sbtRecordOffset
+			0,              // sbtRecordStride
+			0,              // missIndex
+			origin.xyz,     // ray origin
+			tMin,           // ray min range
+			direction.xyz,  // ray direction
+			tMax,           // ray max range
+			0               // payload (location = 0)
 	);
 
 	imageStore(AccumulationImage, ivec2(gl_LaunchIDNV.xy), vec4(Ray.color, 1.0));
-    imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(Ray.color, 1.0));
+	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(Ray.color, 1.0));
 }

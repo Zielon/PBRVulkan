@@ -18,7 +18,10 @@ namespace Tracer
 		};
 	}
 
-	Compiler::Compiler(Integrator integrator): integrator(integrator) { }
+	Compiler::Compiler(Integrator integrator): integrator(integrator)
+	{
+		Compile();
+	}
 
 	void Compiler::Compile()
 	{

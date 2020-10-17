@@ -8,7 +8,6 @@
 #include "Device.h"
 #include "Surface.h"
 #include "SwapChain.h"
-#include "RasterizerGraphicsPipeline.h"
 #include "CommandBuffers.h"
 #include "Semaphore.h"
 #include "Fence.h"
