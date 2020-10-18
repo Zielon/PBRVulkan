@@ -11,11 +11,10 @@
 
 	if (textureId >= 0)
 	{
-		//Ray.color = texture(TextureSamplers[textureId], texCoord).rgb;
-		Ray.color = normal;
+		Ray.color = texture(TextureSamplers[textureId], texCoord).rgb;
 	}
 	else
 	{
-		Ray.color = normal;
+		Ray.color = material.albedo.xyz;
 	}
 }

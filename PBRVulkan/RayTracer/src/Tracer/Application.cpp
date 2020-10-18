@@ -8,11 +8,9 @@
 #include "Menu.h"
 #include "Scene.h"
 #include "Camera.h"
-
-#include "../Geometry/Global.h"
-
 #include "Compiler.h"
 
+#include "../Geometry/Global.h"
 #include "../Vulkan/Window.h"
 #include "../Vulkan/Buffer.h"
 #include "../Vulkan/Device.h"
@@ -20,7 +18,7 @@
 namespace Tracer
 {
 	//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
-	const std::string CONFIG = "../Assets/Scenes/ajax.scene";
+	const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
 
 	Application::Application()
 	{
