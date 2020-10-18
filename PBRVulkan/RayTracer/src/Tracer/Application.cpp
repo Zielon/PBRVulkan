@@ -9,7 +9,7 @@
 #include "Scene.h"
 #include "Camera.h"
 
-#include "../Geometry/MVP.h"
+#include "../Geometry/Global.h"
 
 #include "Compiler.h"
 
@@ -20,7 +20,7 @@
 namespace Tracer
 {
 	//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
-	const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
+	const std::string CONFIG = "../Assets/Scenes/ajax.scene";
 
 	Application::Application()
 	{
@@ -54,13 +54,14 @@ namespace Tracer
 
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
 	{
-		Uniforms::MVP ubo{};
+		Uniforms::Global uniform{};
 
-		ubo.view = scene->GetCamera().GetView();
-		ubo.projection = scene->GetCamera().GetProjection();
-		ubo.direction = scene->GetCamera().GetDirection();
+		uniform.view = scene->GetCamera().GetView();
+		uniform.projection = scene->GetCamera().GetProjection();
+		uniform.direction = scene->GetCamera().GetDirection();
+		uniform.random = glm::vec2(static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX);
 
-		uniformBuffers[imageIndex]->Fill(&ubo);
+		uniformBuffers[imageIndex]->Fill(&uniform);
 	}
 
 	void Application::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)

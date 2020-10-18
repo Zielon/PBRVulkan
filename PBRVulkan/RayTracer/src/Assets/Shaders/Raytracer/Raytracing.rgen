@@ -4,6 +4,7 @@
 #extension GL_NV_ray_tracing : require
 
 #include "../Common/Structs.glsl"
+#include "../Common/Random.glsl"
 
 layout(binding = 0, set = 0) uniform accelerationStructureNV TLAS;
 layout(binding = 1, rgba32f) uniform image2D AccumulationImage;
@@ -21,17 +22,24 @@ void main()
 	float tMin     = 0.001;
 	float tMax     = 10000.0;
 
-	const uint SPP = 2; // Samples per pixel
-
+	const uint SPP = 15; // Samples per pixel
 	vec3 color = vec3(0);
+	vec2 jitter = vec2(0);
+	vec2 seed = gl_LaunchIDNV.xy;
 
 	for (uint i = 0; i < SPP; ++i)
 	{
-		vec2 pixel = gl_LaunchIDNV.xy;
-		pixel.x += 0; // TODO random number
-		pixel.y += 0; // TODO random number
-		const vec2 uv = (pixel / gl_LaunchSizeNV.xy) * 2.0 - 1.0;
+		float r1 = 2.0 * rand(seed, ubo.random);
+		float r2 = 2.0 * rand(seed, ubo.random);
 
+		jitter.x = r1 < 1.0 ? sqrt(r1) - 1.0 : 1.0 - sqrt(2.0 - r1);
+		jitter.y = r2 < 1.0 ? sqrt(r2) - 1.0 : 1.0 - sqrt(2.0 - r2);
+		jitter /= (gl_LaunchSizeNV.xy * 0.5);
+
+		vec2 pixel = gl_LaunchIDNV.xy;
+
+		vec2 uv = (pixel / gl_LaunchSizeNV.xy) * 2.0 - 1.0;
+		uv += jitter;
 		vec4 origin = viewInv * vec4(0, 0, 0, 1);
 		vec4 target = projInv * vec4(uv.x, uv.y, 1, 1);
 		vec4 direction = viewInv * vec4(normalize(target.xyz), 0);

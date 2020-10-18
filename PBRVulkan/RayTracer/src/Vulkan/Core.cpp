@@ -16,7 +16,7 @@
 #include "CommandPool.h"
 #include "DepthBuffer.h"
 
-#include "../Geometry/MVP.h"
+#include "../Geometry/Global.h"
 #include "../Tracer/Scene.h"
 
 namespace Vulkan

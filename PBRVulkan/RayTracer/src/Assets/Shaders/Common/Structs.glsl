@@ -23,6 +23,7 @@ struct Uniform
 	mat4 view;
 	mat4 proj;
 	vec3 direction;
+	vec2 random;
 };
 
 struct RayPayload

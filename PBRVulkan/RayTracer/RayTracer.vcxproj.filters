@@ -87,6 +87,9 @@
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
+    <None Include="src\Assets\Shaders\Common\Random.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Vulkan\Device.cpp">
@@ -284,9 +287,6 @@
     <ClInclude Include="src\Tracer\Scene.h">
       <Filter>Tracer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Geometry\MVP.h">
-      <Filter>Geometry\Uniforms</Filter>
-    </ClInclude>
     <ClInclude Include="src\Vulkan\DescriptorSetLayout.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
@@ -367,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="src\Tracer\Compiler.h">
       <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Geometry\Global.h">
+      <Filter>Geometry\Uniforms</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

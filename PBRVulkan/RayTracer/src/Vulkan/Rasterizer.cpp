@@ -16,7 +16,7 @@
 #include "CommandBuffers.h"
 #include "Semaphore.h"
 
-#include "../Geometry/MVP.h"
+#include "../Geometry/Global.h"
 
 namespace Vulkan
 {
@@ -90,7 +90,7 @@ namespace Vulkan
 			imageAvailableSemaphores.emplace_back(new Semaphore(*device));
 			renderFinishedSemaphores.emplace_back(new Semaphore(*device));
 			uniformBuffers.emplace_back(
-				new Buffer(*device, sizeof(Uniforms::MVP),
+				new Buffer(*device, sizeof(Uniforms::Global),
 				           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 		}

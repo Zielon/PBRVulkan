@@ -10,7 +10,7 @@
 
 #include "../Tracer/Scene.h"
 #include "../Tracer/TextureImage.h"
-#include "../Geometry/MVP.h"
+#include "../Geometry/Global.h"
 #include "../Geometry/Vertex.h"
 
 namespace Vulkan
@@ -155,7 +155,7 @@ namespace Vulkan
 			VkDescriptorBufferInfo bufferInfo{};
 			bufferInfo.buffer = uniformBuffers[imageIndex]->Get();
 			bufferInfo.offset = 0;
-			bufferInfo.range = sizeof(Uniforms::MVP);
+			bufferInfo.range = sizeof(Uniforms::Global);
 
 			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[0].dstSet = descriptorSets[imageIndex];

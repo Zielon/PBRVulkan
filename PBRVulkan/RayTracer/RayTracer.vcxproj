@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Include="Scripts\Compile.py" />
     <None Include="src\Assets\Shaders\Common\Math.glsl" />
+    <None Include="src\Assets\Shaders\Common\Random.glsl" />
     <None Include="src\Assets\Shaders\Common\Structs.glsl" />
     <None Include="src\Assets\Shaders\Common\Vertex.glsl" />
     <None Include="src\Assets\Shaders\Rasterizer\Fragment.frag" />
@@ -84,7 +85,7 @@
     <ClInclude Include="src\Assets\Material.h" />
     <ClInclude Include="src\Assets\Mesh.h" />
     <ClInclude Include="src\Assets\Texture.h" />
-    <ClInclude Include="src\Geometry\MVP.h" />
+    <ClInclude Include="src\Geometry\Global.h" />
     <ClInclude Include="src\Geometry\Vertex.h" />
     <ClInclude Include="src\ImGui\imgui_impl_glfw.h" />
     <ClInclude Include="src\ImGui\imgui_impl_vulkan.h" />
