@@ -13,6 +13,7 @@
 #include "../Geometry/Vertex.h"
 #include "../Loader/Loader.h"
 #include "../Vulkan/Vulkan.h"
+#include "../Assets/Light.h"
 
 namespace Vulkan
 {
@@ -28,6 +29,7 @@ namespace Assets
 	class Mesh;
 	class Texture;
 	class Material;
+	class HDRData;
 	struct Light;
 }
 
@@ -83,9 +85,29 @@ namespace Tracer
 			return *offsetBuffer;
 		}
 
+		[[nodiscard]] const Vulkan::Buffer& GetLightsBuffer() const
+		{
+			return *lightsBuffer;
+		}
+
 		[[nodiscard]] const std::vector<std::unique_ptr<class TextureImage>>& GetTextures() const
 		{
 			return textureImages;
+		}
+
+		[[nodiscard]] const std::vector<std::unique_ptr<class TextureImage>>& GetHDRTextures() const
+		{
+			return hdrImages;
+		}
+
+		[[nodiscard]] bool UseHDR() const
+		{
+			return !hdrImages.empty();
+		}
+
+		[[nodiscard]] uint32_t GetLightsSize() const
+		{
+			return lights.size();
 		}
 
 		[[nodiscard]] uint32_t GetTextureSize() const
@@ -121,6 +143,7 @@ namespace Tracer
 		std::vector<std::unique_ptr<Assets::Texture>> textures;
 
 		std::vector<std::unique_ptr<TextureImage>> textureImages;
+		std::vector<std::unique_ptr<TextureImage>> hdrImages;
 
 		std::vector<Assets::MeshInstance> meshInstances;
 		std::vector<Assets::Material> materials;
@@ -130,12 +153,13 @@ namespace Tracer
 		std::unique_ptr<class Vulkan::Buffer> indexBuffer;
 		std::unique_ptr<class Vulkan::Buffer> materialBuffer;
 		std::unique_ptr<class Vulkan::Buffer> offsetBuffer;
-
+		std::unique_ptr<class Vulkan::Buffer> lightsBuffer;
 		std::unique_ptr<class Vulkan::Image> image;
 
 		void Load();
-		void FillEmptyTextures();
+		void LoadEmptyBuffers();
 		void Process();
+		void LoadHDR(Assets::HDRData* hdr);
 		void CreateBuffers();
 	};
 }

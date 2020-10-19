@@ -13,12 +13,13 @@ namespace Vulkan
 		VkExtent2D extent,
 		VkFormat format,
 		VkImageTiling tiling,
+		VkImageType imageType,
 		VkImageUsageFlags usage,
-		VkMemoryPropertyFlags properties): extent(extent), format(format), device(device)
+		VkMemoryPropertyFlags properties): extent(extent), format(format), imageType(imageType), device(device)
 	{
 		VkImageCreateInfo imageInfo{};
 		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-		imageInfo.imageType = VK_IMAGE_TYPE_2D;
+		imageInfo.imageType = imageType;
 		imageInfo.extent.width = extent.width;
 		imageInfo.extent.height = extent.height;
 		imageInfo.extent.depth = 1;

@@ -12,6 +12,7 @@ namespace Assets
 		Texture(const Texture&) = delete;
 		Texture& operator =(const Texture&) = delete;
 		Texture();
+		Texture(int width, int height, int channel, void* pixels);
 		Texture(const std::string& path);
 		Texture(Texture&&) noexcept;
 		Texture& operator =(Texture&&) noexcept;
@@ -43,6 +44,7 @@ namespace Assets
 		};
 
 	private:
+		bool isHDR;
 		std::string path;
 		void* pixels;
 		int texWidth{};

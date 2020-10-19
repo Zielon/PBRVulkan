@@ -58,6 +58,8 @@ namespace Tracer
 		uniform.projection = scene->GetCamera().GetProjection();
 		uniform.direction = scene->GetCamera().GetDirection();
 		uniform.random = glm::vec2(static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX);
+		uniform.lights = scene->GetLightsSize();
+		uniform.hasHDR = scene->UseHDR();
 
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}

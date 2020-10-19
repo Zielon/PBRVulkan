@@ -15,30 +15,47 @@
 	This is modified version of the original code. Addeed code to build marginal & conditional densities for IBL importance sampling
 */
 
-class HDRData
+namespace Assets
 {
-public:
-	HDRData() : width(0), height(0), cols(nullptr), marginalDistData(nullptr), conditionalDistData(nullptr) {}
-
-	~HDRData()
+	enum HDRType
 	{
-		delete cols;
-		delete marginalDistData;
-		delete conditionalDistData;
-	}
+		COLOR,
+		MARGINAL,
+		CONDITIONAL
+	};
 
-	int width, height;
-	// each pixel takes 3 float32, each component can be of any value...
-	float* cols;
-	glm::vec2* marginalDistData; // y component holds the pdf
-	glm::vec2* conditionalDistData; // y component holds the pdf
-};
+	class HDRData
+	{
+	public:
+		HDRData() : width(0), height(0), cols(nullptr), marginalDistData(nullptr), conditionalDistData(nullptr) {}
 
-class HDRLoader
-{
-private:
-	static void BuildDistributions(HDRData* res);
+		~HDRData()
+		{
+			if (cols != nullptr)
+				delete cols;
+			if (marginalDistData != nullptr)
+				delete marginalDistData;
+			if (conditionalDistData != nullptr)
+				delete conditionalDistData;
 
-public:
-	static HDRData* Load(const char* fileName);
-};
+			cols = nullptr;
+			marginalDistData = nullptr;
+			conditionalDistData = nullptr;
+		}
+
+		int width, height;
+		// each pixel takes 3 float32, each component can be of any value...
+		float* cols;
+		glm::vec2* marginalDistData; // y component holds the pdf
+		glm::vec2* conditionalDistData; // y component holds the pdf
+	};
+
+	class HDRLoader
+	{
+	private:
+		static void BuildDistributions(HDRData* res);
+
+	public:
+		static HDRData* Load(const char* fileName);
+	};
+}

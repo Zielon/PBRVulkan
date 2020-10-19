@@ -15,6 +15,7 @@ namespace Vulkan
 		      VkExtent2D extent,
 		      VkFormat format,
 		      VkImageTiling tiling,
+		      VkImageType imageType,
 		      VkImageUsageFlags usage,
 		      VkMemoryPropertyFlags properties);
 		~Image();
@@ -59,6 +60,7 @@ namespace Vulkan
 		VkImage image{};
 		VkExtent2D extent;
 		VkFormat format;
+		VkImageType imageType;
 		const Device& device;
 		std::unique_ptr<Memory> memory;
 	};

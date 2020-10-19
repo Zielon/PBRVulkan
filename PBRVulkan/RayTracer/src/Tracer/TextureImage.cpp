@@ -9,7 +9,10 @@ namespace Tracer
 {
 	TextureImage::TextureImage(const Vulkan::Device& device,
 	                           const Vulkan::CommandPool& commandPool,
-	                           const Assets::Texture& texture)
+	                           const Assets::Texture& texture,
+	                           VkFormat format,
+	                           VkImageTiling tiling,
+	                           VkImageType imageType)
 	{
 		const std::unique_ptr<Vulkan::Buffer> stagingBuffer(new Vulkan::Buffer(
 			device, texture.GetImageSize(),
@@ -23,9 +26,7 @@ namespace Tracer
 		};
 
 		image.reset(new Vulkan::Image(
-			device, extent,
-			VK_FORMAT_R8G8B8A8_SRGB,
-			VK_IMAGE_TILING_OPTIMAL,
+			device, extent, format, tiling, imageType,
 			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
@@ -35,6 +36,7 @@ namespace Tracer
 		                             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 		sampler.reset(new Vulkan::TextureSampler(device));
+
 		imageView.reset(new Vulkan::ImageView(device, image->Get(), image->GetFormat()));
 	}
 }

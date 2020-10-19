@@ -1,10 +1,11 @@
 #include "Scene.h"
 
 #include <iostream>
-#include <future> 
+#include <future>
 
 #include "Camera.h"
 #include "TextureImage.h"
+#include "../3rdParty/HDRloader.h"
 
 #include "../Vulkan/Device.h"
 #include "../Vulkan/CommandPool.h"
@@ -31,7 +32,7 @@ namespace Tracer
 	{
 		Load();
 		Process();
-		FillEmptyTextures();
+		LoadEmptyBuffers();
 		CreateBuffers();
 
 		std::cout << "[INFO] Scene has been loaded!" << std::endl;
@@ -46,13 +47,18 @@ namespace Tracer
 		textures.clear();
 	}
 
-	void Scene::FillEmptyTextures()
+	void Scene::LoadEmptyBuffers()
 	{
 		// Add a dummy texture for texture samplers in Vulkan
 		if (textures.empty())
 		{
 			const auto texture = std::make_unique<Assets::Texture>();
 			textureImages.emplace_back(new TextureImage(device, commandPool, *texture));
+		}
+
+		if (lights.empty())
+		{
+			lights.emplace_back();
 		}
 	}
 
@@ -75,6 +81,24 @@ namespace Tracer
 				vertex.materialId = meshInstance.materialId;
 			}
 		}
+	}
+
+	void Scene::LoadHDR(Assets::HDRData* hdr)
+	{
+		VkFormat format = VK_FORMAT_R32G32B32_SFLOAT;
+		VkImageTiling tiling = VK_IMAGE_TILING_LINEAR;
+		VkImageType imageType = VK_IMAGE_TYPE_2D;
+
+		auto columns = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->cols);
+		hdrImages.emplace_back(new TextureImage(device, commandPool, *columns, format, tiling, imageType));
+
+		format = VK_FORMAT_R32G32_SFLOAT;
+
+		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 8, hdr->conditionalDistData);
+		hdrImages.emplace_back(new TextureImage(device, commandPool, *conditional, format, tiling, imageType));
+
+		auto marginal = std::make_unique<Assets::Texture>(hdr->width, 1, 8, hdr->marginalDistData);
+		hdrImages.emplace_back(new TextureImage(device, commandPool, *marginal, format, tiling, imageType));
 	}
 
 	void Scene::CreateBuffers()
@@ -182,6 +206,26 @@ namespace Tracer
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		offsetBuffer->Copy(commandPool, *buffer_staging);
+
+		// =============== LIGHTS BUFFER ===============
+
+		size = sizeof(lights[0]) * lights.size();
+
+		buffer_staging.reset(
+			new Vulkan::Buffer(
+				device, size,
+				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
+
+		buffer_staging->Fill(lights.data());
+
+		lightsBuffer.reset(
+			new Vulkan::Buffer(
+				device, size,
+				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT),
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
+		lightsBuffer->Copy(commandPool, *buffer_staging);
 	}
 
 	void Scene::AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov)
@@ -189,7 +233,20 @@ namespace Tracer
 		camera.reset(new Camera(pos, lookAt, fov));
 	}
 
-	void Scene::AddHDR(const std::string& path) { }
+	void Scene::AddHDR(const std::string& path)
+	{
+		const auto file = "../Assets/Scenes/" + path;
+		auto* hdr = Assets::HDRLoader::Load(file.c_str());
+
+		if (hdr == nullptr)
+			printf("[ERROR] Unable to load HDR\n");
+		else
+		{
+			printf("[INFO] HDR %s loaded\n", file.c_str());
+			LoadHDR(hdr);
+			delete hdr;
+		}
+	}
 
 	int Scene::AddMeshInstance(Assets::MeshInstance meshInstance)
 	{

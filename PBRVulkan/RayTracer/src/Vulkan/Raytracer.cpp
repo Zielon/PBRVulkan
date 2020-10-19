@@ -124,11 +124,11 @@ namespace Vulkan
 		const auto tiling = VK_IMAGE_TILING_OPTIMAL;
 
 		accumulationImage.reset(
-			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_USAGE_STORAGE_BIT,
+			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_STORAGE_BIT,
 			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		outputImage.reset(
-			new Image(*device, extent, outputFormat, tiling,
+			new Image(*device, extent, outputFormat, tiling, VK_IMAGE_TYPE_2D,
 			          VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
 			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
