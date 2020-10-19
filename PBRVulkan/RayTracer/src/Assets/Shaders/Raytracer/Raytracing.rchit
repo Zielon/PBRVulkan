@@ -31,5 +31,5 @@ void main()
 	const Material material = Materials[v0.materialIndex];
 
 	// Replaced by Compiler.h
-	====== INTEGRATOR ======
+	// ====== INTEGRATOR ======
 }

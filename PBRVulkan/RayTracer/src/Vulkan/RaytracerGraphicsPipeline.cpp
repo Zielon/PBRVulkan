@@ -76,7 +76,7 @@ namespace Vulkan
 			triangleHitGroupInfo,
 		};
 
-		const std::vector<DescriptorBinding> descriptorBindings =
+		std::vector<DescriptorBinding> descriptorBindings =
 		{
 			// Top level acceleration structure.
 			{ 0, 1, VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV, VK_SHADER_STAGE_RAYGEN_BIT_NV },
@@ -109,13 +109,17 @@ namespace Vulkan
 
 			// Lights buffer
 			{ 9, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV },
-
-			// HDRs
-			{
-				10, 3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-				VK_SHADER_STAGE_RAYGEN_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
-			},
 		};
+
+		// HDRs
+		if (scene.UseHDR())
+		{
+			descriptorBindings.push_back(
+				{
+					10, 3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+					VK_SHADER_STAGE_RAYGEN_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
+				});
+		}
 
 		descriptorsManager.reset(new DescriptorsManager(device, swapChain, descriptorBindings));
 
@@ -135,7 +139,7 @@ namespace Vulkan
 
 		for (size_t imageIndex = 0; imageIndex < swapChain.GetImage().size(); imageIndex++)
 		{
-			std::array<VkWriteDescriptorSet, 11> descriptorWrites{};
+			std::vector<VkWriteDescriptorSet> descriptorWrites(10, VkWriteDescriptorSet());
 
 			// Top level acceleration structure.
 			VkWriteDescriptorSetAccelerationStructureNV structureInfo = {};
@@ -274,23 +278,30 @@ namespace Vulkan
 			descriptorWrites[9].descriptorCount = 1;
 			descriptorWrites[9].pBufferInfo = &lightsBufferInfo;
 
-			// HDR descriptor
-			std::vector<VkDescriptorImageInfo> hdrInfos(scene.GetHDRTextures().size());
-
-			for (size_t t = 0; t < hdrInfos.size(); ++t)
+			if (scene.UseHDR())
 			{
-				hdrInfos[t].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-				hdrInfos[t].imageView = scene.GetHDRTextures()[t]->GetImageView();
-				hdrInfos[t].sampler = scene.GetHDRTextures()[t]->GetTextureSampler();
-			}
+				// HDR descriptor
+				std::vector<VkDescriptorImageInfo> hdrInfos(scene.GetHDRTextures().size());
 
-			descriptorWrites[10].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrites[10].dstSet = descriptorSets[imageIndex];
-			descriptorWrites[10].dstBinding = 10;
-			descriptorWrites[10].dstArrayElement = 0;
-			descriptorWrites[10].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			descriptorWrites[10].descriptorCount = static_cast<uint32_t>(hdrInfos.size());
-			descriptorWrites[10].pImageInfo = hdrInfos.data();
+				VkWriteDescriptorSet descriptor;
+
+				for (size_t t = 0; t < hdrInfos.size(); ++t)
+				{
+					hdrInfos[t].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+					hdrInfos[t].imageView = scene.GetHDRTextures()[t]->GetImageView();
+					hdrInfos[t].sampler = scene.GetHDRTextures()[t]->GetTextureSampler();
+				}
+
+				descriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptor.dstSet = descriptorSets[imageIndex];
+				descriptor.dstBinding = 10;
+				descriptor.dstArrayElement = 0;
+				descriptor.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				descriptor.descriptorCount = static_cast<uint32_t>(hdrInfos.size());
+				descriptor.pImageInfo = hdrInfos.data();
+
+				descriptorWrites.push_back(descriptor);
+			}
 
 			vkUpdateDescriptorSets(device.Get(), static_cast<uint32_t>(descriptorWrites.size()),
 			                       descriptorWrites.data(), 0, nullptr);

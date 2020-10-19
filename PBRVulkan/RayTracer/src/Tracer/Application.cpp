@@ -22,9 +22,10 @@ namespace Tracer
 
 	Application::Application()
 	{
-		compiler.reset(new Compiler(PATH_TRACER_DEFAULT));
-
 		LoadScene();
+
+		compiler.reset(new Compiler(PATH_TRACER_DEFAULT, scene->UseHDR()));
+
 		CreateAS();
 		RegisterCallbacks();
 		Raytracer::CreateSwapChain();

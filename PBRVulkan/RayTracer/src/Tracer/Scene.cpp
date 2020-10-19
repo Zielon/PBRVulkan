@@ -239,10 +239,10 @@ namespace Tracer
 		auto* hdr = Assets::HDRLoader::Load(file.c_str());
 
 		if (hdr == nullptr)
-			printf("[ERROR] Unable to load HDR\n");
+			std::cerr << "[ERROR] Unable to load HDR!" << std::endl;
 		else
 		{
-			printf("[INFO] HDR %s loaded\n", file.c_str());
+			std::cout << "[TEXTURE] " + file + " has been added!" << std::endl;
 			LoadHDR(hdr);
 			delete hdr;
 		}
@@ -266,11 +266,10 @@ namespace Tracer
 		else
 		{
 			const auto file = "../Assets/Scenes/" + path;
-			std::cout << "[MESH] " + file + " has been added!" << std::endl;
-
 			id = meshes.size();
 			meshes.emplace_back(new Assets::Mesh(file));
 			meshMap[path] = id;
+			std::cout << "[MESH] " + file + " has been added!" << std::endl;
 		}
 
 		return id;
@@ -287,12 +286,11 @@ namespace Tracer
 		else
 		{
 			const auto file = "../Assets/Scenes/" + path;
-			std::cout << "[TEXTURE] " + file + " has been added!" << std::endl;
-
 			id = textures.size();
 			textures.emplace_back(new Assets::Texture(file));
 			textureImages.emplace_back(new TextureImage(device, commandPool, *textures[id]));
 			textureMap[path] = id;
+			std::cout << "[TEXTURE] " + file + " has been added!" << std::endl;
 		}
 
 		return id;
