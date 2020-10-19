@@ -70,6 +70,7 @@ namespace Assets
 
 		float colWeightSum = 0.0f;
 
+#pragma omp parallel for
 		for (int j = 0; j < height; j++)
 		{
 			float rowWeightSum = 0.0f;
@@ -100,6 +101,7 @@ namespace Assets
 		}
 
 		/* Convert to range 0,1 */
+#pragma omp parallel for
 		for (int j = 0; j < height; j++)
 		{
 			cdf1D[j] /= colWeightSum;
@@ -107,6 +109,7 @@ namespace Assets
 		}
 
 		/* Precalculate row and col to avoid binary search during lookup in the shader */
+#pragma omp parallel for
 		for (int i = 0; i < height; i++)
 		{
 			float invHeight = static_cast<float>(i + 1) / height;
@@ -115,6 +118,7 @@ namespace Assets
 			res->marginalDistData[i].y = pdf1D[i];
 		}
 
+#pragma omp parallel for collapse(2)
 		for (int j = 0; j < height; j++)
 		{
 			for (int i = 0; i < width; i++)
@@ -195,7 +199,7 @@ namespace Assets
 			return nullptr;
 		}
 
-		// convert image 
+		// convert image
 		for (int y = h - 1; y >= 0; y--)
 		{
 			if (decrunch(scanline, w, file) == false)

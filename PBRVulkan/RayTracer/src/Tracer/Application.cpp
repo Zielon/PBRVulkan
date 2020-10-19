@@ -17,8 +17,8 @@
 
 namespace Tracer
 {
-	const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
-	//const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
+	//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
+	const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
 
 	Application::Application()
 	{
