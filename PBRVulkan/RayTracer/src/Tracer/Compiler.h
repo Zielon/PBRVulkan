@@ -7,46 +7,41 @@
 
 namespace Tracer
 {
-	enum Integrator
+	namespace Parser
 	{
-		PATH_TRACER_DEFAULT,
-		PATH_TRACER_MSM
-	};
+		enum Defines
+		{
+			DEFINE_USE_HDR
+		};
 
-	namespace COMPILER
-	{
-		enum Type
+		enum Include
+		{
+			INCLUDE_PATH_TRACER_DEFAULT,
+			INCLUDE_PATH_TRACER_MSM
+		};
+
+		enum ShaderType
 		{
 			RAY_GEN,
 			RAY_MISS,
 			RAY_HIT
 		};
-
-		struct Shader
-		{
-			Type type;
-			std::string path;
-			std::vector<std::string> content;
-		};
 	}
-
 
 	class Compiler
 	{
 	public:
 		NON_COPIABLE(Compiler)
 
-		Compiler(Integrator integrator, bool define);
+		Compiler(Parser::Include integrator, std::vector<Parser::Defines> defines);
 		~Compiler() = default;
 
 	private:
-		Integrator integrator{};
-		std::map<COMPILER::Type, COMPILER::Shader> shaders;
-		std::map<std::string, int> tokens;
+		Parser::Include integrator{};
+		std::vector<Parser::Defines> defines;
 
-		void Read();
-		void Include();
-		void Define();
-		void Restore();
+		void Read() const;
+		void Compile() const;
+		void Restore() const;
 	};
 }

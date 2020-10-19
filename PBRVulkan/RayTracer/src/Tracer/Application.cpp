@@ -24,7 +24,11 @@ namespace Tracer
 	{
 		LoadScene();
 
-		compiler.reset(new Compiler(PATH_TRACER_DEFAULT, scene->UseHDR()));
+		std::vector<Parser::Defines> defines;
+		if (scene->UseHDR())
+			defines.push_back(Parser::Defines::DEFINE_USE_HDR);
+
+		compiler.reset(new Compiler(Parser::Include::INCLUDE_PATH_TRACER_DEFAULT, defines));
 
 		CreateAS();
 		RegisterCallbacks();

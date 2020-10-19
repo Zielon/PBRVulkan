@@ -1,51 +1,64 @@
 #include "Compiler.h"
 
-#include <map>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <utility>
 
 namespace Tracer
 {
-	namespace COMPILER
+	namespace Parser
 	{
-		enum Defines
+		struct Shader
 		{
-			USE_HDR
+			std::string path;
+			std::vector<std::string> content{};
+			std::vector<int> definesTokens{};
+			std::vector<int> includeTokens{};
 		};
 
 		std::string TOKEN_INTEGRATOR = "// ====== INTEGRATOR ======";
 		std::string TOKEN_DEFINES = "// ====== DEFINES ======";
+
 		std::string RAY_HIT_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing.rchit";
 		std::string RAY_MISS_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing.rmiss";
 		std::string RAY_GEN_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing.rgen";
 
-		std::map<Integrator, std::string> INTEGRATORS = {
-			{ PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
-			{ PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" }
+		std::map<Include, std::string> INCLUDES = {
+			{ INCLUDE_PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
+			{ INCLUDE_PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" }
+		};
+
+		std::map<Defines, std::string> DEFINES = {
+			{ DEFINE_USE_HDR, "#define USE_HDR" },
+		};
+
+		std::map<ShaderType, Shader> SHADERS = {
+			{ RAY_HIT, { RAY_HIT_SHADER } },
+			{ RAY_MISS, { RAY_MISS_SHADER } },
+			{ RAY_GEN, { RAY_GEN_SHADER } },
 		};
 	}
 
-	Compiler::Compiler(Integrator integrator, bool define): integrator(integrator)
+	Compiler::Compiler(Parser::Include integrator, std::vector<Parser::Defines> defines)
+		: integrator(integrator), defines(std::move(defines))
 	{
 		std::cout << "[INFO] Shaders compilation has begin." << std::endl;
 
 		Read();
-		Include();
-		if (define)
-			Define();
+		Compile();
 		std::system("python ./scripts/Compile.py");
 		Restore();
 
 		std::cout << "[INFO] Shaders compilation has ended." << std::endl;
 	}
 
-	void Compiler::Read()
+	void Compiler::Read() const
 	{
-		int id = 0;
-		for (const auto& path : { COMPILER::RAY_HIT_SHADER, COMPILER::RAY_MISS_SHADER, COMPILER::RAY_GEN_SHADER })
+		for (const auto& pair : Parser::SHADERS)
 		{
-			std::ifstream inShader(path);
+			auto shader = pair.second;
+			std::ifstream inShader(shader.path);
 			std::string line;
 			int i = 0;
 			std::vector<std::string> file;
@@ -53,77 +66,58 @@ namespace Tracer
 			{
 				file.push_back(line);
 
-				if (line.find(COMPILER::TOKEN_INTEGRATOR) != std::string::npos)
-					tokens[COMPILER::TOKEN_INTEGRATOR] = i;
+				if (line.find(Parser::TOKEN_INTEGRATOR) != std::string::npos)
+					shader.includeTokens.push_back(i);
 
-				if (line.find(COMPILER::TOKEN_DEFINES) != std::string::npos)
-					tokens[COMPILER::TOKEN_DEFINES] = i;
+				if (line.find(Parser::TOKEN_DEFINES) != std::string::npos)
+					shader.definesTokens.push_back(i);
 
 				++i;
 			}
 			inShader.close();
-
-			COMPILER::Shader shader;
-			shader.path = path;
 			shader.content = file;
-
-			if (id == 0)
-			{
-				shader.type = COMPILER::RAY_HIT;
-				shaders[COMPILER::RAY_HIT] = shader;
-			}
-
-			if (id == 1)
-			{
-				shader.type = COMPILER::RAY_MISS;
-				shaders[COMPILER::RAY_MISS] = shader;
-			}
-
-			if (id == 2)
-			{
-				shader.type = COMPILER::RAY_GEN;
-				shaders[COMPILER::RAY_GEN] = shader;
-			}
-
-			++id;
+			Parser::SHADERS[pair.first] = shader;
 		}
 	}
 
-	void Compiler::Include()
+	/*
+	 * Includes integrator selected form the menu
+	 */
+	void Compiler::Compile() const
 	{
-		std::ofstream outShader(COMPILER::RAY_HIT_SHADER);
-		int i = 0;
-		for (auto& line : shaders[COMPILER::RAY_HIT].content)
+		for (const auto& pair : Parser::SHADERS)
 		{
-			outShader << (i == tokens[COMPILER::TOKEN_INTEGRATOR] ? COMPILER::INTEGRATORS[integrator] : line) <<
-				std::endl;
-			++i;
+			const auto& shader = pair.second;
+			std::ofstream outShader(shader.path);
+			int i = 0;
+			for (const auto& line : shader.content)
+			{
+				if (std::find(
+					shader.includeTokens.begin(), shader.includeTokens.end(), i) != shader.includeTokens.end())
+				{
+					outShader << Parser::INCLUDES[integrator] << std::endl;
+				}
+				else if (std::find(
+					shader.definesTokens.begin(), shader.definesTokens.end(), i) != shader.definesTokens.end())
+				{
+					for (auto define : defines)
+					{
+						outShader << Parser::DEFINES[define] << std::endl;
+					}
+				}
+				else
+				{
+					outShader << line << std::endl;
+				}
+				++i;
+			}
+			outShader.close();
 		}
-		outShader.close();
 	}
 
-	void Compiler::Define()
+	void Compiler::Restore() const
 	{
-		std::ofstream outShader(COMPILER::RAY_MISS_SHADER);
-		int i = 0;
-		for (auto& line : shaders[COMPILER::RAY_MISS].content)
-		{
-			if (i == tokens[COMPILER::TOKEN_DEFINES])
-			{
-				outShader << "#define USE_HDR" << std::endl;
-			}
-			else
-			{
-				outShader << line << std::endl;
-			}
-			++i;
-		}
-		outShader.close();
-	}
-
-	void Compiler::Restore()
-	{
-		for (const auto& pair : shaders)
+		for (const auto& pair : Parser::SHADERS)
 		{
 			auto shader = pair.second;
 			std::ofstream outShader(shader.path);
