@@ -116,8 +116,8 @@ namespace Vulkan
 		{
 			descriptorBindings.push_back(
 				{
-					10, 3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-					VK_SHADER_STAGE_RAYGEN_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
+					10, static_cast<uint32_t>(scene.GetHDRTextures().size()), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+					VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
 				});
 		}
 
@@ -139,7 +139,7 @@ namespace Vulkan
 
 		for (size_t imageIndex = 0; imageIndex < swapChain.GetImage().size(); imageIndex++)
 		{
-			std::vector<VkWriteDescriptorSet> descriptorWrites(10, VkWriteDescriptorSet());
+			std::vector<VkWriteDescriptorSet> descriptorWrites(10);
 
 			// Top level acceleration structure.
 			VkWriteDescriptorSetAccelerationStructureNV structureInfo = {};
@@ -278,13 +278,13 @@ namespace Vulkan
 			descriptorWrites[9].descriptorCount = 1;
 			descriptorWrites[9].pBufferInfo = &lightsBufferInfo;
 
+			// Outside the block because of RAII 
+			std::vector<VkDescriptorImageInfo> hdrInfos(scene.GetHDRTextures().size());
+			VkWriteDescriptorSet descriptor{};
+
+			// HDR descriptor
 			if (scene.UseHDR())
 			{
-				// HDR descriptor
-				std::vector<VkDescriptorImageInfo> hdrInfos(scene.GetHDRTextures().size());
-
-				VkWriteDescriptorSet descriptor;
-
 				for (size_t t = 0; t < hdrInfos.size(); ++t)
 				{
 					hdrInfos[t].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

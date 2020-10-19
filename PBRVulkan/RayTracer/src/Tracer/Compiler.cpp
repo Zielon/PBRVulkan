@@ -25,12 +25,12 @@ namespace Tracer
 		std::string RAY_GEN_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing.rgen";
 
 		std::map<Include, std::string> INCLUDES = {
-			{ INCLUDE_PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
-			{ INCLUDE_PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" }
+			{ PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
+			{ PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" }
 		};
 
-		std::map<Defines, std::string> DEFINES = {
-			{ DEFINE_USE_HDR, "#define USE_HDR" },
+		std::map<Define, std::string> DEFINES = {
+			{ USE_HDR, "#define USE_HDR" },
 		};
 
 		std::map<ShaderType, Shader> SHADERS = {
@@ -40,8 +40,8 @@ namespace Tracer
 		};
 	}
 
-	Compiler::Compiler(Parser::Include integrator, std::vector<Parser::Defines> defines)
-		: integrator(integrator), defines(std::move(defines))
+	Compiler::Compiler(std::vector<Parser::Include> includes, std::vector<Parser::Define> defines)
+		: defines(std::move(defines)), includes(std::move(includes))
 	{
 		std::cout << "[INFO] Shaders compilation has begin." << std::endl;
 
@@ -95,15 +95,14 @@ namespace Tracer
 				if (std::find(
 					shader.includeTokens.begin(), shader.includeTokens.end(), i) != shader.includeTokens.end())
 				{
-					outShader << Parser::INCLUDES[integrator] << std::endl;
+					for (auto include : includes)
+						outShader << Parser::INCLUDES[include] << std::endl;
 				}
 				else if (std::find(
 					shader.definesTokens.begin(), shader.definesTokens.end(), i) != shader.definesTokens.end())
 				{
 					for (auto define : defines)
-					{
 						outShader << Parser::DEFINES[define] << std::endl;
-					}
 				}
 				else
 				{

@@ -17,19 +17,13 @@
 
 namespace Tracer
 {
-	//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
-	const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
+	const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
+	//const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
 
 	Application::Application()
 	{
 		LoadScene();
-
-		std::vector<Parser::Defines> defines;
-		if (scene->UseHDR())
-			defines.push_back(Parser::Defines::DEFINE_USE_HDR);
-
-		compiler.reset(new Compiler(Parser::Include::INCLUDE_PATH_TRACER_DEFAULT, defines));
-
+		CompileShaders();
 		CreateAS();
 		RegisterCallbacks();
 		Raytracer::CreateSwapChain();
@@ -53,6 +47,17 @@ namespace Tracer
 		// Recreate swap chain
 
 		settings = menu->GetSettings();
+	}
+
+	void Application::CompileShaders()
+	{
+		std::vector<Parser::Define> defines;
+		std::vector<Parser::Include> includes{ Parser::Include::PATH_TRACER_DEFAULT };
+		
+		if (scene->UseHDR())
+			defines.push_back(Parser::Define::USE_HDR);
+
+		compiler.reset(new Compiler(includes, defines));
 	}
 
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)

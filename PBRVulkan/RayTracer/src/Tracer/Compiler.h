@@ -9,15 +9,15 @@ namespace Tracer
 {
 	namespace Parser
 	{
-		enum Defines
+		enum Define
 		{
-			DEFINE_USE_HDR
+			USE_HDR
 		};
 
 		enum Include
 		{
-			INCLUDE_PATH_TRACER_DEFAULT,
-			INCLUDE_PATH_TRACER_MSM
+			PATH_TRACER_DEFAULT,
+			PATH_TRACER_MSM
 		};
 
 		enum ShaderType
@@ -33,12 +33,12 @@ namespace Tracer
 	public:
 		NON_COPIABLE(Compiler)
 
-		Compiler(Parser::Include integrator, std::vector<Parser::Defines> defines);
+		Compiler(std::vector<Parser::Include> includes, std::vector<Parser::Define> defines);
 		~Compiler() = default;
 
 	private:
-		Parser::Include integrator{};
-		std::vector<Parser::Defines> defines;
+		std::vector<Parser::Define> defines;
+		std::vector<Parser::Include> includes;
 
 		void Read() const;
 		void Compile() const;
