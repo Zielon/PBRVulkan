@@ -43,9 +43,6 @@ namespace Tracer
 		if (settings == menu->GetSettings())
 			return;
 
-		// Update scene
-		// Recreate swap chain
-
 		settings = menu->GetSettings();
 	}
 
@@ -53,7 +50,7 @@ namespace Tracer
 	{
 		std::vector<Parser::Define> defines;
 		std::vector<Parser::Include> includes{ Parser::Include::PATH_TRACER_DEFAULT };
-		
+
 		if (scene->UseHDR())
 			defines.push_back(Parser::Define::USE_HDR);
 

@@ -33,7 +33,7 @@ namespace Tracer
 		Load();
 		Process();
 		LoadEmptyBuffers();
-		CreateBuffers();
+		CreateBuffers(type);
 
 		std::cout << "[INFO] Scene has been loaded!" << std::endl;
 	}
@@ -101,7 +101,7 @@ namespace Tracer
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *marginal, format, tiling, imageType));
 	}
 
-	void Scene::CreateBuffers()
+	void Scene::CreateBuffers(Type type)
 	{
 		std::vector<uint32_t> indices;
 		std::vector<Geometry::Vertex> vertices;
@@ -124,108 +124,62 @@ namespace Tracer
 		// =============== VERTEX BUFFER ===============
 
 		auto size = sizeof(meshes[0]->GetVertices()[0]) * verticesSize;
-
-		std::cout << "[INFO] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
-
-		std::unique_ptr<Vulkan::Buffer> buffer_staging(
-			new Vulkan::Buffer(
-				device, size,
-				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
-
-		buffer_staging->Fill(vertices.data());
-
 		auto bufferType = type == RASTERIZER ? VK_BUFFER_USAGE_VERTEX_BUFFER_BIT : VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-
-		vertexBuffer.reset(
-			new Vulkan::Buffer(
-				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | bufferType),
-				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-
-		vertexBuffer->Copy(commandPool, *buffer_staging);
+		std::cout << "[INFO] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
+		Fill(vertexBuffer, vertices.data(), size, bufferType);
 
 		// =============== INDEX BUFFER ===============
 
 		size = sizeof(indices[0]) * indices.size();
-
-		buffer_staging.reset(
-			new Vulkan::Buffer(
-				device, size,
-				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
-
-		buffer_staging->Fill(indices.data());
-
 		bufferType = type == RASTERIZER ? VK_BUFFER_USAGE_INDEX_BUFFER_BIT : VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-
-		indexBuffer.reset(
-			new Vulkan::Buffer(
-				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | bufferType),
-				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-
-		indexBuffer->Copy(commandPool, *buffer_staging);
+		Fill(indexBuffer, indices.data(), size, bufferType);
 
 		// =============== MATERIAL BUFFER ===============
 
 		size = sizeof(materials[0]) * materials.size();
-
-		buffer_staging.reset(
-			new Vulkan::Buffer(
-				device, size,
-				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
-
-		buffer_staging->Fill(materials.data());
-
-		materialBuffer.reset(
-			new Vulkan::Buffer(
-				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT),
-				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-
-		materialBuffer->Copy(commandPool, *buffer_staging);
+		Fill(materialBuffer, materials.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 
 		// =============== OFFSET BUFFER ===============
 
 		size = sizeof(offsets[0]) * offsets.size();
-
-		buffer_staging.reset(
-			new Vulkan::Buffer(
-				device, size,
-				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
-
-		buffer_staging->Fill(offsets.data());
-
-		offsetBuffer.reset(
-			new Vulkan::Buffer(
-				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT),
-				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-
-		offsetBuffer->Copy(commandPool, *buffer_staging);
+		Fill(offsetBuffer, offsets.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 
 		// =============== LIGHTS BUFFER ===============
 
 		size = sizeof(lights[0]) * lights.size();
+		Fill(lightsBuffer, lights.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+	}
 
-		buffer_staging.reset(
+	void Scene::ReloadBuffers(Type type)
+	{
+		vertexBuffer.reset();
+		indexBuffer.reset();
+		lightsBuffer.reset();
+		materialBuffer.reset();
+		offsetBuffer.reset();
+
+		CreateBuffers(type);
+	}
+
+	void Scene::Fill(std::unique_ptr<class Vulkan::Buffer>& buffer,
+	                 void* data, size_t size,
+	                 VkBufferUsageFlagBits storage) const
+	{
+		const std::unique_ptr<Vulkan::Buffer> buffer_staging(
 			new Vulkan::Buffer(
 				device, size,
 				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 
-		buffer_staging->Fill(lights.data());
+		buffer_staging->Fill(data);
 
-		lightsBuffer.reset(
+		buffer.reset(
 			new Vulkan::Buffer(
 				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT),
+				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | storage),
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
-		lightsBuffer->Copy(commandPool, *buffer_staging);
+		buffer->Copy(commandPool, *buffer_staging);
 	}
 
 	void Scene::AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov)

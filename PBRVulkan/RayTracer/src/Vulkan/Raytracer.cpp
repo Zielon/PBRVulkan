@@ -38,7 +38,10 @@ namespace Vulkan
 		Raytracer::CreateGraphicsPipeline();
 	}
 
-	void Raytracer::DeleteSwapChain() {}
+	void Raytracer::DeleteSwapChain()
+	{
+		raytracerGraphicsPipeline.reset();
+	}
 
 	void Raytracer::CreateGraphicsPipeline()
 	{

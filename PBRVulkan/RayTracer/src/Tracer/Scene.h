@@ -54,6 +54,8 @@ namespace Tracer
 		int AddMaterial(Assets::Material material) override;
 		int AddLight(Assets::Light light) override;
 		int AddMeshInstance(class Assets::MeshInstance meshInstance) override;
+		void CreateBuffers(Type type);
+		void ReloadBuffers(Type type);
 
 		[[nodiscard]] const std::vector<std::unique_ptr<Assets::Mesh>>& GetMeshes() const
 		{
@@ -160,6 +162,6 @@ namespace Tracer
 		void LoadEmptyBuffers();
 		void Process();
 		void LoadHDR(Assets::HDRData* hdr);
-		void CreateBuffers();
+		void Fill(std::unique_ptr<class Vulkan::Buffer>& buffer, void* data, size_t size, VkBufferUsageFlagBits storage) const;
 	};
 }
