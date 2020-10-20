@@ -115,6 +115,8 @@ namespace Vulkan
 		if (!scene)
 			throw std::runtime_error("Scene has not been loaded!");
 
+		swapChainFrameBuffers.clear();
+
 		rasterizerGraphicsPipeline.reset(
 			new RasterizerGraphicsPipeline(*swapChain, *device, *scene, uniformBuffers));
 

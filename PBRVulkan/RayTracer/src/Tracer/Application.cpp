@@ -17,9 +17,17 @@
 
 namespace Tracer
 {
-	std::vector<std::string> CONFIGS = {
+	std::vector<std::string> CONFIGS =
+	{
 		"../Assets/Scenes/coffee_cart.scene",
-		"../Assets/Scenes/cornell_box.scene"
+		"../Assets/Scenes/cornell_box.scene",
+		"../Assets/Scenes/ajax.scene",
+		"../Assets/Scenes/bedroom.scene",
+		"../Assets/Scenes/staircase.scene",
+		"../Assets/Scenes/diningroom.scene",
+		"../Assets/Scenes/dragon.scene",
+		"../Assets/Scenes/spaceship.scene",
+		"../Assets/Scenes/stormtrooper.scene"
 	};
 
 	Application::Application()

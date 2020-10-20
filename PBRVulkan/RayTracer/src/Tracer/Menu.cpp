@@ -133,7 +133,17 @@ namespace Tracer
 		ImGui::SetNextWindowSize(ImVec2(200, 400), ImGuiCond_Always);
 
 		const char* integrators[] = { "Path tracer", "MSM" };
-		const char* scenes[] = { "Coffee cart", "Cornell box" };
+		const char* scenes[] = {
+			"Coffee cart",
+			"Cornell box",
+			"Ajax",
+			"Bedroom",
+			"Staircase",
+			"Dining room",
+			"Dragon",
+			"Spaceship",
+			"Stormtrooper"
+		};
 
 		if (ImGui::Begin("Settings", &open, flags))
 		{
@@ -147,9 +157,9 @@ namespace Tracer
 			ImGui::Separator();
 			ImGui::PushItemWidth(ImGui::GetWindowWidth());
 			if (ImGui::CollapsingHeader("Current scene"))
-				ImGui::ListBox("scene", &settings.SceneId, scenes, IM_ARRAYSIZE(scenes), 2);
+				ImGui::ListBox("scene", &settings.SceneId, scenes, IM_ARRAYSIZE(scenes), 9);
 			ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
-			
+
 			ImGui::Text("Controls");
 			ImGui::Separator();
 			ImGui::Text("Program usage: \n"
