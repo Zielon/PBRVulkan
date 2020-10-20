@@ -16,6 +16,8 @@ layout(location = 3) in flat int inMaterialId;
 
 layout(location = 0) out vec4 outColor;
 
+#include "../Common/Math.glsl"
+
 void main() 
 {
 	vec3 normal = normalize(inNormal);
@@ -24,13 +26,12 @@ void main()
 	int textureId = material.albedoTexID;
 	float d = max(dot(inDirection, normalize(normal)), 0.2);
 
+	vec3 color = vec3(0);
+
 	if (textureId >= 0)
-	{
-		vec3 color = texture(textureSamplers[textureId], inTexCoord).rgb;
-		outColor = vec4(color * d, 1.0);
-	}
+		color = texture(textureSamplers[textureId], inTexCoord).rgb;
 	else
-	{
-		outColor = vec4(material.albedo.xyz * d, 1.0);
-	}
+		color = material.albedo.xyz;
+
+	outColor = vec4(pow(tone_map(color, 1.5), vec3(1.0 / 2.2)), 1.0);
 }

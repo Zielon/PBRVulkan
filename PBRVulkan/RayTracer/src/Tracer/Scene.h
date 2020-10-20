@@ -43,8 +43,7 @@ namespace Tracer
 		Scene(
 			const std::string& config,
 			const class Vulkan::Device& device,
-			const Vulkan::CommandPool& commandPool,
-			Type type);
+			const Vulkan::CommandPool& commandPool);
 		~Scene();
 
 		void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov) override;
@@ -54,9 +53,8 @@ namespace Tracer
 		int AddMaterial(Assets::Material material) override;
 		int AddLight(Assets::Light light) override;
 		int AddMeshInstance(class Assets::MeshInstance meshInstance) override;
-		void CreateBuffers(Type type);
-		void ReloadBuffers(Type type);
-
+		void CreateBuffers();
+		
 		[[nodiscard]] const std::vector<std::unique_ptr<Assets::Mesh>>& GetMeshes() const
 		{
 			return meshes;
@@ -128,7 +126,6 @@ namespace Tracer
 		}
 
 	private:
-		Type type;
 		std::string config;
 		uint32_t verticesSize{};
 		uint32_t indeciesSize{};
@@ -162,6 +159,7 @@ namespace Tracer
 		void LoadEmptyBuffers();
 		void Process();
 		void LoadHDR(Assets::HDRData* hdr);
-		void Fill(std::unique_ptr<class Vulkan::Buffer>& buffer, void* data, size_t size, VkBufferUsageFlagBits storage) const;
+		void Fill(std::unique_ptr<class Vulkan::Buffer>& buffer, void* data, size_t size,
+		          VkBufferUsageFlagBits storage) const;
 	};
 }

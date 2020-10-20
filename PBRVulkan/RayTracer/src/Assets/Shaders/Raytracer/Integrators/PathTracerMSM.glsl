@@ -2,6 +2,8 @@
  * Path tracing Specular Manifold Sampling integral
  */
 
- {
-	// TODO https://rgl.epfl.ch/publications/Zeltner2020Specular
- }
+{
+  const vec3 barycentrics = vec3(1.0 - Hit.x - Hit.y, Hit.x, Hit.y);
+	const vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
+  Ray.color = abs(normal);
+}

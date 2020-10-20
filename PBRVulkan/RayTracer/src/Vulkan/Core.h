@@ -26,8 +26,6 @@ namespace Vulkan
 		virtual void DeleteSwapChain() = 0;
 		virtual void CreateGraphicsPipeline() = 0;
 		
-		void UpdateSwapChain();
-
 	protected:
 		void DrawFrame();
 		void CreatePhysicalDevice();

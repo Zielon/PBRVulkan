@@ -35,13 +35,21 @@ namespace Tracer
 
 	void Application::LoadScene()
 	{
-		scene.reset(new Scene(CONFIG, *device, *commandPool, RAYTRACER));
+		scene.reset(new Scene(CONFIG, *device, *commandPool));
 	}
 
-	void Application::UpdatePipeline()
+	void Application::UpdateSettings()
 	{
 		if (settings == menu->GetSettings())
 			return;
+
+		if (settings.IntegratorType != menu->GetSettings().IntegratorType)
+		{
+			settings = menu->GetSettings();
+			device->WaitIdle();
+			CompileShaders();
+			Raytracer::CreateGraphicsPipeline();
+		}
 
 		settings = menu->GetSettings();
 	}
@@ -49,11 +57,12 @@ namespace Tracer
 	void Application::CompileShaders()
 	{
 		std::vector<Parser::Define> defines;
-		std::vector<Parser::Include> includes{ Parser::Include::PATH_TRACER_DEFAULT };
+		std::vector<Parser::Include> includes;
 
 		if (scene->UseHDR())
 			defines.push_back(Parser::Define::USE_HDR);
 
+		includes.push_back(static_cast<Parser::Include>(settings.IntegratorType));
 		compiler.reset(new Compiler(includes, defines));
 	}
 
@@ -74,12 +83,11 @@ namespace Tracer
 	void Application::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
 	{
 		Camera::OnBeforeRender();
-		UpdatePipeline();
 
-		if (type == RAYTRACER)
-			Raytracer::Render(framebuffer, commandBuffer, imageIndex);
-		if (type == RASTERIZER)
+		if (settings.UseRasterizer)
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
+		else
+			Raytracer::Render(framebuffer, commandBuffer, imageIndex);
 
 		scene->GetCamera().OnAfterRender();
 		menu->Render(framebuffer, commandBuffer);
@@ -143,6 +151,7 @@ namespace Tracer
 		while (!glfwWindowShouldClose(window->Get()))
 		{
 			glfwPollEvents();
+			UpdateSettings();
 			DrawFrame();
 		}
 

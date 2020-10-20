@@ -9,9 +9,9 @@ Real-time path tracer based on the extension `VK_KHR_ray_tracing`.
 2) Run `install.bat` script to download all necessary libraries.
 3) For shaders compliation you will need `python` and `glslc` available form the shell level. `glslc` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslc.exe`.
 
-Environment variables \
-Add vulkan path for example `C:\VulkanSDK\1.2.148.1\Bin32` to `Path` Variable \
-System variable needed \
+#### Environment variables:
+Add vulkan path for example `C:\VulkanSDK\1.2.148.1\Bin32` to `Path` variable \
+System variable needed
 1) `VULKAN_SDK`
 2) `VK_SDK_PATH`
 

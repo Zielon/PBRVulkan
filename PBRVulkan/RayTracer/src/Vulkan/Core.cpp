@@ -135,14 +135,6 @@ namespace Vulkan
 		surface.reset(new Surface(*instance));
 	}
 
-	void Core::UpdateSwapChain()
-	{
-		device->WaitIdle();
-
-		DeleteSwapChain();
-		CreateSwapChain();
-	}
-
 	void Core::CreatePhysicalDevice()
 	{
 		auto* physicalDevice = instance->GetDevices().front();

@@ -27,20 +27,23 @@ namespace Vulkan
 	Raytracer::~Raytracer()
 	{
 		scene.reset();
-
 		Raytracer::DeleteSwapChain();
 	}
 
 	void Raytracer::CreateSwapChain()
 	{
 		Rasterizer::CreateSwapChain();
+		
 		CreateOutputTexture();
-		Raytracer::CreateGraphicsPipeline();
+		CreateGraphicsPipeline();
 	}
 
 	void Raytracer::DeleteSwapChain()
 	{
-		raytracerGraphicsPipeline.reset();
+		BLASs.clear();
+		TLASs.clear();
+
+		Rasterizer::DeleteSwapChain();
 	}
 
 	void Raytracer::CreateGraphicsPipeline()

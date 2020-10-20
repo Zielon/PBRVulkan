@@ -13,11 +13,7 @@ layout(binding = 3) readonly uniform UniformBufferObject { Uniform ubo; };
 
 layout(location = 0) rayPayloadNV RayPayload Ray;
 
-vec3 tone_map(in vec3 color, float limit)
-{
-	float luminance = 0.3 * color.x + 0.6 * color.y + 0.1 * color.z;
-	return color * 1.0 / (1.0 + luminance / limit);
-}
+#include "../Common/Math.glsl"
 
 void main() 
 {

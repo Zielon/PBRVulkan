@@ -26,14 +26,13 @@ namespace Tracer
 	Scene::Scene(
 		const std::string& config,
 		const Vulkan::Device& device,
-		const Vulkan::CommandPool& commandPool,
-		Type type)
-		: type(type), config(config), device(device), commandPool(commandPool)
+		const Vulkan::CommandPool& commandPool)
+		: config(config), device(device), commandPool(commandPool)
 	{
 		Load();
 		Process();
 		LoadEmptyBuffers();
-		CreateBuffers(type);
+		CreateBuffers();
 
 		std::cout << "[INFO] Scene has been loaded!" << std::endl;
 	}
@@ -101,7 +100,7 @@ namespace Tracer
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *marginal, format, tiling, imageType));
 	}
 
-	void Scene::CreateBuffers(Type type)
+	void Scene::CreateBuffers()
 	{
 		std::vector<uint32_t> indices;
 		std::vector<Geometry::Vertex> vertices;
@@ -121,18 +120,19 @@ namespace Tracer
 		verticesSize = vertices.size();
 		indeciesSize = indices.size();
 
+		const auto usage =
+			VkBufferUsageFlagBits(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+
 		// =============== VERTEX BUFFER ===============
 
 		auto size = sizeof(meshes[0]->GetVertices()[0]) * verticesSize;
-		auto bufferType = type == RASTERIZER ? VK_BUFFER_USAGE_VERTEX_BUFFER_BIT : VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 		std::cout << "[INFO] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
-		Fill(vertexBuffer, vertices.data(), size, bufferType);
+		Fill(vertexBuffer, vertices.data(), size, usage);
 
 		// =============== INDEX BUFFER ===============
 
 		size = sizeof(indices[0]) * indices.size();
-		bufferType = type == RASTERIZER ? VK_BUFFER_USAGE_INDEX_BUFFER_BIT : VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-		Fill(indexBuffer, indices.data(), size, bufferType);
+		Fill(indexBuffer, indices.data(), size, usage);
 
 		// =============== MATERIAL BUFFER ===============
 
@@ -148,17 +148,6 @@ namespace Tracer
 
 		size = sizeof(lights[0]) * lights.size();
 		Fill(lightsBuffer, lights.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
-	}
-
-	void Scene::ReloadBuffers(Type type)
-	{
-		vertexBuffer.reset();
-		indexBuffer.reset();
-		lightsBuffer.reset();
-		materialBuffer.reset();
-		offsetBuffer.reset();
-
-		CreateBuffers(type);
 	}
 
 	void Scene::Fill(std::unique_ptr<class Vulkan::Buffer>& buffer,
