@@ -8,7 +8,6 @@
 #include "DescriptorSetLayout.h"
 #include "DescriptorsManager.h"
 #include "Buffer.h"
-#include "TLAS.h"
 
 #include "../Tracer/Scene.h"
 #include "../Tracer/TextureImage.h"

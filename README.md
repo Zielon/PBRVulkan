@@ -10,7 +10,7 @@ Real-time path tracer based on Vulkan.
 3) For shaders compliation you will need `python` and `glslc` available form the shell level. `glslc` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslc.exe`.
 
 #### Environment variables:
-Add vulkan path `C:\VulkanSDK\x.x.x.x\Bin32` to the `Path` variable \
+Add vulkan path `C:/VulkanSDK/x.x.x.x/Bin32` to the `Path` variable \
 System variable needed for the project
 1) `VULKAN_SDK`
 2) `VK_SDK_PATH`

@@ -31,7 +31,7 @@ namespace Tracer
 		auto* window = device.GetSurface().GetInstance().GetWindow().Get();
 		renderPass.reset(new Vulkan::RenderPass(device, swapChain, false, false));
 
-		if (!ImGui_ImplGlfw_InitForVulkan(window, false))
+		if (!ImGui_ImplGlfw_InitForVulkan(window, true))
 		{
 			throw std::runtime_error("Failed to initialise ImGui GLFW adapter!");
 		}
@@ -120,7 +120,7 @@ namespace Tracer
 	void Menu::RenderSettings()
 	{
 		bool open = true;
-		const float distance = 10.0f;
+		const float distance = 5.0f;
 		const ImVec2 pos = ImVec2(distance, distance);
 		const ImVec2 posPivot = ImVec2(0.0f, 0.0f);
 		const auto flags =
@@ -130,8 +130,8 @@ namespace Tracer
 			ImGuiWindowFlags_NoSavedSettings;
 
 		ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
-		ImGui::SetNextWindowSize(ImVec2(200, 400), ImGuiCond_Always);
-
+		ImGui::SetNextWindowSize(ImVec2(185, 400), ImGuiCond_Always);
+		
 		const char* integrators[] = { "Path tracer", "MSM" };
 		const char* scenes[] = {
 			"Coffee cart",
@@ -149,22 +149,35 @@ namespace Tracer
 		{
 			ImGui::Text("Shaders");
 			ImGui::Separator();
-			ImGui::PushItemWidth(ImGui::GetWindowWidth());
-			if (ImGui::CollapsingHeader("Current shader"))
-				ImGui::ListBox("shader", &settings.IntegratorType, integrators, IM_ARRAYSIZE(integrators), 2);
-
+			
+			ImGui::PushItemWidth(-1);
+			ImGui::Combo(" ", &settings.IntegratorType, integrators, 2);
+			ImGui::PopItemWidth();
+			
 			ImGui::Text("Scene");
+			
+			ImGui::PushItemWidth(-1);
+			ImGui::Combo("  ", &settings.SceneId, scenes, 9);
+			ImGui::PopItemWidth();
 			ImGui::Separator();
-			ImGui::PushItemWidth(ImGui::GetWindowWidth());
-			if (ImGui::CollapsingHeader("Current scene"))
-				ImGui::ListBox("scene", &settings.SceneId, scenes, IM_ARRAYSIZE(scenes), 9);
+			
+			ImGui::Text("Renderer");
+			
 			ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
 
+			ImGui::Text("# samples");
+			ImGui::SameLine();
+			ImGui::InputInt("int_samples", &settings.SSP, 1);
+			
+			ImGui::Text("# depth  ");
+			ImGui::SameLine();
+			ImGui::InputInt("int_depth", &settings.MaxDepth, 1);
+			
 			ImGui::Text("Controls");
 			ImGui::Separator();
 			ImGui::Text("Program usage: \n"
 				" 1) Camera keys: \n   W - forward \n   D - right \n   A - left \n   S - back \n"
-				" 2) Mouse: \n   use scroll \n   press left button [move] \n");
+				" 2) Mouse: \n   use scroll \n   left button \n");
 		}
 
 		ImGui::End();

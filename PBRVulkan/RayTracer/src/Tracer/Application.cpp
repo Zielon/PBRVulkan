@@ -103,6 +103,8 @@ namespace Tracer
 		uniform.random = glm::vec2(static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX);
 		uniform.lights = scene->GetLightsSize();
 		uniform.hasHDR = scene->UseHDR();
+		uniform.ssp = settings.SSP;
+		uniform.maxDepth = settings.MaxDepth;
 
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}

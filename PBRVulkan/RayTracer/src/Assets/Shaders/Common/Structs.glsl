@@ -38,6 +38,8 @@ struct Uniform
 	vec2 random;
 	uint lights;
 	bool useHDR;
+	uint spp;
+	uint maxDepth;
 };
 
 struct RayPayload

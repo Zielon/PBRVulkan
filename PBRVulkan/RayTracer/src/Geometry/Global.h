@@ -12,5 +12,7 @@ namespace Uniforms
 		alignas(16) glm::vec2 random{};
 		uint32_t lights{};
 		uint32_t hasHDR{};
+		uint32_t ssp{};
+		uint32_t maxDepth{};
 	};
 }

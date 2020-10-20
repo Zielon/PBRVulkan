@@ -24,7 +24,7 @@ void main()
 	float tMin     = 0.001;
 	float tMax     = 10000.0;
 
-	const uint SPP = 5; // Samples per pixel
+	const uint SPP = ubo.spp; // Samples per pixel
 	vec3 color = vec3(0);
 	uint seed = 1; // Updated in rand()
 
