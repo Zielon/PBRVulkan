@@ -33,15 +33,12 @@ namespace Tracer
 	public:
 		NON_COPIABLE(Compiler)
 
-		Compiler(std::vector<Parser::Include> includes, std::vector<Parser::Define> defines);
+		Compiler();
 		~Compiler() = default;
-
+		void Compile(std::vector<Parser::Include> include, std::vector<Parser::Define> defines) const;
+		
 	private:
-		std::vector<Parser::Define> defines;
-		std::vector<Parser::Include> includes;
-
 		void Read() const;
-		void Compile() const;
 		void Restore() const;
 	};
 }

@@ -120,17 +120,16 @@ namespace Tracer
 		verticesSize = vertices.size();
 		indeciesSize = indices.size();
 
-		const auto usage =
-			VkBufferUsageFlagBits(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
-
 		// =============== VERTEX BUFFER ===============
 
+		auto usage = VkBufferUsageFlagBits(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 		auto size = sizeof(meshes[0]->GetVertices()[0]) * verticesSize;
 		std::cout << "[INFO] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
 		Fill(vertexBuffer, vertices.data(), size, usage);
 
 		// =============== INDEX BUFFER ===============
 
+		usage = VkBufferUsageFlagBits(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 		size = sizeof(indices[0]) * indices.size();
 		Fill(indexBuffer, indices.data(), size, usage);
 

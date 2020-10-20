@@ -1,7 +1,7 @@
 # Physically based renderer in Vulkan
 ####  Vulkan real-time path tracer engine
-**[IN DEVELOPMENT]**\
-Real-time path tracer based on the extension `VK_KHR_ray_tracing`.
+
+Real-time path tracer based on Vulkan.
 
 #### How to run:
 
@@ -10,8 +10,8 @@ Real-time path tracer based on the extension `VK_KHR_ray_tracing`.
 3) For shaders compliation you will need `python` and `glslc` available form the shell level. `glslc` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslc.exe`.
 
 #### Environment variables:
-Add vulkan path for example `C:\VulkanSDK\1.2.148.1\Bin32` to `Path` variable \
-System variable needed
+Add vulkan path `C:\VulkanSDK\x.x.x.x\Bin32` to the `Path` variable \
+System variable needed for the project
 1) `VULKAN_SDK`
 2) `VK_SDK_PATH`
 

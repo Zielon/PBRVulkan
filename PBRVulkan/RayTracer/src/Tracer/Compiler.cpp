@@ -40,17 +40,9 @@ namespace Tracer
 		};
 	}
 
-	Compiler::Compiler(std::vector<Parser::Include> includes, std::vector<Parser::Define> defines)
-		: defines(std::move(defines)), includes(std::move(includes))
+	Compiler::Compiler()
 	{
-		std::cout << "[INFO] Shaders compilation has begin." << std::endl;
-
 		Read();
-		Compile();
-		std::system("python ./scripts/Compile.py");
-		Restore();
-
-		std::cout << "[INFO] Shaders compilation has ended." << std::endl;
 	}
 
 	void Compiler::Read() const
@@ -83,8 +75,10 @@ namespace Tracer
 	/*
 	 * Includes integrator selected form the menu
 	 */
-	void Compiler::Compile() const
+	void Compiler::Compile(std::vector<Parser::Include> includes, std::vector<Parser::Define> defines) const
 	{
+		std::cout << "[INFO] Shaders compilation has begin." << std::endl;
+
 		for (const auto& pair : Parser::SHADERS)
 		{
 			const auto& shader = pair.second;
@@ -112,6 +106,12 @@ namespace Tracer
 			}
 			outShader.close();
 		}
+
+		std::system("python ./scripts/Compile.py");
+
+		std::cout << "[INFO] Shaders compilation has ended." << std::endl;
+
+		Restore();
 	}
 
 	void Compiler::Restore() const

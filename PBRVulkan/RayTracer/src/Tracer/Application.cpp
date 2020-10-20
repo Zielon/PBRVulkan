@@ -23,6 +23,7 @@ namespace Tracer
 	Application::Application()
 	{
 		LoadScene();
+		compiler.reset(new Compiler());
 		CompileShaders();
 		CreateAS();
 		RegisterCallbacks();
@@ -54,7 +55,7 @@ namespace Tracer
 		settings = menu->GetSettings();
 	}
 
-	void Application::CompileShaders()
+	void Application::CompileShaders() const
 	{
 		std::vector<Parser::Define> defines;
 		std::vector<Parser::Include> includes;
@@ -63,7 +64,8 @@ namespace Tracer
 			defines.push_back(Parser::Define::USE_HDR);
 
 		includes.push_back(static_cast<Parser::Include>(settings.IntegratorType));
-		compiler.reset(new Compiler(includes, defines));
+
+		compiler->Compile(includes, defines);
 	}
 
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
@@ -82,14 +84,14 @@ namespace Tracer
 
 	void Application::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
 	{
-		Camera::OnBeforeRender();
-
+		Camera::TimeDeltaUpdate();
+		scene->GetCamera().OnBeforeRender();
+		
 		if (settings.UseRasterizer)
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
 		else
 			Raytracer::Render(framebuffer, commandBuffer, imageIndex);
 
-		scene->GetCamera().OnAfterRender();
 		menu->Render(framebuffer, commandBuffer);
 	}
 

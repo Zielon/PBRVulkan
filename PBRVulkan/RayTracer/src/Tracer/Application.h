@@ -24,7 +24,7 @@ namespace Tracer
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex) override;
 		void LoadScene() override;
 		void UpdateSettings();
-		void CompileShaders();
+		void CompileShaders() const;
 
 		// User interface API
 		void OnKeyChanged(int key, int scanCode, int action, int mods) override;

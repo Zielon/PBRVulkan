@@ -89,7 +89,7 @@ namespace Tracer
 		}
 	}
 
-	void Camera::OnAfterRender()
+	void Camera::OnBeforeRender()
 	{
 		if (isCameraDown) Move(DOWN);
 		if (isCameraLeft) Move(LEFT);
@@ -115,7 +115,7 @@ namespace Tracer
 		return front;
 	}
 
-	void Camera::OnBeforeRender()
+	void Camera::TimeDeltaUpdate()
 	{
 		const auto currentFrame = static_cast<float>(glfwGetTime());
 		DELTA_TIME = currentFrame - LAST_FRAME_TIME;
