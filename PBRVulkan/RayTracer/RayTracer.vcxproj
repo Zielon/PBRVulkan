@@ -276,4 +276,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties src_4Assets_4Shaders_4Raytracer_4Integrators_4PathTracerMSM_1glsl__JsonSchema="https://docs.renovatebot.com/renovate-schema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

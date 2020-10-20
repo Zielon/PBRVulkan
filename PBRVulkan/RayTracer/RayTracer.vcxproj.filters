@@ -84,11 +84,11 @@
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracer.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl">
-      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
-    </None>
     <None Include="src\Assets\Shaders\Common\Random.glsl">
       <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl">
+      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
