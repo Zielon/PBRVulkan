@@ -20,13 +20,9 @@ namespace Tracer
 	{
 		bool UseRasterizer{};
 		int IntegratorType{};
+		int SceneId{};
 		int MaxDepth{};
 		float Fov{};
-
-		bool operator==(const Settings& settings) const
-		{
-			return UseRasterizer == settings.UseRasterizer && IntegratorType == settings.IntegratorType;
-		}
 	};
 
 	class Menu
@@ -37,7 +33,8 @@ namespace Tracer
 		Menu(
 			const Vulkan::Device& device,
 			const Vulkan::SwapChain& swapChain,
-			const Vulkan::CommandPool& commandPool);
+			const Vulkan::CommandPool& commandPool,
+			Settings settings);
 		~Menu();
 
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer);

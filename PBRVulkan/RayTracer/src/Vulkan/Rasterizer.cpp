@@ -1,10 +1,9 @@
 #include "Rasterizer.h"
 
 #include <array>
+#include <iostream>
 
 #include "../Assets/Mesh.h"
-
-#include "../Tracer/Camera.h"
 #include "../Tracer/Scene.h"
 
 #include "Buffer.h"
@@ -107,6 +106,8 @@ namespace Vulkan
 		imageAvailableSemaphores.clear();
 		depthBuffer.reset();
 		swapChain.reset();
+
+		std::cout << "[INFO] Rasterizer swap chain has been deleted." << std::endl;
 	}
 
 	void Rasterizer::CreateGraphicsPipeline()

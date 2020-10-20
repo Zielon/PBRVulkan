@@ -14,7 +14,7 @@ namespace Tracer
 	{
 	public:
 		Application();
-		~Application();
+		~Application() = default;
 
 		void Run() override;
 
@@ -25,7 +25,9 @@ namespace Tracer
 		void LoadScene() override;
 		void UpdateSettings();
 		void CompileShaders() const;
-
+		void RecreateSwapChain();
+		void RecompileIntegrator();
+		
 		// User interface API
 		void OnKeyChanged(int key, int scanCode, int action, int mods) override;
 		void OnCursorPositionChanged(double xpos, double ypos) override;

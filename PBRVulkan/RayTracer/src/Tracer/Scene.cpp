@@ -252,5 +252,8 @@ namespace Tracer
 		return id;
 	}
 
-	Scene::~Scene() { }
+	Scene::~Scene()
+	{
+		std::cout << "[INFO] Scene " << config << " has been unloaded." << std::endl;
+	}
 }

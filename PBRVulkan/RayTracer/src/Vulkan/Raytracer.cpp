@@ -33,15 +33,20 @@ namespace Vulkan
 	void Raytracer::CreateSwapChain()
 	{
 		Rasterizer::CreateSwapChain();
-		
+
 		CreateOutputTexture();
 		CreateGraphicsPipeline();
 	}
 
 	void Raytracer::DeleteSwapChain()
 	{
+		raytracerGraphicsPipeline.reset();
+		shaderBindingTable.reset();
+
 		BLASs.clear();
 		TLASs.clear();
+
+		std::cout << "[INFO] Raytracer swap chain has been deleted." << std::endl;
 
 		Rasterizer::DeleteSwapChain();
 	}

@@ -21,8 +21,9 @@ namespace Tracer
 	Menu::Menu(
 		const Vulkan::Device& device,
 		const Vulkan::SwapChain& swapChain,
-		const Vulkan::CommandPool& commandPool)
-		: swapChain(swapChain), device(device)
+		const Vulkan::CommandPool& commandPool,
+		Settings settings)
+		: settings(settings), swapChain(swapChain), device(device)
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -124,22 +125,31 @@ namespace Tracer
 		const ImVec2 posPivot = ImVec2(0.0f, 0.0f);
 		const auto flags =
 			ImGuiWindowFlags_AlwaysAutoResize |
-			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoMove |
 			ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoSavedSettings;
 
 		ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
+		ImGui::SetNextWindowSize(ImVec2(200, 400), ImGuiCond_Always);
 
-		const char* integrators[] = { "PATH TRACER", "PATH TRACER MSM" };
+		const char* integrators[] = { "Path tracer", "MSM" };
+		const char* scenes[] = { "Coffee cart", "Cornell box" };
 
 		if (ImGui::Begin("Settings", &open, flags))
 		{
+			ImGui::Text("Shaders");
+			ImGui::Separator();
+			ImGui::PushItemWidth(ImGui::GetWindowWidth());
+			if (ImGui::CollapsingHeader("Current shader"))
+				ImGui::ListBox("shader", &settings.IntegratorType, integrators, IM_ARRAYSIZE(integrators), 2);
+
+			ImGui::Text("Scene");
+			ImGui::Separator();
+			ImGui::PushItemWidth(ImGui::GetWindowWidth());
+			if (ImGui::CollapsingHeader("Current scene"))
+				ImGui::ListBox("scene", &settings.SceneId, scenes, IM_ARRAYSIZE(scenes), 2);
 			ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
-
-			if (ImGui::CollapsingHeader("Current shader"), ImGuiTreeNodeFlags_DefaultOpen)
-				ImGui::ListBox("", &settings.IntegratorType, integrators, IM_ARRAYSIZE(integrators), 2);
-
+			
 			ImGui::Text("Controls");
 			ImGui::Separator();
 			ImGui::Text("Program usage: \n"

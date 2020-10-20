@@ -17,8 +17,10 @@
 
 namespace Tracer
 {
-	//const std::string CONFIG = "../Assets/Scenes/cornell_box.scene";
-	const std::string CONFIG = "../Assets/Scenes/coffee_cart.scene";
+	std::vector<std::string> CONFIGS = {
+		"../Assets/Scenes/coffee_cart.scene",
+		"../Assets/Scenes/cornell_box.scene"
+	};
 
 	Application::Application()
 	{
@@ -29,28 +31,21 @@ namespace Tracer
 		RegisterCallbacks();
 		Raytracer::CreateSwapChain();
 
-		menu.reset(new Menu(*device, *swapChain, *commandPool));
+		menu.reset(new Menu(*device, *swapChain, *commandPool, settings));
 	}
-
-	Application::~Application() {}
 
 	void Application::LoadScene()
 	{
-		scene.reset(new Scene(CONFIG, *device, *commandPool));
+		scene.reset(new Scene(CONFIGS[settings.SceneId], *device, *commandPool));
 	}
 
 	void Application::UpdateSettings()
 	{
-		if (settings == menu->GetSettings())
-			return;
-
 		if (settings.IntegratorType != menu->GetSettings().IntegratorType)
-		{
-			settings = menu->GetSettings();
-			device->WaitIdle();
-			CompileShaders();
-			Raytracer::CreateGraphicsPipeline();
-		}
+			RecompileIntegrator();
+
+		if (settings.SceneId != menu->GetSettings().SceneId)
+			RecreateSwapChain();
 
 		settings = menu->GetSettings();
 	}
@@ -66,6 +61,28 @@ namespace Tracer
 		includes.push_back(static_cast<Parser::Include>(settings.IntegratorType));
 
 		compiler->Compile(includes, defines);
+	}
+
+	void Application::RecreateSwapChain()
+	{
+		settings = menu->GetSettings();
+		device->WaitIdle();
+		menu.reset();
+		scene.reset();
+		Raytracer::DeleteSwapChain();
+		LoadScene();
+		CompileShaders();
+		CreateAS();
+		Raytracer::CreateSwapChain();
+		menu.reset(new Menu(*device, *swapChain, *commandPool, settings));
+	}
+
+	void Application::RecompileIntegrator()
+	{
+		settings = menu->GetSettings();
+		device->WaitIdle();
+		CompileShaders();
+		Raytracer::CreateGraphicsPipeline();
 	}
 
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
@@ -86,7 +103,7 @@ namespace Tracer
 	{
 		Camera::TimeDeltaUpdate();
 		scene->GetCamera().OnBeforeRender();
-		
+
 		if (settings.UseRasterizer)
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
 		else
