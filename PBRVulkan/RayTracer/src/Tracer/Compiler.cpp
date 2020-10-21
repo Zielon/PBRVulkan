@@ -86,22 +86,29 @@ namespace Tracer
 			int i = 0;
 			for (const auto& line : shader.content)
 			{
+				bool isOriginal = true;
+
 				if (std::find(
 					shader.includeTokens.begin(), shader.includeTokens.end(), i) != shader.includeTokens.end())
 				{
+					isOriginal = false;
 					for (auto include : includes)
 						outShader << Parser::INCLUDES[include] << std::endl;
 				}
-				else if (std::find(
+
+				if (std::find(
 					shader.definesTokens.begin(), shader.definesTokens.end(), i) != shader.definesTokens.end())
 				{
+					isOriginal = false;
 					for (auto define : defines)
 						outShader << Parser::DEFINES[define] << std::endl;
 				}
-				else
+
+				if (isOriginal)
 				{
 					outShader << line << std::endl;
 				}
+
 				++i;
 			}
 			outShader.close();
