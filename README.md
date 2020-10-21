@@ -1,7 +1,7 @@
 # Physically based renderer in Vulkan
 ####  Vulkan real-time path tracer engine
 
-Real-time path tracer based on Vulkan.
+This project is a framework where you can create/test new shaders in real-time physically based ray tracing system.
 
 #### How to run:
 
