@@ -148,7 +148,6 @@ namespace Tracer
 		if (ImGui::Begin("Settings", &open, flags))
 		{
 			ImGui::Text("Shaders");
-			ImGui::Separator();
 			
 			ImGui::PushItemWidth(-1);
 			ImGui::Combo(" ", &settings.IntegratorType, integrators, 2);
@@ -159,10 +158,10 @@ namespace Tracer
 			ImGui::PushItemWidth(-1);
 			ImGui::Combo("  ", &settings.SceneId, scenes, 9);
 			ImGui::PopItemWidth();
-			ImGui::Separator();
-			
+		
 			ImGui::Text("Renderer");
-			
+			ImGui::Separator();
+
 			ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
 
 			ImGui::Text("# samples");

@@ -15,7 +15,7 @@ namespace Vulkan
 
 		auto extensions = GetRequiredInstanceExtensions();
 
-		if (!validationLayers.empty())
+		if (validationLayers.size() > 1)
 		{
 			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 		}

@@ -126,10 +126,13 @@ namespace Vulkan
 	void Core::CreateInstance()
 	{
 #ifdef NDEBUG
-		const std::vector<const char*> validationLayers = {};
+		std::vector<const char*> validationLayers = {};
 #else
-		const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+		std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation", };
 #endif
+		
+		validationLayers.push_back("VK_LAYER_LUNARG_monitor");
+		
 		window.reset(new Window());
 		instance.reset(new Instance(*window, validationLayers));
 		surface.reset(new Surface(*instance));
