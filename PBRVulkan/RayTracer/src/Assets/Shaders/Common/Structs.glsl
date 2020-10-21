@@ -40,6 +40,8 @@ struct Uniform
 	bool useHDR;
 	uint spp;
 	uint maxDepth;
+	float aperture;
+	float focalDistance;
 };
 
 struct RayPayload

@@ -2,7 +2,7 @@
 
 namespace Vulkan
 {
-	Instance::Instance(const Window& window, const std::vector<const char*>& validationLayers): window(window)
+	Instance::Instance(const Window& window, const std::vector<const char*>& layers): window(window)
 	{
 		// Core info
 		VkApplicationInfo appInfo = {};
@@ -15,7 +15,7 @@ namespace Vulkan
 
 		auto extensions = GetRequiredInstanceExtensions();
 
-		if (validationLayers.size() > 1)
+		if (layers.size() > 1)
 		{
 			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 		}
@@ -26,14 +26,14 @@ namespace Vulkan
 		createInfo.pApplicationInfo = &appInfo;
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 		createInfo.ppEnabledExtensionNames = extensions.data();
-		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-		createInfo.ppEnabledLayerNames = validationLayers.data();
+		createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
+		createInfo.ppEnabledLayerNames = layers.data();
 
 
-		if (CheckValidationLayerSupport(validationLayers))
+		if (CheckValidationLayerSupport(layers))
 		{
-			createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-			createInfo.ppEnabledLayerNames = validationLayers.data();
+			createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
+			createInfo.ppEnabledLayerNames = layers.data();
 		}
 
 		VK_CHECK(vkCreateInstance(&createInfo, nullptr, &instance), "Vulkan MeshInstance creation");

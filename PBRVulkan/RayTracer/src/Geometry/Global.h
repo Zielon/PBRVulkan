@@ -14,5 +14,7 @@ namespace Uniforms
 		uint32_t hasHDR{};
 		uint32_t ssp{};
 		uint32_t maxDepth{};
+		float aperture{};
+		float focalDistance{};
 	};
 }

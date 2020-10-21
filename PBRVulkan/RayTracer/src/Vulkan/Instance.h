@@ -17,7 +17,7 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(Instance)
 
-		Instance(const Window& window, const std::vector<const char*>& validationLayers);
+		Instance(const Window& window, const std::vector<const char*>& layers);
 		~Instance();
 
 		[[nodiscard]] VkInstance Get() const

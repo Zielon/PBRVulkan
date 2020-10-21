@@ -21,9 +21,11 @@ namespace Tracer
 		bool UseRasterizer{};
 		int IntegratorType{};
 		int SceneId{};
-		int MaxDepth = 3;
-		int SSP = 5;
+		int MaxDepth = 2;
+		int SSP = 2;
 		float Fov{};
+		float Aperture = 0.1f;
+		float FocalDistance = 1.f;
 	};
 
 	class Menu

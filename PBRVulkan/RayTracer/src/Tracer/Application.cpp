@@ -105,6 +105,8 @@ namespace Tracer
 		uniform.hasHDR = scene->UseHDR();
 		uniform.ssp = settings.SSP;
 		uniform.maxDepth = settings.MaxDepth;
+		uniform.aperture = settings.Aperture;
+		uniform.focalDistance = settings.FocalDistance;
 
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}
