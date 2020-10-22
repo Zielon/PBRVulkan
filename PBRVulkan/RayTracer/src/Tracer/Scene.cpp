@@ -34,7 +34,7 @@ namespace Tracer
 		LoadEmptyBuffers();
 		CreateBuffers();
 
-		std::cout << "[INFO] Scene has been loaded!" << std::endl;
+		std::cout << "[INFO] SceneWidget has been loaded!" << std::endl;
 	}
 
 	void Scene::Load()
@@ -177,7 +177,7 @@ namespace Tracer
 
 	void Scene::AddHDR(const std::string& path)
 	{
-		const auto file = "../Assets/Scenes/" + path;
+		const auto file = root + path;
 		auto* hdr = Assets::HDRLoader::Load(file.c_str());
 
 		if (hdr == nullptr)
@@ -207,7 +207,7 @@ namespace Tracer
 		}
 		else
 		{
-			const auto file = "../Assets/Scenes/" + path;
+			const auto file = root + path;
 			id = meshes.size();
 			meshes.emplace_back(new Assets::Mesh(file));
 			meshMap[path] = id;
@@ -227,7 +227,7 @@ namespace Tracer
 		}
 		else
 		{
-			const auto file = "../Assets/Scenes/" + path;
+			const auto file = root + path;
 			id = textures.size();
 			textures.emplace_back(new Assets::Texture(file));
 			textureImages.emplace_back(new TextureImage(device, commandPool, *textures[id]));
@@ -254,6 +254,6 @@ namespace Tracer
 
 	Scene::~Scene()
 	{
-		std::cout << "[INFO] Scene " << config << " has been unloaded." << std::endl;
+		std::cout << "[INFO] SceneWidget " << config << " has been unloaded." << std::endl;
 	}
 }

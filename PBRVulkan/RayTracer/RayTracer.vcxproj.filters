@@ -52,6 +52,12 @@
     <Filter Include="Assets\Shaders\Common">
       <UniqueIdentifier>{1d5dedbf-eddc-42b7-90fa-7145e63a5717}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Shaders\Microfacets">
+      <UniqueIdentifier>{89955b81-cfa4-4c7b-828f-3a0b84c64ef0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tracer\Widgets">
+      <UniqueIdentifier>{eb1d96a5-6d86-4e48-9df5-8a83ec890466}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py">
@@ -89,6 +95,9 @@
     </None>
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Microfacets\UN4BRDF.glsl">
+      <Filter>Assets\Shaders\Microfacets</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +233,15 @@
     </ClCompile>
     <ClCompile Include="src\Tracer\Compiler.cpp">
       <Filter>Tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\Widgets\SceneWidget.cpp">
+      <Filter>Tracer\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\Widgets\RendererWidget.cpp">
+      <Filter>Tracer\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracer\Widgets\CinemaWidget.cpp">
+      <Filter>Tracer\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +388,18 @@
     </ClInclude>
     <ClInclude Include="src\Geometry\Global.h">
       <Filter>Geometry\Uniforms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\Widgets\Widget.h">
+      <Filter>Tracer\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\Widgets\SceneWidget.h">
+      <Filter>Tracer\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\Widgets\RendererWidget.h">
+      <Filter>Tracer\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tracer\Widgets\CinemaWidget.h">
+      <Filter>Tracer\Widgets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

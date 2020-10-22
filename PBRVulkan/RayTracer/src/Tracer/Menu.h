@@ -6,6 +6,11 @@
 #include "Compiler.h"
 #include "../Vulkan/Vulkan.h"
 
+namespace Interface
+{
+	class Widget;
+}
+
 namespace Vulkan
 {
 	class Device;
@@ -42,6 +47,8 @@ namespace Tracer
 
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer);
 
+		void AddWidget(const std::shared_ptr<Interface::Widget>& widget);
+		
 		[[nodiscard]] const Settings& GetSettings() const
 		{
 			return settings;
@@ -65,5 +72,6 @@ namespace Tracer
 		const Vulkan::SwapChain& swapChain;
 		const Vulkan::Device& device;
 		std::unique_ptr<Vulkan::RenderPass> renderPass;
+		std::vector<std::shared_ptr<Interface::Widget>> widgets;
 	};
 }

@@ -13,6 +13,8 @@
 #include "../Vulkan/RenderPass.h"
 #include "../Vulkan/Command.cpp"
 
+#include "Widgets/Widget.h"
+
 #include "../ImGui/imgui_impl_glfw.h"
 #include "../ImGui/imgui_impl_vulkan.h"
 
@@ -117,6 +119,11 @@ namespace Tracer
 		vkCmdEndRenderPass(commandBuffer);
 	}
 
+	void Menu::AddWidget(const std::shared_ptr<Interface::Widget>& widget)
+	{
+		widgets.push_back(widget);
+	}
+
 	void Menu::RenderSettings()
 	{
 		bool open = true;
@@ -131,55 +138,12 @@ namespace Tracer
 
 		ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
 		ImGui::SetNextWindowSize(ImVec2(185, 400), ImGuiCond_Always);
-		
-		const char* integrators[] = { "Path tracer", "MSM" };
-		const char* scenes[] = {
-			"Coffee cart",
-			"Cornell box",
-			"Ajax",
-			"Bedroom",
-			"Staircase",
-			"Dining room",
-			"Dragon",
-			"Spaceship",
-			"Stormtrooper"
-		};
 
 		if (ImGui::Begin("Settings", &open, flags))
 		{
-			ImGui::Text("Shaders");
-			
-			ImGui::PushItemWidth(-1);
-			ImGui::Combo(" ", &settings.IntegratorType, integrators, 2);
-			ImGui::PopItemWidth();
-			
-			ImGui::Text("Scene");
-			
-			ImGui::PushItemWidth(-1);
-			ImGui::Combo("  ", &settings.SceneId, scenes, 9);
-			ImGui::PopItemWidth();
-		
-			ImGui::Text("Renderer");
-			ImGui::Separator();
+			for (auto& widget : widgets)
+				widget->Render(settings);
 
-			ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
-
-			ImGui::Text("# samples ");
-			ImGui::SameLine();
-			ImGui::InputInt("int_samples", &settings.SSP, 1);
-			
-			ImGui::Text("# depth   ");
-			ImGui::SameLine();
-			ImGui::InputInt("int_depth", &settings.MaxDepth, 1);
-
-			ImGui::Text("Focal     ");
-			ImGui::SameLine();
-			ImGui::InputFloat("float_focal", &settings.FocalDistance, 0.1);
-
-			ImGui::Text("Aperture  ");
-			ImGui::SameLine();
-			ImGui::InputFloat("float_aperture", &settings.Aperture, 0.1);
-			
 			ImGui::Text("Controls");
 			ImGui::Separator();
 			ImGui::Text("Program usage: \n"

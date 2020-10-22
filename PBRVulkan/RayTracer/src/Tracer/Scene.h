@@ -54,7 +54,7 @@ namespace Tracer
 		int AddLight(Assets::Light light) override;
 		int AddMeshInstance(class Assets::MeshInstance meshInstance) override;
 		void CreateBuffers();
-		
+
 		[[nodiscard]] const std::vector<std::unique_ptr<Assets::Mesh>>& GetMeshes() const
 		{
 			return meshes;
@@ -127,6 +127,7 @@ namespace Tracer
 
 	private:
 		std::string config;
+		const std::string root = "../Assets/Scenes/";
 		uint32_t verticesSize{};
 		uint32_t indeciesSize{};
 		std::unique_ptr<class Camera> camera;

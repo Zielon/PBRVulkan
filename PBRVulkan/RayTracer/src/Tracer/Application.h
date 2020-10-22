@@ -27,6 +27,7 @@ namespace Tracer
 		void CompileShaders() const;
 		void RecreateSwapChain();
 		void RecompileIntegrator();
+		void CreateMenu();
 		
 		// User interface API
 		void OnKeyChanged(int key, int scanCode, int action, int mods) override;

@@ -15,6 +15,10 @@
 #include "../Vulkan/Buffer.h"
 #include "../Vulkan/Device.h"
 
+#include "Widgets/CinemaWidget.h"
+#include "Widgets/RendererWidget.h"
+#include "Widgets/SceneWidget.h"
+
 namespace Tracer
 {
 	std::vector<std::string> CONFIGS =
@@ -38,8 +42,7 @@ namespace Tracer
 		CreateAS();
 		RegisterCallbacks();
 		Raytracer::CreateSwapChain();
-
-		menu.reset(new Menu(*device, *swapChain, *commandPool, settings));
+		CreateMenu();
 	}
 
 	void Application::LoadScene()
@@ -82,7 +85,7 @@ namespace Tracer
 		CompileShaders();
 		CreateAS();
 		Raytracer::CreateSwapChain();
-		menu.reset(new Menu(*device, *swapChain, *commandPool, settings));
+		CreateMenu();
 	}
 
 	void Application::RecompileIntegrator()
@@ -91,6 +94,15 @@ namespace Tracer
 		device->WaitIdle();
 		CompileShaders();
 		Raytracer::CreateGraphicsPipeline();
+	}
+
+	void Application::CreateMenu()
+	{
+		menu.reset(new Menu(*device, *swapChain, *commandPool, settings));
+
+		menu->AddWidget(std::make_shared<Interface::SceneWidget>());
+		menu->AddWidget(std::make_shared<Interface::RendererWidget>());
+		menu->AddWidget(std::make_shared<Interface::CinemaWidget>());
 	}
 
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)

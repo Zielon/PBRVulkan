@@ -24,6 +24,7 @@
     <None Include="src\Assets\Shaders\Common\Random.glsl" />
     <None Include="src\Assets\Shaders\Common\Structs.glsl" />
     <None Include="src\Assets\Shaders\Common\Vertex.glsl" />
+    <None Include="src\Assets\Shaders\Microfacets\UN4BRDF.glsl" />
     <None Include="src\Assets\Shaders\Rasterizer\Fragment.frag" />
     <None Include="src\Assets\Shaders\Rasterizer\Vertex.vert" />
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracer.glsl" />
@@ -46,6 +47,9 @@
     <ClCompile Include="src\Tracer\Application.cpp" />
     <ClCompile Include="src\Tracer\Scene.cpp" />
     <ClCompile Include="src\Tracer\TextureImage.cpp" />
+    <ClCompile Include="src\Tracer\Widgets\CinemaWidget.cpp" />
+    <ClCompile Include="src\Tracer\Widgets\RendererWidget.cpp" />
+    <ClCompile Include="src\Tracer\Widgets\SceneWidget.cpp" />
     <ClCompile Include="src\Vulkan\AccelerationStructure.cpp" />
     <ClCompile Include="src\Vulkan\BLAS.cpp" />
     <ClCompile Include="src\Vulkan\Core.cpp" />
@@ -97,6 +101,10 @@
     <ClInclude Include="src\Tracer\Application.h" />
     <ClInclude Include="src\Tracer\Scene.h" />
     <ClInclude Include="src\Tracer\TextureImage.h" />
+    <ClInclude Include="src\Tracer\Widgets\CinemaWidget.h" />
+    <ClInclude Include="src\Tracer\Widgets\RendererWidget.h" />
+    <ClInclude Include="src\Tracer\Widgets\SceneWidget.h" />
+    <ClInclude Include="src\Tracer\Widgets\Widget.h" />
     <ClInclude Include="src\Vulkan\AccelerationStructure.h" />
     <ClInclude Include="src\Vulkan\BLAS.h" />
     <ClInclude Include="src\Vulkan\Core.h" />
