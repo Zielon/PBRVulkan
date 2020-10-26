@@ -108,7 +108,7 @@ namespace Tracer
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
 	{
 		Uniforms::Global uniform{};
-
+		
 		uniform.view = scene->GetCamera().GetView();
 		uniform.projection = scene->GetCamera().GetProjection();
 		uniform.direction = scene->GetCamera().GetDirection();
@@ -119,7 +119,9 @@ namespace Tracer
 		uniform.maxDepth = settings.MaxDepth;
 		uniform.aperture = settings.Aperture;
 		uniform.focalDistance = settings.FocalDistance;
-
+		uniform.hdrResolution = scene->UseHDR() ? scene->GetHDRResolution() : 0.f;
+		uniform.frame = frame;
+		
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}
 
@@ -134,6 +136,8 @@ namespace Tracer
 			Raytracer::Render(framebuffer, commandBuffer, imageIndex);
 
 		menu->Render(framebuffer, commandBuffer);
+
+		frame++;
 	}
 
 	void Application::RegisterCallbacks()

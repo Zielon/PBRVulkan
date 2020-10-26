@@ -92,13 +92,10 @@ namespace Vulkan
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
 		                        raytracerGraphicsPipeline->GetPipelineLayout(), 0, 1, descriptorSets, 0, nullptr);
 
-		extensions->vkCmdTraceRaysNV(
-			commandBuffer,
+		extensions->vkCmdTraceRaysNV(commandBuffer, 
 			shaderBindingTable->GetBuffer().Get(), size_t(0),
-			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize(),
-			shaderBindingTable->GetEntrySize(),
-			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize() * 2,
-			shaderBindingTable->GetEntrySize(),
+			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize(), shaderBindingTable->GetEntrySize(),
+			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize() * 3, shaderBindingTable->GetEntrySize(),
 			nullptr, 0, 0,
 			extent.width, extent.height, 1);
 

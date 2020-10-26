@@ -186,6 +186,7 @@ namespace Tracer
 		{
 			std::cout << "[TEXTURE] " + file + " has been added!" << std::endl;
 			LoadHDR(hdr);
+			hdrResolution = hdr->width * hdr->height;
 			delete hdr;
 		}
 	}

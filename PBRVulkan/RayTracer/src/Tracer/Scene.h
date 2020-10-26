@@ -125,6 +125,11 @@ namespace Tracer
 			return verticesSize;
 		}
 
+		[[nodiscard]] uint32_t GetHDRResolution() const
+		{
+			return hdrResolution;
+		}
+
 	private:
 		std::string config;
 		const std::string root = "../Assets/Scenes/";
@@ -155,6 +160,8 @@ namespace Tracer
 		std::unique_ptr<class Vulkan::Buffer> offsetBuffer;
 		std::unique_ptr<class Vulkan::Buffer> lightsBuffer;
 		std::unique_ptr<class Vulkan::Image> image;
+
+		float hdrResolution{};
 
 		void Load();
 		void LoadEmptyBuffers();

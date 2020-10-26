@@ -24,14 +24,15 @@
     <None Include="src\Assets\Shaders\Common\Random.glsl" />
     <None Include="src\Assets\Shaders\Common\Structs.glsl" />
     <None Include="src\Assets\Shaders\Common\Vertex.glsl" />
-    <None Include="src\Assets\Shaders\Microfacets\UN4BRDF.glsl" />
     <None Include="src\Assets\Shaders\Rasterizer\Fragment.frag" />
     <None Include="src\Assets\Shaders\Rasterizer\Vertex.vert" />
+    <None Include="src\Assets\Shaders\Raytracer\Integrators\DirectLight.glsl" />
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracer.glsl" />
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl" />
     <None Include="src\Assets\Shaders\Raytracer\Raytracing.rchit" />
     <None Include="src\Assets\Shaders\Raytracer\Raytracing.rgen" />
     <None Include="src\Assets\Shaders\Raytracer\Raytracing.rmiss" />
+    <None Include="src\Assets\Shaders\Raytracer\Shadow.rmiss" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\3rdParty\HDRLoader.cpp" />

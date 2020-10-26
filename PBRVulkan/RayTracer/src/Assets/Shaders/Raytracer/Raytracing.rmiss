@@ -4,7 +4,6 @@
 #extension GL_NV_ray_tracing : require
 
 // Replaced by Compiler.h
-// ====== DEFINES ======
 
 #include "../Common/Structs.glsl"
 
@@ -14,19 +13,20 @@ layout(binding = 3) readonly uniform UniformBufferObject { Uniform ubo; };
 layout(binding = 10) uniform sampler2D[] HDRs;
 #endif
 
-layout(location = 0) rayPayloadInNV RayPayload Ray;
+layout(location = 0) rayPayloadInNV RayPayload payload;
 
 void main()
 {
+	payload.throughput = vec3(1, 0, 0);
+
 	if (ubo.useHDR)
 	{
 		#ifdef USE_HDR
-		vec2 uv = vec2((PI + atan(Ray.direction.z, Ray.direction.x)) * (1.0 / TWO_PI), acos(Ray.direction.y) * (1.0 / PI));
-		Ray.color = texture(HDRs[0], uv).rgb;
+		payload.radiance += texture(HDRs[0], uv).xyz;
 		#endif
 	}
 	else
 	{
-		Ray.color = vec3(0);
+		payload.radiance = vec3(0);
 	}
 }

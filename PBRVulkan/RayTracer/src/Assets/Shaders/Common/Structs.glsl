@@ -4,6 +4,8 @@
 
 #define PI        3.14159265358979323
 #define TWO_PI    6.28318530717958648
+#define EPS       0.001
+#define INFINITY  1000000.0
 
 struct Material 
 { 
@@ -40,12 +42,15 @@ struct Uniform
 	bool useHDR;
 	uint spp;
 	uint maxDepth;
+	uint frame;
 	float aperture;
 	float focalDistance;
+	float hdrResolution;
 };
 
 struct RayPayload
 {
-	vec3 color;
-	vec3 direction;
+	vec3 radiance;
+	vec3 throughput;
+	uint seed;
 };

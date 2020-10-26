@@ -25,9 +25,9 @@ namespace Tracer
 	{
 		bool UseRasterizer{};
 		int IntegratorType{};
-		int SceneId{};
-		int MaxDepth = 2;
-		int SSP = 2;
+		int SceneId = 1;
+		int MaxDepth = 1;
+		int SSP = 5;
 		float Fov{};
 		float Aperture = 0.1f;
 		float FocalDistance = 1.f;

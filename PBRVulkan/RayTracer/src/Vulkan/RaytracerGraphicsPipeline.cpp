@@ -31,12 +31,14 @@ namespace Vulkan
 		// Load shaders.
 		const Shader rayGenShader(device, "Raytracing.rgen.spv");
 		const Shader missShader(device, "Raytracing.rmiss.spv");
+		const Shader shadowShader(device, "Shadow.rmiss.spv");
 		const Shader closestHitShader(device, "Raytracing.rchit.spv");
 
-		VkPipelineShaderStageCreateInfo shaderStages[] =
+		std:std::array<VkPipelineShaderStageCreateInfo, 4> shaderStages =
 		{
 			rayGenShader.CreateShaderStage(VK_SHADER_STAGE_RAYGEN_BIT_NV),
 			missShader.CreateShaderStage(VK_SHADER_STAGE_MISS_BIT_NV),
+			shadowShader.CreateShaderStage(VK_SHADER_STAGE_MISS_BIT_NV),
 			closestHitShader.CreateShaderStage(VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV),
 		};
 
@@ -59,12 +61,21 @@ namespace Vulkan
 		missGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
 		missGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
 
+		VkRayTracingShaderGroupCreateInfoNV shadowGroupInfo = {};
+		shadowGroupInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV;
+		shadowGroupInfo.pNext = nullptr;
+		shadowGroupInfo.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV;
+		shadowGroupInfo.generalShader = 2;
+		shadowGroupInfo.closestHitShader = VK_SHADER_UNUSED_NV;
+		shadowGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
+		shadowGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
+		
 		VkRayTracingShaderGroupCreateInfoNV triangleHitGroupInfo = {};
 		triangleHitGroupInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV;
 		triangleHitGroupInfo.pNext = nullptr;
 		triangleHitGroupInfo.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV;
 		triangleHitGroupInfo.generalShader = VK_SHADER_UNUSED_NV;
-		triangleHitGroupInfo.closestHitShader = 2;
+		triangleHitGroupInfo.closestHitShader = 3;
 		triangleHitGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
 		triangleHitGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
 
@@ -72,13 +83,17 @@ namespace Vulkan
 		{
 			rayGenGroupInfo,
 			missGroupInfo,
+			shadowGroupInfo,
 			triangleHitGroupInfo,
 		};
 
 		std::vector<DescriptorBinding> descriptorBindings =
 		{
 			// Top level acceleration structure.
-			{ 0, 1, VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV, VK_SHADER_STAGE_RAYGEN_BIT_NV },
+			{
+				0, 1, VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV,
+				VK_SHADER_STAGE_RAYGEN_BIT_NV | VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV
+			},
 
 			// Image accumulation
 			{ 1, 1, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, VK_SHADER_STAGE_RAYGEN_BIT_NV },
@@ -87,7 +102,7 @@ namespace Vulkan
 			{ 2, 1, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, VK_SHADER_STAGE_RAYGEN_BIT_NV },
 
 			// Uniforms
-			{ 3, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_RAYGEN_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV },
+			{ 3, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_RAYGEN_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV | VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV },
 
 			// Vertex buffer
 			{ 4, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV },
@@ -103,11 +118,11 @@ namespace Vulkan
 
 			// Textures
 			{
-				8, scene.GetTextureSize(), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV
+				8, scene.GetTextureSize(), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
 			},
 
 			// Lights buffer
-			{ 9, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV },
+			{ 9, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV },
 		};
 
 		// HDRs
@@ -264,7 +279,7 @@ namespace Vulkan
 			descriptorWrites[8].descriptorCount = static_cast<uint32_t>(imageInfos.size());
 			descriptorWrites[8].pImageInfo = imageInfos.data();
 
-			// Offsets buffer
+			// Lights buffer
 			VkDescriptorBufferInfo lightsBufferInfo = {};
 			lightsBufferInfo.buffer = scene.GetLightsBuffer().Get();
 			lightsBufferInfo.range = VK_WHOLE_SIZE;
@@ -323,11 +338,11 @@ namespace Vulkan
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV;
 		pipelineInfo.pNext = nullptr;
 		pipelineInfo.flags = 0;
-		pipelineInfo.stageCount = uint32_t(3);
-		pipelineInfo.pStages = shaderStages;
+		pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
+		pipelineInfo.pStages = shaderStages.data();
 		pipelineInfo.groupCount = static_cast<uint32_t>(groups.size());
 		pipelineInfo.pGroups = groups.data();
-		pipelineInfo.maxRecursionDepth = 1;
+		pipelineInfo.maxRecursionDepth = 2;
 		pipelineInfo.layout = pipelineLayout;
 		pipelineInfo.basePipelineHandle = nullptr;
 		pipelineInfo.basePipelineIndex = 0;
@@ -353,20 +368,5 @@ namespace Vulkan
 		}
 
 		descriptorSets.clear();
-	}
-
-	uint32_t RaytracerGraphicsPipeline::GetRayGenShaderIndex()
-	{
-		return 0;
-	}
-
-	uint32_t RaytracerGraphicsPipeline::GetMissShaderIndex()
-	{
-		return 1;
-	}
-
-	uint32_t RaytracerGraphicsPipeline::GetHitShaderIndex()
-	{
-		return 2;
 	}
 }

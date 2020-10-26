@@ -38,5 +38,7 @@ namespace Tracer
 		Settings settings;
 		std::unique_ptr<class Menu> menu;
 		std::unique_ptr<class Compiler> compiler;
+
+		uint32_t frame = 0;
 	};
 }

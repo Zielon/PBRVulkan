@@ -32,10 +32,6 @@ namespace Vulkan
 		                          VkAccelerationStructureNV topLevelAS);
 		~RaytracerGraphicsPipeline();
 
-		[[nodiscard]] static uint32_t GetRayGenShaderIndex();
-		[[nodiscard]] static uint32_t GetMissShaderIndex();
-		[[nodiscard]] static uint32_t GetHitShaderIndex();
-
 		[[nodiscard]] const class Device& GetDevice() const
 		{
 			return device;
