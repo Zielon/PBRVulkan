@@ -128,7 +128,9 @@ namespace Tracer
 	void Application::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
 	{
 		Camera::TimeDeltaUpdate();
-		scene->GetCamera().OnBeforeRender();
+
+		if (scene->GetCamera().OnBeforeRender())
+			frame = 0;
 
 		if (settings.UseRasterizer)
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
@@ -137,7 +139,7 @@ namespace Tracer
 
 		menu->Render(framebuffer, commandBuffer);
 
-		frame++;
+		++frame;
 	}
 
 	void Application::RegisterCallbacks()
@@ -176,7 +178,8 @@ namespace Tracer
 		if (menu->WantCaptureKeyboard() || menu->WantCaptureMouse() || !swapChain)
 			return;
 
-		scene->GetCamera().OnCursorPositionChanged(xpos, ypos);
+		if (scene->GetCamera().OnCursorPositionChanged(xpos, ypos))
+			frame = 0;
 	}
 
 	void Application::OnMouseButtonChanged(int button, int action, int mods)

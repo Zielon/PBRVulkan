@@ -51,14 +51,14 @@ namespace Tracer
 		}
 	}
 
-	void Camera::OnCursorPositionChanged(double xpos, double ypos)
+	bool Camera::OnCursorPositionChanged(double xpos, double ypos)
 	{
 		if (isFirstMouseEvent)
 		{
 			lastX = xpos;
 			lastY = ypos;
 			isFirstMouseEvent = false;
-			return;
+			return false;
 		}
 
 		float xoffset = xpos - lastX;
@@ -67,7 +67,7 @@ namespace Tracer
 		lastX = xpos;
 		lastY = ypos;
 
-		if (!isMousePressed) return;
+		if (!isMousePressed) return false;
 
 		xoffset *= SENSITIVITY;
 		yoffset *= SENSITIVITY;
@@ -79,6 +79,8 @@ namespace Tracer
 		if (pitch < -89.0f) pitch = -89.0f;
 
 		Update();
+
+		return true;
 	}
 
 	void Camera::OnMouseButtonChanged(int button, int action, int mods)
@@ -89,12 +91,14 @@ namespace Tracer
 		}
 	}
 
-	void Camera::OnBeforeRender()
+	bool Camera::OnBeforeRender()
 	{
 		if (isCameraDown) Move(DOWN);
 		if (isCameraLeft) Move(LEFT);
 		if (isCameraRight) Move(RIGHT);
 		if (isCameraUp) Move(UP);
+		
+		return isCameraDown | isCameraLeft | isCameraRight | isCameraUp;
 	}
 
 	glm::mat4 Camera::GetView() const

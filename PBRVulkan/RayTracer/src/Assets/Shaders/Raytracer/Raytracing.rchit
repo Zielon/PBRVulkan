@@ -52,7 +52,7 @@ void main()
 	const vec3 barycentrics = vec3(1.0 - Hit.x - Hit.y, Hit.x, Hit.y);
 	const vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
-	const vec3 worldPos = v0.position * barycentrics.x + v1.position * barycentrics.y + v2.position * barycentrics.z;
+	const vec3 worldPos = mix(v0.position, v1.position, v2.position, barycentrics);
 
 	if (material.albedoTexID >= 0)
 		payload.radiance = texture(TextureSamplers[material.albedoTexID], texCoord).rbg;
@@ -75,8 +75,8 @@ void main()
 	{
 		float tMin     = 0.001;
 		float tMax     = lightDist;
-		uint  flags    = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
-		vec3 origin    = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV;
+		uint flags     = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
+		vec3 origin    = (gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV) - EPS;
 		isShadowed     = true;
 
 		traceNV(TLAS,           // acceleration structure

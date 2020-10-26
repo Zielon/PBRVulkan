@@ -20,11 +20,11 @@ namespace Tracer
 
 		void OnKeyChanged(int key, int scanCode, int action, int mod);
 
-		void OnCursorPositionChanged(double xpos, double ypos);
+		bool OnCursorPositionChanged(double xpos, double ypos);
 
 		void OnMouseButtonChanged(int button, int action, int mods);
 
-		void OnBeforeRender();
+		bool OnBeforeRender();
 
 		void static TimeDeltaUpdate();
 
