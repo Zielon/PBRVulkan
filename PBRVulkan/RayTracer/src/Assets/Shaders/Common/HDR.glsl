@@ -1,0 +1,1 @@
+// HDR specific functions

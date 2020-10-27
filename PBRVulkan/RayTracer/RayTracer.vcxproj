@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Include="Scripts\Compile.py" />
     <None Include="src\Assets\Shaders\Common\Composition.glsl" />
+    <None Include="src\Assets\Shaders\Common\HDR.glsl" />
     <None Include="src\Assets\Shaders\Common\Math.glsl" />
     <None Include="src\Assets\Shaders\Common\Random.glsl" />
     <None Include="src\Assets\Shaders\Common\Sampling.glsl" />
