@@ -27,7 +27,7 @@ namespace Tracer
 		int IntegratorType{};
 		int SceneId = 1;
 		int MaxDepth = 1;
-		int SSP = 5;
+		int SSP = 1;
 		float Fov{};
 		float Aperture = 0.1f;
 		float FocalDistance = 1.f;

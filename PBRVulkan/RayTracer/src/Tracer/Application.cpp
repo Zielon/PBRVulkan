@@ -86,6 +86,7 @@ namespace Tracer
 		CreateAS();
 		Raytracer::CreateSwapChain();
 		CreateMenu();
+		ResetAccumulation();
 	}
 
 	void Application::RecompileIntegrator()
@@ -105,10 +106,15 @@ namespace Tracer
 		menu->AddWidget(std::make_shared<Interface::CinemaWidget>());
 	}
 
+	void Application::ResetAccumulation()
+	{
+		frame = 0;
+	}
+
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
 	{
 		Uniforms::Global uniform{};
-		
+
 		uniform.view = scene->GetCamera().GetView();
 		uniform.projection = scene->GetCamera().GetProjection();
 		uniform.direction = scene->GetCamera().GetDirection();
@@ -121,7 +127,7 @@ namespace Tracer
 		uniform.focalDistance = settings.FocalDistance;
 		uniform.hdrResolution = scene->UseHDR() ? scene->GetHDRResolution() : 0.f;
 		uniform.frame = frame;
-		
+
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}
 
@@ -130,7 +136,7 @@ namespace Tracer
 		Camera::TimeDeltaUpdate();
 
 		if (scene->GetCamera().OnBeforeRender())
-			frame = 0;
+			ResetAccumulation();
 
 		if (settings.UseRasterizer)
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
@@ -179,7 +185,7 @@ namespace Tracer
 			return;
 
 		if (scene->GetCamera().OnCursorPositionChanged(xpos, ypos))
-			frame = 0;
+			ResetAccumulation();
 	}
 
 	void Application::OnMouseButtonChanged(int button, int action, int mods)

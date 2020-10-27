@@ -28,6 +28,7 @@ namespace Tracer
 		void RecreateSwapChain();
 		void RecompileIntegrator();
 		void CreateMenu();
+		void ResetAccumulation();
 		
 		// User interface API
 		void OnKeyChanged(int key, int scanCode, int action, int mods) override;

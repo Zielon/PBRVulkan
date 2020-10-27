@@ -33,8 +33,16 @@ namespace Tracer
 		Process();
 		LoadEmptyBuffers();
 		CreateBuffers();
+		Print();
+	}
 
-		std::cout << "[INFO] SceneWidget has been loaded!" << std::endl;
+	void Scene::Print()
+	{
+		std::cout << "[INFO] Scene has been loaded!" << std::endl;
+		std::cout << "	# meshes:    " << meshes.size() << std::endl;
+		std::cout << "	# textures:  " << textures.size() << std::endl;
+		std::cout << "	# lights:    " << lights.size() << std::endl;
+		std::cout << "	# materials: " << materials.size() << std::endl;
 	}
 
 	void Scene::Load()
@@ -51,6 +59,7 @@ namespace Tracer
 		// Add a dummy texture for texture samplers in Vulkan
 		if (textures.empty())
 		{
+			textures.emplace_back();
 			const auto texture = std::make_unique<Assets::Texture>();
 			textureImages.emplace_back(new TextureImage(device, commandPool, *texture));
 		}
@@ -255,6 +264,6 @@ namespace Tracer
 
 	Scene::~Scene()
 	{
-		std::cout << "[INFO] SceneWidget " << config << " has been unloaded." << std::endl;
+		std::cout << "[INFO] Scene " << config << " has been unloaded." << std::endl;
 	}
 }

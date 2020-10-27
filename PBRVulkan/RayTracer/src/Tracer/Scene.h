@@ -163,6 +163,7 @@ namespace Tracer
 
 		float hdrResolution{};
 
+		void Print();
 		void Load();
 		void LoadEmptyBuffers();
 		void Process();
