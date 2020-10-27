@@ -76,7 +76,7 @@ void main()
 		float tMin     = 0.001;
 		float tMax     = lightDist;
 		uint flags     = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
-		vec3 origin    = (gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV) - EPS;
+		vec3 origin    = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV - EPS;
 		isShadowed     = true;
 
 		traceNV(TLAS,           // acceleration structure

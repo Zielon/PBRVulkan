@@ -46,7 +46,7 @@ void main()
 		payload.seed = seed;
 
 		for (uint j = 0; j <= ubo.maxDepth; ++j)
-		{		
+		{			
 			traceNV(TLAS,           // acceleration structure
 					rayFlags,       // rayFlags
 					0xFF,           // cullMask
@@ -64,16 +64,13 @@ void main()
 		color += payload.radiance;
 	}
 
-	// TODO Accumulate results when camera does not move
-
+	// HDR scale
 	vec3 accumulatedColor = ubo.frame > 1 ? imageLoad(AccumulationImage, ivec2(gl_LaunchIDNV.xy)).rbg : vec3(0);
-
-	accumulatedColor += color;
-	
+	accumulatedColor += color;	
 	imageStore(AccumulationImage, ivec2(gl_LaunchIDNV.xy), vec4(accumulatedColor, 1.0));
 
-	color = accumulatedColor / (float(ubo.frame + 1) * float(SPP));
+	// LDR scale
+	color = accumulatedColor / (SPP * ubo.frame);
 	color = pow(tone_map(color, 1.5), vec3(1.0 / 2.2));
-
 	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(color, 1.0));
 }
