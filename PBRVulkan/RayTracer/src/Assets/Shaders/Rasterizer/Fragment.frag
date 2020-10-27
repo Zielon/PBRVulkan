@@ -16,7 +16,11 @@ layout(location = 3) in flat int inMaterialId;
 
 layout(location = 0) out vec4 outColor;
 
-#include "../Common/Math.glsl"
+vec3 tone_map(in vec3 color, float limit)
+{
+	float luminance = 0.3 * color.x + 0.6 * color.y + 0.1 * color.z;
+	return color * 1.0 / (1.0 + luminance / limit);
+}
 
 void main() 
 {

@@ -105,9 +105,12 @@ namespace Vulkan
 		renderFinishedSemaphores.clear();
 		imageAvailableSemaphores.clear();
 		depthBuffer.reset();
-		swapChain.reset();
 
-		std::cout << "[INFO] Rasterizer swap chain has been deleted." << std::endl;
+		if (swapChain)
+		{
+			swapChain.reset();
+			std::cout << "[INFO] Rasterizer swap chain has been deleted." << std::endl;
+		}
 	}
 
 	void Rasterizer::CreateGraphicsPipeline()

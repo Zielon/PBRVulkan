@@ -128,7 +128,7 @@ namespace Vulkan
 #ifdef NDEBUG
 		std::vector<const char*> layers = {};
 #else
-		std::vector<const char*> layers = { "VK_LAYER_KHRONOS_validation", };
+		std::vector<const char*> layers = { "VK_LAYER_KHRONOS_validation" };
 #endif
 
 		layers.push_back("VK_LAYER_LUNARG_monitor");

@@ -5,6 +5,7 @@
 #extension GL_NV_ray_tracing : require
 
 // Replaced by Compiler.h
+// ====== DEFINES ======
 
 #include "../Common/Structs.glsl"
 
@@ -26,16 +27,7 @@ layout(location = 1) rayPayloadNV bool isShadowed;
 
 hitAttributeNV vec2 Hit;
 
-#include "../Common/Vertex.glsl"
-#include "../Common/Math.glsl"
-#include "../Common/Random.glsl"
-
-vec3 sampleLight(Light light)
-{
-	float r1 = rnd(payload.seed);
-	float r2 = rnd(payload.seed);
-	return light.position + light.u * r1 + light.v * r2;
-}
+#include "../Common/Composition.glsl"
 
 void main()
 {
@@ -54,50 +46,6 @@ void main()
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 	const vec3 worldPos = mix(v0.position, v1.position, v2.position, barycentrics);
 
-	if (material.albedoTexID >= 0)
-		payload.radiance = texture(TextureSamplers[material.albedoTexID], texCoord).rbg;
-	else
-		payload.radiance = material.albedo.rbg;
-
-	if (ubo.lights == 0)
-		return;
-
-	Light light;
-	int index = int(rnd(payload.seed) * float(ubo.lights));
-	light = Lights[index];
-
-	vec3 lightNormal = normalize(cross(light.u, light.v));
-	vec3 lightDir = sampleLight(light) - worldPos;
-	float lightDist = length(lightDir);
-	float lightDistSq = lightDist * lightDist;
-	lightDir /= sqrt(lightDistSq);
-
-	isShadowed = true;
-
-	// The light is visible from the surface. Less than 90° between vectors.
-	if (dot(normal, lightDir) > 0.f)
-	{
-		float tMin     = 0.001;
-		float tMax     = lightDist;
-		uint flags     = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
-		vec3 origin    = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV - EPS;
-
-		traceNV(TLAS,           // acceleration structure
-				flags,          // rayFlags
-				0xFF,           // cullMask
-				0,              // sbtRecordOffset
-				0,              // sbtRecordStride
-				1,              // missIndex
-				origin,         // ray origin
-				tMin,           // ray min range
-				lightDir,       // ray direction
-				tMax,           // ray max range
-				1               // payload (location = 1)
-		);
-	}
-
-	if (isShadowed)
-	{
-		payload.radiance *= 0.3;
-	}
+	// Replaced by Compiler.h
+	// ====== INTEGRATOR ======
 }

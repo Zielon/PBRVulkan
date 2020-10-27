@@ -58,6 +58,9 @@ namespace Tracer
 		if (settings.SceneId != menu->GetSettings().SceneId)
 			RecreateSwapChain();
 
+		if (settings.RequiresAccumulationReset(menu->GetSettings()))
+			ResetAccumulation();
+
 		settings = menu->GetSettings();
 	}
 
@@ -95,6 +98,7 @@ namespace Tracer
 		device->WaitIdle();
 		CompileShaders();
 		Raytracer::CreateGraphicsPipeline();
+		ResetAccumulation();
 	}
 
 	void Application::CreateMenu()

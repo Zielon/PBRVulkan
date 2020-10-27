@@ -93,14 +93,20 @@
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracer.glsl">
-      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
-    </None>
     <None Include="src\Assets\Shaders\Raytracer\Integrators\DirectLight.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
     <None Include="src\Assets\Shaders\Raytracer\Shadow.rmiss">
       <Filter>Assets\Shaders\Raytracer</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\Sampling.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracer.glsl">
+      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\Composition.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

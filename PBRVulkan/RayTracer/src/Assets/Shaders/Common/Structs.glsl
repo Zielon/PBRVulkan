@@ -53,4 +53,6 @@ struct RayPayload
 	vec3 radiance;
 	vec3 throughput;
 	uint seed;
+	vec3 direction;
+	vec3 origin;
 };

@@ -28,7 +28,7 @@ void main()
 	uint seed = tea(gl_LaunchIDNV.y * gl_LaunchSizeNV.x + gl_LaunchIDNV.x, ubo.frame);
 	vec3 color = vec3(0);
 
-	for (uint i = 0; i <= SPP; ++i)
+	for (uint i = 0; i < SPP; ++i)
 	{
 		float r1 = rnd(seed);
 		float r2 = rnd(seed);
@@ -59,9 +59,9 @@ void main()
 					tMax,           // ray max range
 					0               // payload (location = 0)
 			);
-		}
 
-		color += payload.radiance;
+			color += payload.radiance;
+		}
 	}
 
 	// HDR scale

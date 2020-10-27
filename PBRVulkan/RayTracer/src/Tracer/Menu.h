@@ -31,6 +31,19 @@ namespace Tracer
 		float Fov{};
 		float Aperture = 0.1f;
 		float FocalDistance = 1.f;
+
+		[[nodiscard]] bool RequiresAccumulationReset(const Settings& prev) const
+		{
+			return
+				UseRasterizer != prev.UseRasterizer ||
+				IntegratorType != prev.IntegratorType ||
+				SceneId != prev.SceneId ||
+				MaxDepth != prev.MaxDepth ||
+				SSP != prev.SSP ||
+				Fov != prev.Fov ||
+				Aperture != prev.Aperture ||
+				FocalDistance != prev.FocalDistance;
+		}
 	};
 
 	class Menu
@@ -48,7 +61,7 @@ namespace Tracer
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer);
 
 		void AddWidget(const std::shared_ptr<Interface::Widget>& widget);
-		
+
 		[[nodiscard]] const Settings& GetSettings() const
 		{
 			return settings;
