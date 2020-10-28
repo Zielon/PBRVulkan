@@ -344,8 +344,6 @@ namespace Vulkan
 		pipelineInfo.pGroups = groups.data();
 		pipelineInfo.maxRecursionDepth = 2;
 		pipelineInfo.layout = pipelineLayout;
-		pipelineInfo.basePipelineHandle = nullptr;
-		pipelineInfo.basePipelineIndex = 0;
 
 		VK_CHECK(extensions->vkCreateRayTracingPipelinesNV(device.Get(), nullptr, 1, &pipelineInfo, nullptr, &pipeline),
 		         "Create ray tracing pipeline");

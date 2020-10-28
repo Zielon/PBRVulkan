@@ -25,9 +25,10 @@ layout(binding = 10) uniform sampler2D[] HDRs;
 layout(location = 0) rayPayloadInNV RayPayload payload;
 layout(location = 1) rayPayloadNV bool isShadowed;
 
-hitAttributeNV vec2 Hit;
+hitAttributeNV vec2 hit;
 
 #include "../Common/Composition.glsl"
+
 #ifdef USE_HDR
 #include "../Common/HDR.glsl"
 #endif
@@ -44,7 +45,7 @@ void main()
 
 	const Material material = Materials[v0.materialIndex];
 
-	const vec3 barycentrics = vec3(1.0 - Hit.x - Hit.y, Hit.x, Hit.y);
+	const vec3 barycentrics = vec3(1.0 - hit.x - hit.y, hit.x, hit.y);
 	const vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 	const vec3 worldPos = mix(v0.position, v1.position, v2.position, barycentrics);

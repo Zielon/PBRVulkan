@@ -55,4 +55,19 @@ struct RayPayload
 	uint seed;
 	vec3 direction;
 	vec3 origin;
+	uint depth;
+};
+
+struct BsdfSample
+{
+	vec3 bsdfDir; 
+	float pdf; 
+};
+
+struct LightSample
+{ 
+	vec3 surfacePos; 
+	vec3 normal; 
+	vec3 emission; 
+	float pdf; 
 };

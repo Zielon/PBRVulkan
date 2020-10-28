@@ -16,7 +16,7 @@ layout(location = 3) in flat int inMaterialId;
 
 layout(location = 0) out vec4 outColor;
 
-vec3 tone_map(in vec3 color, float limit)
+vec3 toneMap(in vec3 color, float limit)
 {
 	float luminance = 0.3 * color.x + 0.6 * color.y + 0.1 * color.z;
 	return color * 1.0 / (1.0 + luminance / limit);
@@ -37,5 +37,5 @@ void main()
 	else
 		color = material.albedo.xyz;
 
-	outColor = vec4(pow(tone_map(color, 1.5), vec3(1.0 / 2.2)), 1.0);
+	outColor = vec4(pow(toneMap(color, 1.5), vec3(1.0 / 2.2)), 1.0);
 }

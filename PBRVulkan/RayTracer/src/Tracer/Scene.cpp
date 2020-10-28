@@ -36,7 +36,7 @@ namespace Tracer
 		Print();
 	}
 
-	void Scene::Print()
+	void Scene::Print() const
 	{
 		std::cout << "[INFO] Scene has been loaded!" << std::endl;
 		std::cout << "	# meshes:    " << meshes.size() << std::endl;
