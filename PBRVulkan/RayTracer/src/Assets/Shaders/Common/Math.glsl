@@ -14,7 +14,7 @@ vec2 mix(vec2 a, vec2 b, vec2 c, vec3 barycentrics)
 
 vec3 toneMap(in vec3 color, float limit)
 {
-	float luminance = 0.3 * color.x + 0.6 * color.y + 0.1 * color.z;
+	float luminance = 0.299 * color.x + 0.587 * color.y + 0.114 * color.z;
 	return color * 1.0 / (1.0 + luminance / limit);
 }
 

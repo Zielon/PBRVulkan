@@ -18,5 +18,6 @@ namespace Uniforms
 		float aperture{};
 		float focalDistance{};
 		float hdrResolution{};
+		float AORayLength{};
 	};
 }

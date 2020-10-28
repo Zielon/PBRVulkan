@@ -134,7 +134,8 @@ namespace Tracer
 		uniform.focalDistance = settings.FocalDistance;
 		uniform.hdrResolution = scene->UseHDR() ? scene->GetHDRResolution() : 0.f;
 		uniform.frame = frame;
-
+		uniform.AORayLength = settings.AORayLength;
+	
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}
 

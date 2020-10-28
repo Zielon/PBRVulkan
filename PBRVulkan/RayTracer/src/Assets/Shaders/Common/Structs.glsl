@@ -48,6 +48,7 @@ struct Uniform
 	float aperture;
 	float focalDistance;
 	float hdrResolution;
+	float AORayLength;
 };
 
 struct RayPayload

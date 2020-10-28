@@ -32,6 +32,7 @@ namespace Tracer
 		float Fov{};
 		float Aperture = 0.1f;
 		float FocalDistance = 1.f;
+		float AORayLength = 0.25f;
 
 		[[nodiscard]] bool RequiresShaderRecompliation(const Settings& prev) const
 		{
@@ -49,7 +50,8 @@ namespace Tracer
 				SSP != prev.SSP ||
 				Fov != prev.Fov ||
 				Aperture != prev.Aperture ||
-				FocalDistance != prev.FocalDistance;
+				FocalDistance != prev.FocalDistance ||
+				AORayLength != prev.AORayLength;
 		}
 	};
 

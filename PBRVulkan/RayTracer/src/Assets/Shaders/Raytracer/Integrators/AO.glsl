@@ -13,7 +13,7 @@
  */
  {
 	float tMin     = 0.001;
-	float tMax     = 0.5;
+	float tMax     = ubo.AORayLength;
 	uint flags     = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
 	vec3 origin    = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV - EPS;
 
