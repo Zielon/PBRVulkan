@@ -8,7 +8,7 @@ namespace Interface
 {
 	void SceneWidget::Render(Tracer::Settings& settings)
 	{
-		const char* integrators[] = { "Path tracer", "MSM" };
+		const char* integrators[] = { "Path tracer", "MSM", "AO" };
 
 		const char* scenes[] = {
 			"Coffee cart",
@@ -25,7 +25,7 @@ namespace Interface
 		ImGui::Text("Shaders");
 
 		ImGui::PushItemWidth(-1);
-		ImGui::Combo(" ", &settings.IntegratorType, integrators, 2);
+		ImGui::Combo(" ", &settings.IntegratorType, integrators, 3);
 		ImGui::PopItemWidth();
 
 		ImGui::Text("Scene");

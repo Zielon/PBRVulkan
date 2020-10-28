@@ -24,6 +24,7 @@ namespace Tracer
 	struct Settings
 	{
 		bool UseRasterizer{};
+		bool UseGammaCorrection = true;
 		int IntegratorType{};
 		int SceneId = 1;
 		int MaxDepth = 1;
@@ -32,10 +33,16 @@ namespace Tracer
 		float Aperture = 0.1f;
 		float FocalDistance = 1.f;
 
+		[[nodiscard]] bool RequiresShaderRecompliation(const Settings& prev) const
+		{
+			return UseGammaCorrection != prev.UseGammaCorrection || IntegratorType != prev.IntegratorType;
+		}
+
 		[[nodiscard]] bool RequiresAccumulationReset(const Settings& prev) const
 		{
 			return
 				UseRasterizer != prev.UseRasterizer ||
+				UseGammaCorrection != prev.UseGammaCorrection ||
 				IntegratorType != prev.IntegratorType ||
 				SceneId != prev.SceneId ||
 				MaxDepth != prev.MaxDepth ||

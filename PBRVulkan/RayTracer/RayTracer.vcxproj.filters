@@ -111,6 +111,9 @@
     <None Include="src\Assets\Shaders\Common\HDR.glsl">
       <Filter>Assets\Shaders\Common</Filter>
     </None>
+    <None Include="src\Assets\Shaders\Raytracer\Integrators\AO.glsl">
+      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Vulkan\Device.cpp">

@@ -2,8 +2,10 @@
  *  Global structure used in shaders
  */
 
-#define PI        3.14159265358979323
-#define TWO_PI    6.28318530717958648
+#define PI        3.14159265358979323846
+#define TWO_PI    6.2831853071795864
+#define INV_PI    0.31830988618379067154
+#define INV_2PI   0.15915494309189533577
 #define EPS       0.0001
 #define INFINITY  1000000.0
 

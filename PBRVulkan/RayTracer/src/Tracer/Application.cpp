@@ -52,11 +52,11 @@ namespace Tracer
 
 	void Application::UpdateSettings()
 	{
-		if (settings.IntegratorType != menu->GetSettings().IntegratorType)
-			RecompileIntegrator();
-
 		if (settings.SceneId != menu->GetSettings().SceneId)
 			RecreateSwapChain();
+		
+		if (settings.RequiresShaderRecompliation(menu->GetSettings()))
+			RecompileShaders();
 
 		if (settings.RequiresAccumulationReset(menu->GetSettings()))
 			ResetAccumulation();
@@ -71,6 +71,9 @@ namespace Tracer
 
 		if (scene->UseHDR())
 			defines.push_back(Parser::Define::USE_HDR);
+
+		if(settings.UseGammaCorrection)
+			defines.push_back(Parser::Define::USE_GAMMA_CORRECTION);
 
 		includes.push_back(static_cast<Parser::Include>(settings.IntegratorType));
 
@@ -92,7 +95,7 @@ namespace Tracer
 		ResetAccumulation();
 	}
 
-	void Application::RecompileIntegrator()
+	void Application::RecompileShaders()
 	{
 		settings = menu->GetSettings();
 		device->WaitIdle();

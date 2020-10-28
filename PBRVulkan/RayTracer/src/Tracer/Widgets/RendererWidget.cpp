@@ -12,6 +12,7 @@ namespace Interface
 		ImGui::Separator();
 
 		ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
+		ImGui::Checkbox("Gamma correction", &settings.UseGammaCorrection);
 
 		ImGui::Text("# samples ");
 		ImGui::SameLine();

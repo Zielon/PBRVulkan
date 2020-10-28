@@ -3,6 +3,9 @@
 #extension GL_GOOGLE_include_directive : require
 #extension GL_NV_ray_tracing : require
 
+// Replaced by Compiler.h
+// ====== DEFINES ======
+
 #include "../Common/Structs.glsl"
 #include "../Common/Random.glsl"
 
@@ -73,6 +76,10 @@ void main()
 
 	// LDR scale
 	color = accumulatedColor / (SPP * ubo.frame);
+
+	#ifdef USE_GAMMA_CORRECTION
 	color = pow(toneMap(color, 1.5), vec3(1.0 / 2.2));
+	#endif
+
 	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(color, 1.0));
 }

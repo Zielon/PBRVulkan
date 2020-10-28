@@ -11,13 +11,15 @@ namespace Tracer
 	{
 		enum Define
 		{
-			USE_HDR
+			USE_HDR,
+			USE_GAMMA_CORRECTION
 		};
 
 		enum Include
 		{
 			PATH_TRACER_DEFAULT,
-			PATH_TRACER_MSM
+			PATH_TRACER_MSM,
+			AMBIENT_OCCLUSION
 		};
 
 		enum ShaderType

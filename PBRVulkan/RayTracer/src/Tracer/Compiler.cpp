@@ -26,11 +26,13 @@ namespace Tracer
 
 		std::map<Include, std::string> INCLUDES = {
 			{ PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
-			{ PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" }
+			{ PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" },
+			{ AMBIENT_OCCLUSION, "#include \"Integrators/AO.glsl\"" }
 		};
 
 		std::map<Define, std::string> DEFINES = {
 			{ USE_HDR, "#define USE_HDR" },
+			{ USE_GAMMA_CORRECTION, "#define USE_GAMMA_CORRECTION" }
 		};
 
 		std::map<ShaderType, Shader> SHADERS = {

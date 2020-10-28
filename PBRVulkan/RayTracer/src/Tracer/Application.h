@@ -26,7 +26,7 @@ namespace Tracer
 		void UpdateSettings();
 		void CompileShaders() const;
 		void RecreateSwapChain();
-		void RecompileIntegrator();
+		void RecompileShaders();
 		void CreateMenu();
 		void ResetAccumulation();
 		
