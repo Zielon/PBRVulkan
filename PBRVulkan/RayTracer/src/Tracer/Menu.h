@@ -26,7 +26,7 @@ namespace Tracer
 		bool UseRasterizer{};
 		bool UseGammaCorrection = true;
 		int IntegratorType{};
-		int SceneId = 1;
+		int SceneId = 5;
 		int MaxDepth = 1;
 		int SSP = 1;
 		float Fov{};

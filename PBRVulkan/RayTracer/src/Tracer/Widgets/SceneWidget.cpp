@@ -8,18 +8,27 @@ namespace Interface
 {
 	void SceneWidget::Render(Tracer::Settings& settings)
 	{
-		const char* integrators[] = { "Path tracer", "MSM", "AO" };
+		const char* integrators[] = {
+			"Path tracer",
+			"MSM",
+			"AO"
+		};
 
 		const char* scenes[] = {
-			"Coffee cart",
-			"Cornell box",
 			"Ajax",
 			"Bedroom",
-			"Staircase",
-			"Dining room",
+			"Boy",
+			"Coffee cart",
+			"Coffee maker",
+			"Cornell box",
+			"Diningroom",
 			"Dragon",
+			"Hyperion",
+			"Panther",
 			"Spaceship",
-			"Stormtrooper"
+			"Staircase",
+			"Stormtrooper",
+			"Teapot"
 		};
 
 		ImGui::Text("Shaders");
@@ -34,11 +43,11 @@ namespace Interface
 			ImGui::SameLine();
 			ImGui::InputFloat("AO_samples", &settings.AORayLength, 0.01);
 		}
-		
+
 		ImGui::Text("Scene");
 
 		ImGui::PushItemWidth(-1);
-		ImGui::Combo("  ", &settings.SceneId, scenes, 9);
+		ImGui::Combo("  ", &settings.SceneId, scenes, 14);
 		ImGui::PopItemWidth();
 	}
 }

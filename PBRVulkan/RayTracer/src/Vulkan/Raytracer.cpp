@@ -26,7 +26,6 @@ namespace Vulkan
 
 	Raytracer::~Raytracer()
 	{
-		scene.reset();
 		Raytracer::DeleteSwapChain();
 	}
 
@@ -40,6 +39,7 @@ namespace Vulkan
 
 	void Raytracer::DeleteSwapChain()
 	{
+		scene.reset();
 		raytracerGraphicsPipeline.reset();
 		shaderBindingTable.reset();
 
