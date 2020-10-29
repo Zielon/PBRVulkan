@@ -29,7 +29,7 @@ void main()
 
 	const uint SPP = ubo.spp; // Samples per pixel
 	uint seed = tea(gl_LaunchIDNV.y * gl_LaunchSizeNV.x + gl_LaunchIDNV.x, ubo.frame);
-	vec3 color = vec3(0);
+	vec3 radiance = vec3(0);
 
 	for (uint i = 0; i < SPP; ++i)
 	{
@@ -65,21 +65,22 @@ void main()
 					0               // payload (location = 0)
 			);
 
-			color += payload.radiance;
+			radiance += payload.radiance;
 		}
 	}
 
 	// HDR scale
-	vec3 accumulatedColor = ubo.frame > 1 ? imageLoad(AccumulationImage, ivec2(gl_LaunchIDNV.xy)).rbg : vec3(0);
-	accumulatedColor += color;	
-	imageStore(AccumulationImage, ivec2(gl_LaunchIDNV.xy), vec4(accumulatedColor, 1.0));
+	vec3 accumulatedRadiance = ubo.frame > 1 ? imageLoad(AccumulationImage, ivec2(gl_LaunchIDNV.xy)).rbg : vec3(0);
+	accumulatedRadiance += radiance;	
+	imageStore(AccumulationImage, ivec2(gl_LaunchIDNV.xy), vec4(accumulatedRadiance, 1.0));
+	radiance = accumulatedRadiance / (SPP * ubo.frame);
 
 	// LDR scale
-	color = accumulatedColor / (SPP * ubo.frame);
+	vec3 ldr = toneMap(radiance, 1.5);
 
 	#ifdef USE_GAMMA_CORRECTION
-	color = pow(toneMap(color, 1.5), vec3(1.0 / 2.2));
+	ldr = gammaCorrection(ldr);
 	#endif
 
-	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(color, 1.0));
+	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(ldr, 1.0));
 }

@@ -24,8 +24,8 @@
 	{
 		float r1 = rnd(payload.seed);
 		float r2 = rnd(payload.seed);
-
-		vec3 dir = cosineSampleHemisphere(r1, r2);
+		mat3 frame = localFrame(normal);
+		vec3 dir = frame * cosineSampleHemisphere(r1, r2);
 
 		isShadowed = true;
 
