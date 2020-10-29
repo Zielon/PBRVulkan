@@ -4,7 +4,7 @@
 
 namespace Tracer
 {
-	enum Action
+	enum class Action
 	{
 		LEFT,
 		RIGHT,

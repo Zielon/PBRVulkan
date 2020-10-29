@@ -9,20 +9,20 @@ namespace Tracer
 {
 	namespace Parser
 	{
-		enum Define
+		enum class Define
 		{
 			USE_HDR,
 			USE_GAMMA_CORRECTION
 		};
 
-		enum Include
+		enum class Include
 		{
 			PATH_TRACER_DEFAULT,
 			PATH_TRACER_MSM,
 			AMBIENT_OCCLUSION
 		};
 
-		enum ShaderType
+		enum class ShaderType
 		{
 			RAY_GEN,
 			RAY_MISS,

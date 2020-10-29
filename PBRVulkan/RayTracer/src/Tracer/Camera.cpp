@@ -1,6 +1,7 @@
 #include "Camera.h"
 
 #include <GLFW/glfw3.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 float Tracer::Camera::DELTA_TIME = 0;
@@ -93,10 +94,10 @@ namespace Tracer
 
 	bool Camera::OnBeforeRender()
 	{
-		if (isCameraDown) Move(DOWN);
-		if (isCameraLeft) Move(LEFT);
-		if (isCameraRight) Move(RIGHT);
-		if (isCameraUp) Move(UP);
+		if (isCameraDown) Move(Action::DOWN);
+		if (isCameraLeft) Move(Action::LEFT);
+		if (isCameraRight) Move(Action::RIGHT);
+		if (isCameraUp) Move(Action::UP);
 		
 		return isCameraDown | isCameraLeft | isCameraRight | isCameraUp;
 	}
@@ -145,16 +146,16 @@ namespace Tracer
 
 		switch (action)
 		{
-		case DOWN:
+		case Action::DOWN:
 			position -= front * distance;
 			break;
-		case UP:
+		case Action::UP:
 			position += front * distance;
 			break;
-		case LEFT:
+		case Action::LEFT:
 			position -= right * distance;
 			break;
-		case RIGHT:
+		case Action::RIGHT:
 			position += right * distance;
 			break;
 		default:

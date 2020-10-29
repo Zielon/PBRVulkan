@@ -28,19 +28,19 @@ vec2 mix(vec2 a, vec2 b, vec2 c, vec3 barycentrics)
 }
 
  /*
-  * Encode color from HDR space to LDR
+  * Encode color from HDR space to LDR. Tone mapping.
   * @param color Color vector
   * @param limit Scaling limit
   * @returns LDR color encoding
   */
-vec3 toneMap(in vec3 hdr, float limit)
+vec3 toneMap(in vec3 rgb, float limit)
 {
-	float luminance = 0.299 * hdr.x + 0.587 * hdr.y + 0.114 * hdr.z;
-	return hdr / (1.0 + luminance / limit);
+	float luminance = 0.299 * rgb.x + 0.587 * rgb.y + 0.114 * rgb.z;
+	return rgb / (1.0 + luminance / limit);
 }
 
 /*
- * Gamma correction 
+ * Gamma correction. Gamut mapping.
  * @param color Color vector
  * @returns LDR color value encoding
  */
@@ -55,10 +55,10 @@ vec3 gammaCorrection(in vec3 ldr)
  */
 mat3 localFrame(in vec3 normal)
 {
-	vec3 up = abs(normal.z) < 0.999 ? vec3(0, 0, 1) : vec3(1, 0, 0);
-	vec3 x  = normalize(cross(up, normal));
-	vec3 y  = cross(normal, x);
-	return mat3(x, y, normal);
+	vec3 up       = abs(normal.z) < 0.999 ? vec3(0, 0, 1) : vec3(1, 0, 0);
+	vec3 tangentX = normalize(cross(up, normal));
+	vec3 tangentY = cross(normal, tangentX);
+	return mat3(tangentX, tangentY, normal);
 }
 
  /*

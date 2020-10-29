@@ -25,20 +25,20 @@ namespace Tracer
 		std::string RAY_GEN_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing.rgen";
 
 		std::map<Include, std::string> INCLUDES = {
-			{ PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
-			{ PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" },
-			{ AMBIENT_OCCLUSION, "#include \"Integrators/AO.glsl\"" }
+			{ Include::PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
+			{ Include::PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" },
+			{ Include::AMBIENT_OCCLUSION, "#include \"Integrators/AO.glsl\"" }
 		};
 
 		std::map<Define, std::string> DEFINES = {
-			{ USE_HDR, "#define USE_HDR" },
-			{ USE_GAMMA_CORRECTION, "#define USE_GAMMA_CORRECTION" }
+			{ Define::USE_HDR, "#define USE_HDR" },
+			{ Define::USE_GAMMA_CORRECTION, "#define USE_GAMMA_CORRECTION" }
 		};
 
 		std::map<ShaderType, Shader> SHADERS = {
-			{ RAY_HIT, { RAY_HIT_SHADER } },
-			{ RAY_MISS, { RAY_MISS_SHADER } },
-			{ RAY_GEN, { RAY_GEN_SHADER } },
+			{ ShaderType::RAY_HIT, { RAY_HIT_SHADER } },
+			{ ShaderType::RAY_MISS, { RAY_MISS_SHADER } },
+			{ ShaderType::RAY_GEN, { RAY_GEN_SHADER } },
 		};
 	}
 
