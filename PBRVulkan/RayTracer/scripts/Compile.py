@@ -13,7 +13,7 @@ mk = output_folder + assets
 if not os.path.exists(mk):
     os.makedirs(mk)
 
-extensionsToCheck = ('.frag', '.vert', '.rchit', '.rgen', '.rmiss')
+extensionsToCheck = ('.frag', '.vert', '.compiled.rchit', '.compiled.rgen', '.compiled.rmiss')
 
 for path in glob.iglob(shaders + '**/*', recursive=True):
 

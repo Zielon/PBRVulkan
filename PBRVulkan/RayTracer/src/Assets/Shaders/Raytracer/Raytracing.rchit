@@ -50,6 +50,8 @@ void main()
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 	const vec3 worldPos = mix(v0.position, v1.position, v2.position, barycentrics);
 
+	uint seed = tea(gl_LaunchIDNV.y * gl_LaunchSizeNV.x + gl_LaunchIDNV.x, ubo.frame);
+
 	// Replaced by Compiler.h
 	// ====== INTEGRATOR ======
 }

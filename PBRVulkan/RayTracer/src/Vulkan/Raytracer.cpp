@@ -92,12 +92,14 @@ namespace Vulkan
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
 		                        raytracerGraphicsPipeline->GetPipelineLayout(), 0, 1, descriptorSets, 0, nullptr);
 
-		extensions->vkCmdTraceRaysNV(commandBuffer, 
-			shaderBindingTable->GetBuffer().Get(), size_t(0),
-			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize(), shaderBindingTable->GetEntrySize(),
-			shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize() * 3, shaderBindingTable->GetEntrySize(),
-			nullptr, 0, 0,
-			extent.width, extent.height, 1);
+		extensions->vkCmdTraceRaysNV(commandBuffer,
+		                             shaderBindingTable->GetBuffer().Get(), size_t(0),
+		                             shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize(),
+		                             shaderBindingTable->GetEntrySize(),
+		                             shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize() * 3,
+		                             shaderBindingTable->GetEntrySize(),
+		                             nullptr, 0, 0,
+		                             extent.width, extent.height, 1);
 
 		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT, VK_IMAGE_LAYOUT_GENERAL,
@@ -171,10 +173,12 @@ namespace Vulkan
 
 		std::vector<ASMemoryRequirementsNV> requirements;
 
-		for (const auto& model : scene->GetMeshes())
+		for (const auto& model : scene->GetMeshInstances())
 		{
-			const auto vertexCount = static_cast<uint32_t>(model->GetVerticesSize());
-			const auto indexCount = static_cast<uint32_t>(model->GetIndeciesSize());
+			const auto& mesh = scene->GetMeshes()[model.meshId];
+
+			const auto vertexCount = static_cast<uint32_t>(mesh->GetVerticesSize());
+			const auto indexCount = static_cast<uint32_t>(mesh->GetIndeciesSize());
 
 			const std::vector<VkGeometryNV> geometries =
 			{
@@ -215,7 +219,7 @@ namespace Vulkan
 		std::vector<ASMemoryRequirementsNV> requirements;
 
 		geometryInstances.reserve(scene->GetMeshes().size());
-		for (auto instanceId = 0; instanceId < scene->GetMeshes().size(); ++instanceId)
+		for (auto instanceId = 0; instanceId < scene->GetMeshInstances().size(); ++instanceId)
 		{
 			geometryInstances.push_back(TLAS::CreateGeometryInstance(BLASs[instanceId], glm::mat4(1), instanceId));
 		}

@@ -26,6 +26,7 @@ namespace Tracer
 		{
 			RAY_GEN,
 			RAY_MISS,
+			RAY_SHADOW,
 			RAY_HIT
 		};
 	}
@@ -41,6 +42,5 @@ namespace Tracer
 		
 	private:
 		void Read() const;
-		void Restore() const;
 	};
 }

@@ -2,10 +2,10 @@
  * Set of different sampling functions
  */
 
-vec3 sampleLight(Light light)
+vec3 sampleLight(Light light, inout uint seed)
 {
-	float r1 = rnd(payload.seed);
-	float r2 = rnd(payload.seed);
+	float r1 = rnd(seed);
+	float r2 = rnd(seed);
 	return light.position + light.u * r1 + light.v * r2;
 }
 

@@ -60,6 +60,11 @@ namespace Tracer
 			return meshes;
 		}
 
+		[[nodiscard]] const std::vector<Assets::MeshInstance>& GetMeshInstances() const
+		{
+			return meshInstances;
+		}
+
 		[[nodiscard]] class Camera& GetCamera() const
 		{
 			return *camera;

@@ -394,6 +394,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+*.compiled.*
+
 Shadrec/
 PBRVulkan/Assets/
 PBRVulkan/Shaders/

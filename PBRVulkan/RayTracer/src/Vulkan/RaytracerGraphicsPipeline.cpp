@@ -29,10 +29,10 @@ namespace Vulkan
 		extensions.reset(new Extensions(device));
 
 		// Load shaders.
-		const Shader rayGenShader(device, "Raytracing.rgen.spv");
-		const Shader missShader(device, "Raytracing.rmiss.spv");
-		const Shader shadowShader(device, "Shadow.rmiss.spv");
-		const Shader closestHitShader(device, "Raytracing.rchit.spv");
+		const Shader rayGenShader(device, "Raytracing.compiled.rgen.spv");
+		const Shader missShader(device, "Raytracing.compiled.rmiss.spv");
+		const Shader shadowShader(device, "Shadow.compiled.rmiss.spv");
+		const Shader closestHitShader(device, "Raytracing.compiled.rchit.spv");
 
 		std:std::array<VkPipelineShaderStageCreateInfo, 4> shaderStages =
 		{

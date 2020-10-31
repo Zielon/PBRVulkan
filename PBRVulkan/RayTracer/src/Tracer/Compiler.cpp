@@ -12,6 +12,7 @@ namespace Tracer
 		struct Shader
 		{
 			std::string path;
+			std::string extension;
 			std::vector<std::string> content{};
 			std::vector<int> definesTokens{};
 			std::vector<int> includeTokens{};
@@ -20,9 +21,10 @@ namespace Tracer
 		std::string TOKEN_INTEGRATOR = "// ====== INTEGRATOR ======";
 		std::string TOKEN_DEFINES = "// ====== DEFINES ======";
 
-		std::string RAY_HIT_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing.rchit";
-		std::string RAY_MISS_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing.rmiss";
-		std::string RAY_GEN_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing.rgen";
+		std::string RAY_HIT_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing";
+		std::string RAY_MISS_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing";
+		std::string RAY_SHADOW_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Shadow";
+		std::string RAY_GEN_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing";
 
 		std::map<Include, std::string> INCLUDES = {
 			{ Include::PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
@@ -36,9 +38,10 @@ namespace Tracer
 		};
 
 		std::map<ShaderType, Shader> SHADERS = {
-			{ ShaderType::RAY_HIT, { RAY_HIT_SHADER } },
-			{ ShaderType::RAY_MISS, { RAY_MISS_SHADER } },
-			{ ShaderType::RAY_GEN, { RAY_GEN_SHADER } },
+			{ ShaderType::RAY_HIT, { RAY_HIT_SHADER, ".rchit" } },
+			{ ShaderType::RAY_MISS, { RAY_MISS_SHADER, ".rmiss" } },
+			{ ShaderType::RAY_GEN, { RAY_GEN_SHADER, ".rgen" } },
+			{ ShaderType::RAY_SHADOW, { RAY_SHADOW_SHADER, ".rmiss" } }
 		};
 	}
 
@@ -52,7 +55,7 @@ namespace Tracer
 		for (const auto& pair : Parser::SHADERS)
 		{
 			auto shader = pair.second;
-			std::ifstream inShader(shader.path);
+			std::ifstream inShader(shader.path + shader.extension);
 			std::string line;
 			int i = 0;
 			std::vector<std::string> file;
@@ -84,7 +87,7 @@ namespace Tracer
 		for (const auto& pair : Parser::SHADERS)
 		{
 			const auto& shader = pair.second;
-			std::ofstream outShader(shader.path);
+			std::ofstream outShader(shader.path + ".compiled" + shader.extension, std::ofstream::trunc);
 			int i = 0;
 			for (const auto& line : shader.content)
 			{
@@ -119,22 +122,5 @@ namespace Tracer
 		std::system("python ./scripts/Compile.py");
 
 		std::cout << "[INFO] Shaders compilation has ended." << std::endl;
-
-		Restore();
-	}
-
-	void Compiler::Restore() const
-	{
-		for (const auto& pair : Parser::SHADERS)
-		{
-			auto shader = pair.second;
-			std::ofstream outShader(shader.path);
-			int i = 0;
-			for (auto& line : shader.content)
-			{
-				outShader << line << std::endl;
-			}
-			outShader.close();
-		}
 	}
 }

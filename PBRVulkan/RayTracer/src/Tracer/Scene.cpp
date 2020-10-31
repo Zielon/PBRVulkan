@@ -39,6 +39,7 @@ namespace Tracer
 	{
 		std::cout << "[INFO] Scene has been loaded!" << std::endl;
 		std::cout << "	# meshes:    " << meshes.size() << std::endl;
+		std::cout << "	# instances: " << meshInstances.size() << std::endl;
 		std::cout << "	# textures:  " << textures.size() << std::endl;
 		std::cout << "	# lights:    " << lights.size() << std::endl;
 		std::cout << "	# materials: " << materials.size() << std::endl;
@@ -97,8 +98,7 @@ namespace Tracer
 		{
 			auto& mesh = meshes[meshInstance.meshId];
 			glm::mat4 modelMatrix = meshInstance.modelTransform;
-			
-#pragma omp parallel for
+
 			for (auto& vertex : mesh->GetVertices())
 			{
 				vertex.position = modelMatrix * glm::vec4(vertex.position.xyz(), 1.f);
@@ -114,13 +114,10 @@ namespace Tracer
 			indices.insert(indices.end(), mesh->GetIndecies().begin(), mesh->GetIndecies().end());
 		}
 
-		verticesSize = vertices.size();
-		indeciesSize = indices.size();
-
 		// =============== VERTEX BUFFER ===============
 
 		auto usage = VkBufferUsageFlagBits(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
-		auto size = sizeof(meshes[0]->GetVertices()[0]) * verticesSize;
+		auto size = sizeof(meshes[0]->GetVertices()[0]) * vertices.size();
 		std::cout << "[INFO] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
 		Fill(vertexBuffer, vertices.data(), size, usage);
 
