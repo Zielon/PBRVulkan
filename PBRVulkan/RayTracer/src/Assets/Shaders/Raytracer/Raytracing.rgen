@@ -73,6 +73,7 @@ void main()
 	vec3 accumulatedRadiance = ubo.frame > 1 ? imageLoad(AccumulationImage, ivec2(gl_LaunchIDNV.xy)).rbg : vec3(0);
 	accumulatedRadiance += radiance;	
 	imageStore(AccumulationImage, ivec2(gl_LaunchIDNV.xy), vec4(accumulatedRadiance, 1.0));
+
 	radiance = accumulatedRadiance / (SPP * ubo.frame);
 
 	// LDR scale

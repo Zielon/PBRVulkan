@@ -90,7 +90,6 @@ namespace Tracer
 		settings = menu->GetSettings();
 		device->WaitIdle();
 		menu.reset();
-		scene.reset();
 		Raytracer::DeleteSwapChain();
 		LoadScene();
 		CompileShaders();

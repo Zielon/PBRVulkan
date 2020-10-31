@@ -30,7 +30,6 @@ namespace Tracer
 		: config(config), device(device), commandPool(commandPool)
 	{
 		Load();
-		Process();
 		LoadEmptyBuffers();
 		CreateBuffers();
 		Print();
@@ -70,27 +69,6 @@ namespace Tracer
 		}
 	}
 
-	void Scene::Process()
-	{
-		/*
-		 * Translation of position does not affect normals.
-		 * Rotation is applied to normals just like it is to position.
-		 * Uniform scaling of position does not affect the direction of normals
-		 * Non-uniform scaling of position does affect the direction of normals!
-		 */
-#pragma omp parallel for
-		for (auto& meshInstance : meshInstances)
-		{
-			glm::mat4 modelMatrix = meshInstance.modelTransform;
-
-			for (auto& vertex : meshes[meshInstance.meshId]->GetVertices())
-			{
-				vertex.position = modelMatrix * glm::vec4(vertex.position.xyz(), 1.f);
-				vertex.materialId = meshInstance.materialId;
-			}
-		}
-	}
-
 	void Scene::LoadHDR(Assets::HDRData* hdr)
 	{
 		VkFormat format = VK_FORMAT_R32G32B32_SFLOAT;
@@ -115,8 +93,18 @@ namespace Tracer
 		std::vector<Geometry::Vertex> vertices;
 		std::vector<glm::uvec2> offsets;
 
-		for (const auto& mesh : meshes)
+		for (const auto& meshInstance : meshInstances)
 		{
+			auto& mesh = meshes[meshInstance.meshId];
+			glm::mat4 modelMatrix = meshInstance.modelTransform;
+			
+#pragma omp parallel for
+			for (auto& vertex : mesh->GetVertices())
+			{
+				vertex.position = modelMatrix * glm::vec4(vertex.position.xyz(), 1.f);
+				vertex.materialId = meshInstance.materialId;
+			}
+			
 			const auto indexOffset = static_cast<uint32_t>(indices.size());
 			const auto vertexOffset = static_cast<uint32_t>(vertices.size());
 

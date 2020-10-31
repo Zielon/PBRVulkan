@@ -9,13 +9,16 @@ namespace Assets
 	class Texture
 	{
 	public:
-		Texture(const Texture&) = delete;
-		Texture& operator =(const Texture&) = delete;
 		Texture();
 		Texture(int width, int height, int channel, void* pixels);
 		Texture(const std::string& path);
+		
+		Texture(const Texture&) = delete;
 		Texture(Texture&&) noexcept;
+		
 		Texture& operator =(Texture&&) noexcept;
+		Texture& operator =(const Texture&) = delete;
+		
 		~Texture();
 
 		[[nodiscard]] int GetWidth() const

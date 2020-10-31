@@ -36,9 +36,9 @@
 	if (dot(normal, lightDir) > 0.f)
 	{
 		float tMin     = 0.001;
-		float tMax     = lightDist;
+		float tMax     = lightDist - EPS;
 		uint flags     = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
-		vec3 origin    = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV - EPS;
+		vec3 origin    = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV;
 
 		traceNV(TLAS,           // acceleration structure
 				flags,          // rayFlags
@@ -56,6 +56,6 @@
 
 	if (isShadowed)
 	{
-		payload.radiance *= 0.3;
+		payload.radiance *= 0.2;
 	}
 }

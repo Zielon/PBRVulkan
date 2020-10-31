@@ -61,12 +61,11 @@ namespace Vulkan
 			// Render all models with proper buffers offsets
 			for (const auto& mesh : scene->GetMeshes())
 			{
-				const uint32_t vertices = mesh->GetVerticesSize();
 				const uint32_t indecies = mesh->GetIndeciesSize();
 
 				vkCmdDrawIndexed(commandBuffer, indecies, 1, indexOffset, vertexOffset, 0);
 
-				vertexOffset += vertices;
+				vertexOffset += mesh->GetVerticesSize();
 				indexOffset += indecies;
 			}
 		}

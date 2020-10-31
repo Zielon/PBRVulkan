@@ -166,7 +166,6 @@ namespace Tracer
 		void Print() const;
 		void Load();
 		void LoadEmptyBuffers();
-		void Process();
 		void LoadHDR(Assets::HDRData* hdr);
 		void Fill(std::unique_ptr<class Vulkan::Buffer>& buffer, void* data, size_t size,
 		          VkBufferUsageFlagBits storage) const;

@@ -10,7 +10,7 @@ namespace Interface
 	{
 		const char* integrators[] = {
 			"Path tracer",
-			"MSM",
+			"SMS",
 			"AO"
 		};
 
@@ -21,13 +21,13 @@ namespace Interface
 			"Coffee cart",
 			"Coffee maker",
 			"Cornell box",
-			"Diningroom",
+			"Dining room",
 			"Dragon",
 			"Hyperion",
 			"Panther",
 			"Spaceship",
 			"Staircase",
-			"Stormtrooper",
+			"Stormtroopers",
 			"Teapot"
 		};
 
