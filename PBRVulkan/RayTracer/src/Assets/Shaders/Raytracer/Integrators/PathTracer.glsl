@@ -32,7 +32,7 @@
 
 	isShadowed = true;
 
-	vec3 surfacePos = worldPos + normal * EPS;
+	vec3 surfacePos = worldPos + ffnormal * EPS;
 
 	// The light is visible from the surface. Less than 90° between vectors.
 	if (dot(normal, lightDir) > 0.f)

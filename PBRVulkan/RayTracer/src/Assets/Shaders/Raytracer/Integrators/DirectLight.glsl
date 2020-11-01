@@ -11,7 +11,7 @@ vec3 directLight()
 
 	BsdfSample bsdfSample;
 
-	vec3 surfacePos = payload.worldPos + payload.normal * EPS;
+	vec3 surfacePos = payload.worldPos + payload.ffnormal * EPS;
 
 	/* Environment Light */
 	if (ubo.useHDR)
@@ -51,8 +51,7 @@ vec3 directLight()
 		// The light is visible from the surface. Less than 90° between vectors.
 		if (dot(payload.normal, lightDir) > 0.f)
 		{
-			tMax  = lightDist - EPS;
-
+			tMax = lightDist - EPS;
 			traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, tMax, 1);
 		}
 

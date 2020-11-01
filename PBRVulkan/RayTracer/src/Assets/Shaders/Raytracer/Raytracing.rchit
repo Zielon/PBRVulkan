@@ -50,13 +50,18 @@ void main()
 
 	const vec3 barycentrics = vec3(1.0 - hit.x - hit.y, hit.x, hit.y);
 	const vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
+	// face forward normal
+	const vec3 ffnormal = dot(normal, gl_WorldRayDirectionNV) <= 0.0 ? normal : normal * -1.0;
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 	const vec3 worldPos = mix(v0.position, v1.position, v2.position, barycentrics);
 
 	payload.worldPos = worldPos;
 	payload.normal = normal;
+	payload.ffnormal = ffnormal;
 
 	seed = tea(gl_LaunchIDNV.y * gl_LaunchSizeNV.x + gl_LaunchIDNV.x, ubo.frame);
+
+	// vec3 hit = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV;
 
 	// Replaced by Compiler.h
 	// ====== INTEGRATOR ======

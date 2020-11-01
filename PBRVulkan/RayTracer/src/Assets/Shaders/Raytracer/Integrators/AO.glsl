@@ -12,10 +12,10 @@
  * [rayPayloadInNV RayPayload payload, rayPayloadNV bool isShadowed]
  */
  {
-	float tMin     = 0.001;
-	float tMax     = ubo.AORayLength;
-	uint flags     = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
-	vec3 origin    = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV;
+	float tMin      = 0.001;
+	float tMax      = ubo.AORayLength;
+	uint flags      = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
+	vec3 surfacePos = worldPos + ffnormal * EPS;
 
 	uint samples = 5;
 	float ao = 1.f;
@@ -27,7 +27,7 @@
 
 		isShadowed = true;
 
-		traceNV(TLAS, flags, 0xFF, 0, 0, 1, origin, tMin, dir, tMax, 1);
+		traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, dir, tMax, 1);
 
 		if (isShadowed)
 		{
