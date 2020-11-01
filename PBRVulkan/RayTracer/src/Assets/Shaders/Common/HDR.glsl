@@ -1,9 +1,9 @@
 // HDR specific functions
 
-float envPdf()
+float envPdf(vec3 direction)
 {
-	float theta = acos(clamp(payload.direction.y, -1.0, 1.0));
-	vec2 uv = vec2((PI + atan(payload.direction.z, payload.direction.x)) * (1.0 / TWO_PI), theta * (1.0 / PI));
+	float theta = acos(clamp(direction.y, -1.0, 1.0));
+	vec2 uv = vec2((PI + atan(direction.z, direction.x)) * (1.0 / TWO_PI), theta * (1.0 / PI));
 	float pdf = texture(HDRs[1], uv).y * texture(HDRs[2], vec2(uv.y, 0.)).y;
 	return (pdf * ubo.hdrResolution) / (2.0 * PI * PI * sin(theta));
 }
@@ -13,8 +13,8 @@ vec4 envSample(inout vec3 color)
 	float r1 = rnd(seed);
 	float r2 = rnd(seed);
 
-	float v = texture(HDRs[2], vec2(r1, 0.)).x;
-	float u = texture(HDRs[1], vec2(r2, v)).x;
+	float v = texture(HDRs[2], vec2(r1, 0.)).x; // marginal
+	float u = texture(HDRs[1], vec2(r2, v)).x;  // conditional
 
 	color = texture(HDRs[0], vec2(u, v)).xyz * 2.f;
 	float pdf = texture(HDRs[1], vec2(u, v)).y * texture(HDRs[2], vec2(v, 0.)).y;

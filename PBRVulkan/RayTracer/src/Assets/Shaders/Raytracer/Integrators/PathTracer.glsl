@@ -32,26 +32,16 @@
 
 	isShadowed = true;
 
+	vec3 surfacePos = worldPos + normal * EPS;
+
 	// The light is visible from the surface. Less than 90° between vectors.
 	if (dot(normal, lightDir) > 0.f)
 	{
 		float tMin     = 0.001;
 		float tMax     = lightDist - EPS;
 		uint flags     = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
-		vec3 origin    = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV;
 
-		traceNV(TLAS,           // acceleration structure
-				flags,          // rayFlags
-				0xFF,           // cullMask
-				0,              // sbtRecordOffset
-				0,              // sbtRecordStride
-				1,              // missIndex
-				origin,         // ray origin
-				tMin,           // ray min range
-				lightDir,       // ray direction
-				tMax,           // ray max range
-				1               // payload (location = 1)
-		);
+		traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, tMax, 1);
 	}
 
 	if (isShadowed)

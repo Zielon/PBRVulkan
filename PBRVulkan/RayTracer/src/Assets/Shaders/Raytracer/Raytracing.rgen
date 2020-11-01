@@ -28,7 +28,7 @@ void main()
 
 	uint  rayFlags = gl_RayFlagsOpaqueNV;
 	float tMin     = 0.001;
-	float tMax     = 10000.0;
+	float tMax     = INFINITY;
 
 	const uint SPP = ubo.spp; // Samples per pixel
 	uint seed = tea(gl_LaunchIDNV.y * gl_LaunchSizeNV.x + gl_LaunchIDNV.x, ubo.frame);

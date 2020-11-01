@@ -57,21 +57,13 @@ struct RayPayload
 {
 	vec3 radiance;
 	vec3 throughput;
-	vec3 direction;
-	vec3 origin;
+	vec3 worldPos;
+	vec3 normal;
 	uint depth;
 };
 
 struct BsdfSample
 {
 	vec3 bsdfDir; 
-	float pdf; 
-};
-
-struct LightSample
-{ 
-	vec3 surfacePos; 
-	vec3 normal; 
-	vec3 emission; 
 	float pdf; 
 };

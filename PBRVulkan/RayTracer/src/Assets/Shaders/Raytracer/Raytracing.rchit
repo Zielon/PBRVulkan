@@ -31,10 +31,10 @@ layout(location = 1) rayPayloadNV bool isShadowed;
 hitAttributeNV vec2 hit;
 
 #include "../Common/Composition.glsl"
-
 #ifdef USE_HDR
 #include "../Common/HDR.glsl"
 #endif
+#include "Integrators/DirectLight.glsl"
 
 void main()
 {
@@ -52,6 +52,9 @@ void main()
 	const vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 	const vec3 worldPos = mix(v0.position, v1.position, v2.position, barycentrics);
+
+	payload.worldPos = worldPos;
+	payload.normal = normal;
 
 	seed = tea(gl_LaunchIDNV.y * gl_LaunchSizeNV.x + gl_LaunchIDNV.x, ubo.frame);
 

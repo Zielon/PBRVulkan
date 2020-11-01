@@ -27,18 +27,7 @@
 
 		isShadowed = true;
 
-		traceNV(TLAS,           // acceleration structure
-				flags,          // rayFlags
-				0xFF,           // cullMask
-				0,              // sbtRecordOffset
-				0,              // sbtRecordStride
-				1,              // missIndex
-				origin,         // ray origin
-				tMin,           // ray min range
-				dir,            // ray direction
-				tMax,           // ray max range
-				1               // payload (location = 1)
-		);
+		traceNV(TLAS, flags, 0xFF, 0, 0, 1, origin, tMin, dir, tMax, 1);
 
 		if (isShadowed)
 		{
