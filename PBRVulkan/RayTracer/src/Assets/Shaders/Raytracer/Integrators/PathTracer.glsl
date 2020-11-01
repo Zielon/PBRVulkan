@@ -24,7 +24,8 @@
 	int index = int(rnd(seed) * float(ubo.lights));
 	light = Lights[index];
 
-	vec3 lightDir = sampleLight(light, seed) - worldPos;
+	vec3 sampled = sampleLight(light);
+	vec3 lightDir = sampled - worldPos;
 	float lightDist = length(lightDir);
 	float lightDistSq = lightDist * lightDist;
 	lightDir /= sqrt(lightDistSq);
@@ -35,7 +36,7 @@
 	if (dot(normal, lightDir) > 0.f)
 	{
 		float tMin     = 0.001;
-		float tMax     = lightDist;
+		float tMax     = lightDist - EPS;
 		uint flags     = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
 		vec3 origin    = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * gl_HitTNV;
 

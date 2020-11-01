@@ -22,10 +22,8 @@
 
 	for(uint i = 0; i < samples; ++i)
 	{
-		float r1 = rnd(seed);
-		float r2 = rnd(seed);
 		mat3 frame = localFrame(normal);
-		vec3 dir = frame * cosineSampleHemisphere(r1, r2);
+		vec3 dir = frame * cosineSampleHemisphere();
 
 		isShadowed = true;
 

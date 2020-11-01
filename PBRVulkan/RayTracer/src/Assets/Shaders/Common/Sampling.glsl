@@ -2,18 +2,25 @@
  * Set of different sampling functions
  */
 
-vec3 sampleLight(Light light, inout uint seed)
+vec3 sampleLight(Light light)
 {
 	float r1 = rnd(seed);
 	float r2 = rnd(seed);
-	return light.position + light.u * r1 + light.v * r2;
+
+	vec3 u = light.u * r1;
+	vec3 v = light.v * r2;
+
+	return light.position + u + v;
 }
 
-vec3 cosineSampleHemisphere(float u1, float u2)
+vec3 cosineSampleHemisphere()
 {
+	float r1 = rnd(seed);
+	float r2 = rnd(seed);
+
 	vec3 dir;
-	float r = sqrt(u1);
-	float phi = 2.0 * PI * u2;
+	float r = sqrt(r1);
+	float phi = 2.0 * PI * r2;
 
 	dir.x = r * cos(phi);
 	dir.y = r * sin(phi);
@@ -22,11 +29,14 @@ vec3 cosineSampleHemisphere(float u1, float u2)
 	return dir;
 }
 
-vec3 uniformSampleSphere(float u1, float u2)
+vec3 uniformSampleSphere()
 {
-	float z = 1.0 - 2.0 * u1;
+	float r1 = rnd(seed);
+	float r2 = rnd(seed);
+
+	float z = 1.0 - 2.0 * r1;
 	float r = sqrt(max(0.f, 1.0 - z * z));
-	float phi = 2.0 * PI * u2;
+	float phi = 2.0 * PI * r2;
 
 	float x = r * cos(phi);
 	float y = r * sin(phi);

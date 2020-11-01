@@ -27,40 +27,50 @@ namespace Assets
 
 		for (const auto& shape : shapes)
 		{
-			for (const auto& index : shape.mesh.indices)
+			// Loop over faces(polygon)
+			size_t index_offset = 0;
+
+			for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); f++)
 			{
-				Geometry::Vertex vertex{};
+				int fv = shape.mesh.num_face_vertices[f];
 
-				vertex.position = {
-					attrib.vertices[3 * index.vertex_index + 0],
-					attrib.vertices[3 * index.vertex_index + 1],
-					attrib.vertices[3 * index.vertex_index + 2]
-				};
-
-				if (!attrib.normals.empty())
+				for (size_t v = 0; v < fv; v++)
 				{
-					vertex.normal = {
-						attrib.normals[3 * index.normal_index + 0],
-						attrib.normals[3 * index.normal_index + 1],
-						attrib.normals[3 * index.normal_index + 2]
-					};
+					tinyobj::index_t idx = shape.mesh.indices[index_offset + v];
+					tinyobj::real_t vx = attrib.vertices[3 * idx.vertex_index + 0];
+					tinyobj::real_t vy = attrib.vertices[3 * idx.vertex_index + 1];
+					tinyobj::real_t vz = attrib.vertices[3 * idx.vertex_index + 2];
+					tinyobj::real_t nx = attrib.normals[3 * idx.normal_index + 0];
+					tinyobj::real_t ny = attrib.normals[3 * idx.normal_index + 1];
+					tinyobj::real_t nz = attrib.normals[3 * idx.normal_index + 2];
+
+					tinyobj::real_t tx, ty;
+
+					if (!attrib.texcoords.empty() && idx.texcoord_index >= 0)
+					{
+						tx = attrib.texcoords[2 * idx.texcoord_index + 0];
+						ty = attrib.texcoords[2 * idx.texcoord_index + 1];
+					}
+					else
+					{
+						tx = ty = 0.f;
+					}
+
+					Geometry::Vertex vertex{};
+					vertex.position = { vx, vy, vz };
+					vertex.normal = { nx, ny, nz };
+					vertex.texCoords = { tx, ty };
+
+					if (uniqueVertices.count(vertex) == 0)
+					{
+						uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+						vertices.push_back(vertex);
+					}
+
+					indices.push_back(uniqueVertices[vertex]);
 				}
 
-				if (!attrib.texcoords.empty())
-				{
-					vertex.texCoords = {
-						attrib.texcoords[2 * index.texcoord_index + 0],
-						1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-					};
-				}
-
-				if (uniqueVertices.count(vertex) == 0)
-				{
-					uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-					vertices.push_back(vertex);
-				}
-
-				indices.push_back(uniqueVertices[vertex]);
+				index_offset += fv;
 			}
 		}
 	}

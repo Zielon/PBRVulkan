@@ -1,5 +1,8 @@
 #version 460
 
+precision highp float;
+precision highp int;
+
 #extension GL_GOOGLE_include_directive : require
 #extension GL_NV_ray_tracing : require
 

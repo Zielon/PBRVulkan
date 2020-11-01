@@ -90,7 +90,7 @@ namespace Loader
 
 			if (sscanf(line, " material %s", name) == 1)
 			{
-				Assets::Material material;
+				Assets::Material material{};
 				int albedoTexID, matRghTexID, nrmTexID;
 				char albedoTexName[100] = "None";
 				char metallicRoughnessTexName[100] = "None";
@@ -142,8 +142,8 @@ namespace Loader
 
 			if (strstr(line, "light"))
 			{
-				Assets::Light light;
-				glm::vec3 v1, v2;
+				Assets::Light light{};
+				glm::vec3 v1{}, v2{};
 				char light_type[20] = "None";
 
 				while (fgets(line, kMaxLineLength, file))
@@ -239,8 +239,8 @@ namespace Loader
 			if (strstr(line, "mesh"))
 			{
 				std::string filename;
-				glm::vec3 pos;
-				glm::vec3 scale;
+				glm::vec3 pos{};
+				glm::vec3 scale{};
 				glm::mat4 xform = glm::mat4(1.f);
 				int material_id = 0; // Default Material ID
 				while (fgets(line, kMaxLineLength, file))

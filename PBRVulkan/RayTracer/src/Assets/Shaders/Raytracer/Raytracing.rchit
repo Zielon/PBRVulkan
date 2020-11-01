@@ -1,5 +1,8 @@
 #version 460
 
+precision highp float;
+precision highp int;
+
 #extension GL_EXT_nonuniform_qualifier : require
 #extension GL_GOOGLE_include_directive : require
 #extension GL_NV_ray_tracing : require
@@ -50,7 +53,7 @@ void main()
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 	const vec3 worldPos = mix(v0.position, v1.position, v2.position, barycentrics);
 
-	uint seed = tea(gl_LaunchIDNV.y * gl_LaunchSizeNV.x + gl_LaunchIDNV.x, ubo.frame);
+	seed = tea(gl_LaunchIDNV.y * gl_LaunchSizeNV.x + gl_LaunchIDNV.x, ubo.frame);
 
 	// Replaced by Compiler.h
 	// ====== INTEGRATOR ======
