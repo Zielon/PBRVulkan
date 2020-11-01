@@ -10,8 +10,8 @@ float envPdf()
 
 vec4 envSample(inout vec3 color)
 {
-	float r1 = rnd(payload.seed);
-	float r2 = rnd(payload.seed);
+	float r1 = rnd(seed);
+	float r2 = rnd(seed);
 
 	float v = texture(HDRs[2], vec2(r1, 0.)).x;
 	float u = texture(HDRs[1], vec2(r2, v)).x;
