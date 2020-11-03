@@ -25,18 +25,16 @@ layout(location = 0) rayPayloadInNV RayPayload payload;
 
 void main()
 {
-	vec3 direction = gl_WorldRayDirectionNV;
-
 	if (ubo.useHDR)
 	{
 		#ifdef USE_HDR
 		float lightPdf = 1.0f;
 		float misWeight = 1.0f;
-		float hdrMultiplier = 1.2f;
-		vec2 uv = vec2((PI + atan(direction.z, direction.x)) * (1.0 / TWO_PI), acos(direction.y) * (1.0 / PI));
+		float hdrMultiplier = 5.0f;
+		vec2 uv = vec2((PI + atan(gl_WorldRayDirectionNV.z, gl_WorldRayDirectionNV.x)) * (1.0 / TWO_PI), acos(gl_WorldRayDirectionNV.y) * (1.0 / PI));
 		if (payload.depth > 0 && !payload.specularBounce)
 		{
-			lightPdf = envPdf(direction);
+			lightPdf = envPdf();
 			misWeight = powerHeuristic(0, lightPdf);
 		}
 		payload.radiance += misWeight * texture(HDRs[0], uv).xyz * payload.throughput * hdrMultiplier;

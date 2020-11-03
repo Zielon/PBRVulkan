@@ -44,14 +44,14 @@ vec3 uniformSampleSphere()
 	return vec3(x, y, z);
 }
 
-float rectIntersect(in vec3 pos, in vec3 u, in vec3 v, in vec4 plane, in Ray r)
+float rectIntersect(in vec3 pos, in vec3 u, in vec3 v, in vec4 plane)
 {
 	vec3 n = vec3(plane);
-	float dt = dot(r.direction, n);
-	float t = (plane.w - dot(n, r.origin)) / dt;
+	float dt = dot(gl_WorldRayDirectionNV, n);
+	float t = (plane.w - dot(n, gl_WorldRayOriginNV)) / dt;
 	if (t > EPS)
 	{
-		vec3 p = r.origin + r.direction * t;
+		vec3 p = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * t;
 		vec3 vi = p - pos;
 		float a1 = dot(u, vi);
 		if (a1 >= 0. && a1 <= 1.)
@@ -65,27 +65,25 @@ float rectIntersect(in vec3 pos, in vec3 u, in vec3 v, in vec4 plane, in Ray r)
 	return INFINITY;
 }
 
-bool interesetsEmitter(in Ray ray, inout LightSample lightSample)
+bool interesetsEmitter(inout LightSample lightSample)
 {
 	bool intersects = false;
 	float t = INFINITY;
 	float d = 0;
 
-	for (uint i = 0; i < ubo.lights; i++)
+	for (uint i = 0; i < ubo.lights; ++i)
 	{
 		Light light = Lights[i];
-
 		vec3 u = light.u.xyz;
 		vec3 v = light.v.xyz;
 
 		vec3 normal = normalize(cross(u, v));
-
 		vec4 plane = vec4(normal, dot(normal, light.position));
 
 		u *= 1.0f / dot(u, u);
 		v *= 1.0f / dot(v, v);
 
-		d = rectIntersect(light.position, u, v, plane, ray);
+		d = rectIntersect(light.position, u, v, plane);
 
 		if (d < 0.)
 			d = INFINITY;
@@ -93,8 +91,9 @@ bool interesetsEmitter(in Ray ray, inout LightSample lightSample)
 		if (d < t)
 		{
 			t = d;
+
 			vec3 normal = normalize(cross(u, v));
-			float cosTheta = abs(dot(-ray.direction, normal));
+			float cosTheta = abs(dot(-gl_WorldRayDirectionNV, normal));
 			float d = length(light.position - payload.worldPos);
 			float pdf = (t * t) / (light.area.x * cosTheta);
 
@@ -107,7 +106,7 @@ bool interesetsEmitter(in Ray ray, inout LightSample lightSample)
 	return intersects;
 }
 
-vec3 sampleEmitter(in Ray ray, in LightSample lightSample, in BsdfSample bsdfSample)
+vec3 sampleEmitter(in LightSample lightSample, in BsdfSample bsdfSample)
 {
 	vec3 Le = vec3(0);
 

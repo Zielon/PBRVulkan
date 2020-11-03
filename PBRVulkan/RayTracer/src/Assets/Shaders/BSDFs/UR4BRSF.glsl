@@ -2,10 +2,10 @@
  *
  */
 
-float UE4Pdf(in Ray ray, in Material material, in vec3 bsdfDir)
+float UE4Pdf(in Material material, in vec3 bsdfDir)
 {
 	vec3 N = payload.ffnormal;
-	vec3 V = -ray.direction;
+	vec3 V = -gl_WorldRayDirectionNV;
 	vec3 L = bsdfDir;
 
 	float specularAlpha = max(0.001, material.roughness);
@@ -26,10 +26,10 @@ float UE4Pdf(in Ray ray, in Material material, in vec3 bsdfDir)
 	return diffuseRatio * pdfDiff + specularRatio * pdfSpec;
 }
 
-vec3 UE4Sample(in Ray ray, in Material material)
+vec3 UE4Sample(in Material material)
 {
 	vec3 N = payload.ffnormal;
-	vec3 V = -ray.direction;
+	vec3 V = -gl_WorldRayDirectionNV;
 
 	vec3 dir;
 
@@ -65,10 +65,10 @@ vec3 UE4Sample(in Ray ray, in Material material)
 	return dir;
 }
 
-vec3 UE4Eval(in Ray ray, in Material material, in vec3 bsdfDir)
+vec3 UE4Eval(in Material material, in vec3 bsdfDir)
 {
 	vec3 N = payload.ffnormal;
-	vec3 V = -ray.direction;
+	vec3 V = -gl_WorldRayDirectionNV;
 	vec3 L = bsdfDir;
 
 	float NDotL = dot(N, L);

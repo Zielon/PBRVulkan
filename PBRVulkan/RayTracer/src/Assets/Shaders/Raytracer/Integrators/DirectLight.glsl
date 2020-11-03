@@ -2,7 +2,7 @@
  * Direct light estimator
  */
 
-vec3 directLight(in Material material, in Ray ray)
+vec3 directLight(in Material material)
 {
 	vec3 L      = vec3(0);
 	float tMin  = 0.001;
@@ -28,9 +28,9 @@ vec3 directLight(in Material material, in Ray ray)
 
 		if (!isShadowed)
 		{
-			float bsdfPdf = UE4Pdf(ray, material, lightDir);
+			float bsdfPdf = UE4Pdf(material, lightDir);
 			float cosTheta = abs(dot(lightDir, payload.ffnormal));
-			vec3 F = UE4Eval(ray, material, lightDir);
+			vec3 F = UE4Eval(material, lightDir);
 			float misWeight = powerHeuristic(lightPdf, bsdfPdf);
 
 			if (misWeight > 0.0)
@@ -65,10 +65,10 @@ vec3 directLight(in Material material, in Ray ray)
 
 		if (!isShadowed)
 		{
-			float bsdfPdf = UE4Pdf(ray, material, lightDir);
+			float bsdfPdf = UE4Pdf(material, lightDir);
 			float lightPdf = lightDistSq / (light.area.x * abs(dot(lightNormal, lightDir)));
 			float cosTheta = abs(dot(payload.ffnormal, lightDir));
-			vec3 F = UE4Eval(ray, material, lightDir);
+			vec3 F = UE4Eval(material, lightDir);
 
 			L += (powerHeuristic(lightPdf, bsdfPdf) * F * cosTheta * emission) / lightPdf;
 		}

@@ -51,37 +51,35 @@ void main()
 	Material material = Materials[v0.materialIndex];
 
 	const vec3 barycentrics = vec3(1.0 - hit.x - hit.y, hit.x, hit.y);
-	vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
-	// face forward normal
-	vec3 ffnormal = dot(normal, payload.ray.direction) <= 0.0 ? normal : normal * -1.0;
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 	const vec3 worldPos = mix(v0.position, v1.position, v2.position, barycentrics);
+	vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
+	// face forward normal
+	vec3 ffnormal = dot(normal, gl_WorldRayDirectionNV) <= 0.0 ? normal : normal * -1.0;
 
+	// Update material
 	{
+		// Albedo
 		if (material.albedoTexID >= 0)
-			material.albedo.xyz *= pow(texture(TextureSamplers[material.albedoTexID], texCoord).xyz, vec3(2.2));
+		{
+			material.albedo.xyz *= texture(TextureSamplers[material.albedoTexID], texCoord).xyz;
+		}
 
+		// Metallic and Roughness
 		if (material.metallicRoughnessTexID >= 0)
 		{
-			vec2 update = pow(texture(TextureSamplers[material.metallicRoughnessTexID], texCoord).zy, vec2(2.2));
-			//material.metallic = update.x;
-			//material.roughness = update.y;
+			vec2 metallicRoughness = texture(TextureSamplers[material.metallicRoughnessTexID], texCoord).zy;
+			material.metallic = metallicRoughness.x;
+			material.roughness = metallicRoughness.y;
 		}
 
 		if (material.normalmapTexID >= 0)
 		{
-			vec3 nrm = texture(TextureSamplers[material.normalmapTexID], texCoord).xyz;
-			nrm = normalize(nrm * 2.0 - 1.0);
-
 			// Orthonormal Basis
-			vec3 UpVector = abs(ffnormal.z) < 0.999 ? vec3(0, 0, 1) : vec3(1, 0, 0);
-			vec3 TangentX = normalize(cross(UpVector, ffnormal));
-			vec3 TangentY = cross(ffnormal, TangentX);
-
-			nrm = TangentX * nrm.x + TangentY * nrm.y + ffnormal * nrm.z;
-
+			mat3 frame = localFrame(ffnormal);
+			vec3 nrm = texture(TextureSamplers[material.normalmapTexID], texCoord).xyz;
+			nrm = frame * normalize(nrm * 2.0 - 1.0);
 			normal = normalize(nrm);
-			ffnormal = dot(normal, payload.ray.direction) <= 0.0 ? normal : normal * -1.0;
 		}
 	}
 
