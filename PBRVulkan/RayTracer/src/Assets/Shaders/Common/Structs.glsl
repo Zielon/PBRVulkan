@@ -27,13 +27,19 @@ struct Material
 	int heightmapTexID;
 };
 
-struct Light 
+struct Ray 
 { 
-	vec3 position; 
+	vec3 origin; 
+	vec3 direction; 
+};
+
+struct Light
+{ 
+	vec3 position;
 	vec3 emission; 
-	vec3 u; 
+	vec3 u;
 	vec3 v; 
-	vec3 radiusAreaType; 
+	vec3 area;
 };
 
 struct Uniform
@@ -41,7 +47,6 @@ struct Uniform
 	mat4 view;
 	mat4 proj;
 	vec3 direction;
-	vec2 random;
 	uint lights;
 	bool useHDR;
 	uint spp;
@@ -53,18 +58,30 @@ struct Uniform
 	float AORayLength;
 };
 
-struct RayPayload
-{
-	vec3 radiance;
-	vec3 throughput;
-	vec3 worldPos;
-	vec3 normal;
-	vec3 ffnormal;
-	uint depth;
+struct LightSample
+{ 
+	vec3 surfacePos; 
+	vec3 normal; 
+	vec3 emission; 
+	float pdf;
 };
 
 struct BsdfSample
 {
 	vec3 bsdfDir; 
 	float pdf; 
+};
+
+struct RayPayload
+{
+	Ray ray;
+	BsdfSample bsdf;
+	vec3 radiance;
+	vec3 throughput;
+	vec3 worldPos;
+	vec3 normal;
+	vec3 ffnormal;
+	uint depth;
+	bool specularBounce;
+	bool stop;
 };

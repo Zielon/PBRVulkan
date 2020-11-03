@@ -52,11 +52,11 @@
     <Filter Include="Assets\Shaders\Common">
       <UniqueIdentifier>{1d5dedbf-eddc-42b7-90fa-7145e63a5717}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\Shaders\Microfacets">
-      <UniqueIdentifier>{89955b81-cfa4-4c7b-828f-3a0b84c64ef0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tracer\Widgets">
       <UniqueIdentifier>{eb1d96a5-6d86-4e48-9df5-8a83ec890466}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders\BSDFs">
+      <UniqueIdentifier>{c7a140a7-fbad-4d12-a1e5-4e28f5a59977}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +113,9 @@
     </None>
     <None Include="src\Assets\Shaders\Raytracer\Integrators\AO.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\BSDFs\UR4BRSF.glsl">
+      <Filter>Assets\Shaders\BSDFs</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

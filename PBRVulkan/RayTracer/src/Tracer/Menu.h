@@ -27,7 +27,7 @@ namespace Tracer
 		bool UseGammaCorrection = true;
 		int IntegratorType{};
 		int SceneId = 5;
-		int MaxDepth = 1;
+		int MaxDepth = 3;
 		int SSP = 1;
 		float Fov{};
 		float Aperture = 0.1f;

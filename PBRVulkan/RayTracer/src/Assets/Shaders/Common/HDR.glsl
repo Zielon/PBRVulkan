@@ -25,5 +25,10 @@ vec4 envSample(inout vec3 color)
 	if (sin(theta) == 0.0)
 		pdf = 0.0;
 
-	return vec4(-sin(theta) * cos(phi), cos(theta), -sin(theta)*sin(phi), (pdf * ubo.hdrResolution) / (2.0 * PI * PI * sin(theta)));
+	return vec4(
+		-sin(theta) * cos(phi), 
+		cos(theta),
+		-sin(theta)*sin(phi),
+		(pdf * ubo.hdrResolution) / (2.0 * PI * PI * sin(theta))
+	);
 }

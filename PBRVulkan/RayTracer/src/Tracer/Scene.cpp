@@ -101,7 +101,7 @@ namespace Tracer
 
 			for (auto& vertex : mesh->GetVertices())
 			{
-				vertex.position = modelMatrix * glm::vec4(vertex.position.xyz(), 1.f);
+				vertex.position = modelMatrix * glm::vec4(vertex.position, 1.f);
 				vertex.materialId = meshInstance.materialId;
 			}
 			

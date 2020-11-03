@@ -34,6 +34,8 @@ hitAttributeNV vec2 hit;
 #ifdef USE_HDR
 #include "../Common/HDR.glsl"
 #endif
+#include "../Common/Sampling.glsl"
+#include "../BSDFs/UR4BRSF.glsl"
 #include "Integrators/DirectLight.glsl"
 
 void main()
@@ -46,14 +48,42 @@ void main()
 	const Vertex v1 = unpack(vertexOffset + Indices[indexOffset + gl_PrimitiveID * 3 + 1]);
 	const Vertex v2 = unpack(vertexOffset + Indices[indexOffset + gl_PrimitiveID * 3 + 2]);
 
-	const Material material = Materials[v0.materialIndex];
+	Material material = Materials[v0.materialIndex];
 
 	const vec3 barycentrics = vec3(1.0 - hit.x - hit.y, hit.x, hit.y);
-	const vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
+	vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
 	// face forward normal
-	const vec3 ffnormal = dot(normal, gl_WorldRayDirectionNV) <= 0.0 ? normal : normal * -1.0;
+	vec3 ffnormal = dot(normal, payload.ray.direction) <= 0.0 ? normal : normal * -1.0;
 	const vec2 texCoord = mix(v0.texCoord, v1.texCoord, v2.texCoord, barycentrics);
 	const vec3 worldPos = mix(v0.position, v1.position, v2.position, barycentrics);
+
+	{
+		if (material.albedoTexID >= 0)
+			material.albedo.xyz *= pow(texture(TextureSamplers[material.albedoTexID], texCoord).xyz, vec3(2.2));
+
+		if (material.metallicRoughnessTexID >= 0)
+		{
+			vec2 update = pow(texture(TextureSamplers[material.metallicRoughnessTexID], texCoord).zy, vec2(2.2));
+			//material.metallic = update.x;
+			//material.roughness = update.y;
+		}
+
+		if (material.normalmapTexID >= 0)
+		{
+			vec3 nrm = texture(TextureSamplers[material.normalmapTexID], texCoord).xyz;
+			nrm = normalize(nrm * 2.0 - 1.0);
+
+			// Orthonormal Basis
+			vec3 UpVector = abs(ffnormal.z) < 0.999 ? vec3(0, 0, 1) : vec3(1, 0, 0);
+			vec3 TangentX = normalize(cross(UpVector, ffnormal));
+			vec3 TangentY = cross(ffnormal, TangentX);
+
+			nrm = TangentX * nrm.x + TangentY * nrm.y + ffnormal * nrm.z;
+
+			normal = normalize(nrm);
+			ffnormal = dot(normal, payload.ray.direction) <= 0.0 ? normal : normal * -1.0;
+		}
+	}
 
 	payload.worldPos = worldPos;
 	payload.normal = normal;

@@ -4,12 +4,11 @@
 
 namespace Uniforms
 {
-	struct Global
+	struct alignas(16) Global final
 	{
 		glm::mat4 view = glm::mat4(1.f);
 		glm::mat4 projection = glm::mat4(1.f);
 		glm::vec3 direction{};
-		alignas(16) glm::vec2 random{};
 		uint32_t lights{};
 		uint32_t hasHDR{};
 		uint32_t ssp{};

@@ -143,7 +143,8 @@ namespace Loader
 			if (strstr(line, "light"))
 			{
 				Assets::Light light{};
-				glm::vec3 v1{}, v2{};
+				glm::vec4 v1{};
+				glm::vec4 v2{};
 				char light_type[20] = "None";
 
 				while (fgets(line, kMaxLineLength, file))
@@ -155,7 +156,7 @@ namespace Loader
 					sscanf(line, " position %f %f %f", &light.position.x, &light.position.y, &light.position.z);
 					sscanf(line, " emission %f %f %f", &light.emission.x, &light.emission.y, &light.emission.z);
 
-					sscanf(line, " radius %f", &light.radius);
+					//sscanf(line, " radius %f", &light.radius);
 					sscanf(line, " v1 %f %f %f", &v1.x, &v1.y, &v1.z);
 					sscanf(line, " v2 %f %f %f", &v2.x, &v2.y, &v2.z);
 					sscanf(line, " type %s", light_type);
@@ -163,15 +164,15 @@ namespace Loader
 
 				if (strcmp(light_type, "Quad") == 0)
 				{
-					light.type = Assets::LightType::QuadLight;
+					//light.type = Assets::LightType::QuadLight;
 					light.u = v1 - light.position;
 					light.v = v2 - light.position;
-					light.area = length(cross(light.u, light.v));
+					light.area.x = length(cross(light.u.xyz(), light.v.xyz()));
 				}
 				else if (strcmp(light_type, "Sphere") == 0)
 				{
-					light.type = Assets::LightType::SphereLight;
-					light.area = 4.0f * _PI * light.radius * light.radius;
+					//light.type = Assets::LightType::SphereLight;
+					//light.area = 4.0f * _PI * light.radius * light.radius;
 				}
 
 				scene.AddLight(light);

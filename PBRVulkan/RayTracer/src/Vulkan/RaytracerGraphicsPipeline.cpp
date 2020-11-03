@@ -34,7 +34,7 @@ namespace Vulkan
 		const Shader shadowShader(device, "Shadow.compiled.rmiss.spv");
 		const Shader closestHitShader(device, "Raytracing.compiled.rchit.spv");
 
-		std:std::array<VkPipelineShaderStageCreateInfo, 4> shaderStages =
+	std:std::array<VkPipelineShaderStageCreateInfo, 4> shaderStages =
 		{
 			rayGenShader.CreateShaderStage(VK_SHADER_STAGE_RAYGEN_BIT_NV),
 			missShader.CreateShaderStage(VK_SHADER_STAGE_MISS_BIT_NV),
@@ -69,7 +69,7 @@ namespace Vulkan
 		shadowGroupInfo.closestHitShader = VK_SHADER_UNUSED_NV;
 		shadowGroupInfo.anyHitShader = VK_SHADER_UNUSED_NV;
 		shadowGroupInfo.intersectionShader = VK_SHADER_UNUSED_NV;
-		
+
 		VkRayTracingShaderGroupCreateInfoNV triangleHitGroupInfo = {};
 		triangleHitGroupInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV;
 		triangleHitGroupInfo.pNext = nullptr;
@@ -102,10 +102,16 @@ namespace Vulkan
 			{ 2, 1, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, VK_SHADER_STAGE_RAYGEN_BIT_NV },
 
 			// Uniforms
-			{ 3, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_RAYGEN_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV | VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV },
+			{
+				3, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+				VK_SHADER_STAGE_RAYGEN_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV | VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV
+			},
 
 			// Vertex buffer
-			{ 4, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV },
+			{
+				4, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+				VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
+			},
 
 			// Index buffer
 			{ 5, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV },
@@ -118,11 +124,15 @@ namespace Vulkan
 
 			// Textures
 			{
-				8, scene.GetTextureSize(), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
+				8, scene.GetTextureSize(), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+				VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
 			},
 
 			// Lights buffer
-			{ 9, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV },
+			{
+				9, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+				VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
+			},
 		};
 
 		// HDRs

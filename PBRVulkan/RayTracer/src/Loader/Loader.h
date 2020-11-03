@@ -1,7 +1,9 @@
 #pragma once
 
 #include <string>
-#include <glm/vec3.hpp>
+
+#define GLM_SWIZZLE 
+#include <glm/glm.hpp>
 
 namespace Assets
 {

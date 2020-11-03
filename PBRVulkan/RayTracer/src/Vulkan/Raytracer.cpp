@@ -223,7 +223,7 @@ namespace Vulkan
 		{
 			geometryInstances.push_back(TLAS::CreateGeometryInstance(BLASs[instanceId], glm::mat4(1), instanceId));
 		}
-
+	
 		TLASs.emplace_back(*device, geometryInstances, false);
 		requirements.push_back(TLASs.back().GetMemoryRequirements());
 

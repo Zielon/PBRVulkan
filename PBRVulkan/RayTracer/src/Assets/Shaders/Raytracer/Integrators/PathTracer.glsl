@@ -12,40 +12,37 @@
  * [rayPayloadInNV RayPayload payload, rayPayloadNV bool isShadowed]
  */
 {
-	if (material.albedoTexID >= 0)
-		payload.radiance = texture(TextureSamplers[material.albedoTexID], texCoord).rbg;
-	else
-		payload.radiance = material.albedo.rbg;
+	BsdfSample bsdfSample;
+	LightSample lightSample;
 
-	if (ubo.lights == 0)
+	payload.radiance += material.emission.xyz * payload.throughput;
+
+	if (interesetsEmitter(payload.ray, lightSample))
+	{
+		vec3 Le = sampleEmitter(payload.ray, lightSample, payload.bsdf);
+		payload.radiance += Le  * payload.throughput;
+		payload.stop = true;
 		return;
-
-	Light light;
-	int index = int(rnd(seed) * float(ubo.lights));
-	light = Lights[index];
-
-	vec3 sampled = sampleLight(light);
-	vec3 lightDir = sampled - worldPos;
-	float lightDist = length(lightDir);
-	float lightDistSq = lightDist * lightDist;
-	lightDir /= sqrt(lightDistSq);
-
-	isShadowed = true;
-
-	vec3 surfacePos = worldPos + ffnormal * EPS;
-
-	// The light is visible from the surface. Less than 90° between vectors.
-	if (dot(normal, lightDir) > 0.f)
-	{
-		float tMin     = 0.001;
-		float tMax     = lightDist - EPS;
-		uint flags     = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
-
-		traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, tMax, 1);
 	}
 
-	if (isShadowed)
+	if (material.albedo.w == 0.0) // UE4 Brdf
 	{
-		payload.radiance *= 0.2;
+		payload.specularBounce = false;
+		payload.radiance += directLight(material, payload.ray) * payload.throughput;
+
+		bsdfSample.bsdfDir = UE4Sample(payload.ray, material);
+		bsdfSample.pdf = UE4Pdf(payload.ray, material, bsdfSample.bsdfDir);
+
+		if (bsdfSample.pdf > 0.0)
+			payload.throughput *= UE4Eval(payload.ray, material, bsdfSample.bsdfDir) * abs(dot(ffnormal, bsdfSample.bsdfDir)) / bsdfSample.pdf;
+		else
+		{
+			payload.stop = true;
+			return;
+		}
 	}
+
+	payload.ray.direction = bsdfSample.bsdfDir;
+	payload.ray.origin = worldPos + bsdfSample.bsdfDir * EPS;
+	payload.bsdf = bsdfSample;
 }
