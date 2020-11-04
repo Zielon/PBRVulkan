@@ -13,18 +13,32 @@ precision highp int;
 
 layout(binding = 3) readonly uniform UniformBufferObject { Uniform ubo; };
 layout(binding = 4) readonly buffer VertexArray { float Vertices[]; };
+layout(binding = 9) readonly buffer LightArray { Light[] Lights; };
 
-#include "../Common/Composition.glsl"
+layout(location = 0) rayPayloadInNV RayPayload payload;
+
+#include "../Common/Random.glsl"
+#include "../Common/Math.glsl"
+#include "../Common/Sampling.glsl"
 
 #ifdef USE_HDR
 layout(binding = 10) uniform sampler2D[] HDRs;
 #include "../Common/HDR.glsl"
 #endif
 
-layout(location = 0) rayPayloadInNV RayPayload payload;
-
 void main()
 {
+	payload.stop = true;
+	
+	LightSample lightSample;
+
+	if (interesetsEmitter(lightSample, INFINITY))
+	{
+		vec3 Le = sampleEmitter(lightSample, payload.bsdf);
+		payload.radiance += Le * payload.beta;
+		return;
+	}
+
 	if (ubo.useHDR)
 	{
 		#ifdef USE_HDR
@@ -37,7 +51,7 @@ void main()
 			lightPdf = envPdf();
 			misWeight = powerHeuristic(0, lightPdf);
 		}
-		payload.radiance += misWeight * texture(HDRs[0], uv).xyz * payload.throughput * hdrMultiplier;
+		payload.radiance += misWeight * texture(HDRs[0], uv).xyz * payload.beta * hdrMultiplier;
 		#endif
 	}
 }

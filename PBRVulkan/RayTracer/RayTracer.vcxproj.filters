@@ -105,16 +105,13 @@
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracer.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Common\Composition.glsl">
-      <Filter>Assets\Shaders\Common</Filter>
-    </None>
     <None Include="src\Assets\Shaders\Common\HDR.glsl">
       <Filter>Assets\Shaders\Common</Filter>
     </None>
     <None Include="src\Assets\Shaders\Raytracer\Integrators\AO.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
-    <None Include="src\Assets\Shaders\BSDFs\UR4BRSF.glsl">
+    <None Include="src\Assets\Shaders\BSDFs\UE4BRSF.glsl">
       <Filter>Assets\Shaders\BSDFs</Filter>
     </None>
   </ItemGroup>

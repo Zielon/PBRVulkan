@@ -95,3 +95,46 @@ vec3 UE4Eval(in Material material, in vec3 bsdfDir)
 
 	return (material.albedo.xyz / PI) * (1.0 - material.metallic) + Gs * Fs * Ds;
 }
+
+float glassPdf()
+{
+	return 1.0;
+}
+
+vec3 glassSample(in Material material)
+{
+	float n1 = 1.0;
+	float n2 = material.ior;
+	float R0 = (n1 - n2) / (n1 + n2);
+	R0 *= R0;
+	float theta = dot(-gl_WorldRayDirectionNV, payload.ffnormal);
+	float prob = R0 + (1. - R0) * SchlickFresnel(theta);
+	vec3 dir;
+
+	//vec3 transmittance = vec3(1.0);
+	//vec3 extinction = -log(vec3(0.1, 0.1, 0.908));
+	//vec3 extinction = -log(vec3(0.905, 0.63, 0.3));
+
+	float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (n1 / n2) : (n2 / n1);
+	vec3 transDir = normalize(refract(gl_WorldRayDirectionNV, payload.ffnormal, eta));
+	float cos2t = 1.0 - eta * eta * (1.0 - theta * theta);
+
+	//if(dot(-ray.direction, state.normal) <= 0.0)
+	//	transmittance = exp(-extinction * state.hitDist * 100.0);
+
+	if (cos2t < 0.0 || rnd(seed) < prob) // Reflection
+	{
+		dir = normalize(reflect(gl_WorldRayDirectionNV, payload.ffnormal));
+	}
+	else  // Transmission
+	{
+		dir = transDir;
+	}
+	//state.mat.albedo.xyz = transmittance;
+	return dir;
+}
+
+vec3 glassEval(in Material material)
+{
+	return material.albedo.xyz;
+}

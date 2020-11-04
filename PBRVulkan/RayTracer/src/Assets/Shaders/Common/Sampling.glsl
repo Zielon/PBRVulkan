@@ -49,10 +49,11 @@ float rectIntersect(in vec3 pos, in vec3 u, in vec3 v, in vec4 plane)
 	vec3 n = vec3(plane);
 	float dt = dot(gl_WorldRayDirectionNV, n);
 	float t = (plane.w - dot(n, gl_WorldRayOriginNV)) / dt;
+	vec3 p = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * t;
+	vec3 vi = p - pos;
+
 	if (t > EPS)
 	{
-		vec3 p = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * t;
-		vec3 vi = p - pos;
 		float a1 = dot(u, vi);
 		if (a1 >= 0. && a1 <= 1.)
 		{
@@ -65,7 +66,7 @@ float rectIntersect(in vec3 pos, in vec3 u, in vec3 v, in vec4 plane)
 	return INFINITY;
 }
 
-bool interesetsEmitter(inout LightSample lightSample)
+bool interesetsEmitter(inout LightSample lightSample, float hit)
 {
 	bool intersects = false;
 	float t = INFINITY;
@@ -88,17 +89,17 @@ bool interesetsEmitter(inout LightSample lightSample)
 		if (d < 0.)
 			d = INFINITY;
 
-		if (d < t)
+		if (d < t && d < hit)
 		{
 			t = d;
 
 			vec3 normal = normalize(cross(u, v));
 			float cosTheta = abs(dot(-gl_WorldRayDirectionNV, normal));
-			float d = length(light.position - payload.worldPos);
 			float pdf = (t * t) / (light.area.x * cosTheta);
 
 			lightSample.emission = light.emission;
 			lightSample.pdf = pdf;
+
 			intersects = true;
 		}
 	}
@@ -108,12 +109,6 @@ bool interesetsEmitter(inout LightSample lightSample)
 
 vec3 sampleEmitter(in LightSample lightSample, in BsdfSample bsdfSample)
 {
-	vec3 Le = vec3(0);
-
-	if (payload.depth == 0 || payload.specularBounce)
-		Le = lightSample.emission;
-	else
-		Le = powerHeuristic(bsdfSample.pdf, lightSample.pdf) * lightSample.emission;
-
-	return Le;
+	vec3 Le = lightSample.emission;
+	return (payload.depth == 0 || payload.specularBounce) ? Le : powerHeuristic(bsdfSample.pdf, lightSample.pdf) * Le;
 }

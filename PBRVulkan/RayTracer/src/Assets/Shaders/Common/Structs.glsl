@@ -10,10 +10,13 @@
 #define INFINITY  1000000.0
 
 uint seed = 0;
+int DISNEY = 0;
+int GLASS = 1;
 
 struct Material 
 { 
-	vec4 albedo;
+	vec3 albedo;
+	float type;
 	vec4 emission;
 	// Parameters
 	float metallic;
@@ -77,7 +80,7 @@ struct RayPayload
 	Ray ray;
 	BsdfSample bsdf;
 	vec3 radiance;
-	vec3 throughput;
+	vec3 beta;
 	vec3 worldPos;
 	vec3 normal;
 	vec3 ffnormal;

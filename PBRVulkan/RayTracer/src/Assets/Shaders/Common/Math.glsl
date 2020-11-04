@@ -99,3 +99,8 @@ float powerHeuristic(float a, float b)
 	float t = a * a;
 	return t / (b * b + t);
 }
+
+float max3(vec3 v) 
+{
+	return max (max (v.x, v.y), v.z);
+}
