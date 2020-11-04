@@ -29,15 +29,14 @@ void main()
 	mat4 viewInv = inverse(ubo.view);
 
 	uint  rayFlags = gl_RayFlagsOpaqueNV;
-	float tMin     = 0.001;
+	float tMin     = MINIMUM;
 	float tMax     = INFINITY;
 
-	const uint SPP = ubo.spp; // Samples per pixel
+	uint SPP = ubo.spp; // Samples per pixel
 	uint seed = tea(gl_LaunchIDNV.y * gl_LaunchSizeNV.x + gl_LaunchIDNV.x, ubo.frame);
 
 	vec3 radiance = vec3(0);
 
-	[[unroll]]
 	for (uint i = 0; i < SPP; ++i)
 	{
 		float r1 = rnd(seed);
@@ -86,9 +85,10 @@ void main()
 			beta = payload.beta;
 			specularBounce = payload.specularBounce;
 			
+			// First hit normal
 			if (j == 0)
 			{
-				imageStore(NormalsImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.ffnormal, 1.0));
+				imageStore(NormalsImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.ffnormal, 0.0));
 			}
 
 			ray = payload.ray;
@@ -103,12 +103,15 @@ void main()
 		radiance += pathRadiance;
 	}
 	
+	radiance /= float(SPP);
+
 	// HDR scale
 	vec3 accumulatedRadiance = ubo.frame > 1 ? imageLoad(AccumulationImage, ivec2(gl_LaunchIDNV.xy)).rbg : vec3(0);
 	accumulatedRadiance += radiance;	
 	imageStore(AccumulationImage, ivec2(gl_LaunchIDNV.xy), vec4(accumulatedRadiance, 1.0));
 
-	radiance = accumulatedRadiance / (SPP * ubo.frame);
+	float inv = 1.f / ubo.frame;
+	radiance = accumulatedRadiance * inv;
 
 	// LDR scale
 	vec3 ldr = toneMap(radiance, 1.5);
@@ -120,10 +123,7 @@ void main()
 	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(ldr, 1.f));
 
 	#ifdef USE_DENOISER
-	if (ubo.frame > 1)
-	{
-		vec4 denoised = denoise();
-		imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), denoised);
-	}
+	vec4 denoised = denoise();
+	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), denoised);
 	#endif
 }

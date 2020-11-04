@@ -5,13 +5,13 @@
 vec3 directLight(in Material material)
 {
 	vec3 L      = vec3(0);
-	float tMin  = 0.001;
+	float tMin  = MINIMUM;
 	float tMax  = INFINITY;
 	uint flags  = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
 
 	BsdfSample bsdfSample;
 
-	vec3 surfacePos = payload.worldPos + payload.ffnormal * EPS;
+	vec3 surfacePos = payload.worldPos;
 
 	/* Environment Light */
 	if (ubo.useHDR)
@@ -59,8 +59,7 @@ vec3 directLight(in Material material)
 		// The light is visible from the surface. Less than 90° between vectors.
 		if (dot(payload.ffnormal, lightDir) > 0.f)
 		{
-			tMax = lightDist - EPS;
-			traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, tMax, 1);
+			traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, lightDist, 1);
 		}
 
 		if (!isShadowed)

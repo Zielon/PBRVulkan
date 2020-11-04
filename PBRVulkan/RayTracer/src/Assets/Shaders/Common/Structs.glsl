@@ -8,6 +8,7 @@
 #define INV_2PI   0.15915494309189533577
 #define EPS       0.001
 #define INFINITY  1000000.0
+#define MINIMUM   0.00001
 
 uint seed = 0;
 int DISNEY = 0;
@@ -41,7 +42,7 @@ struct Light
 	vec3 position;
 	vec3 emission; 
 	vec3 u;
-	vec3 v; 
+	vec3 v;
 	vec3 area;
 };
 

@@ -61,5 +61,5 @@
 
 	// Update a new ray path bounce direction
 	payload.ray.direction = bsdfSample.bsdfDir;
-	payload.ray.origin = worldPos + bsdfSample.bsdfDir * EPS;
+	payload.ray.origin = worldPos;
 }

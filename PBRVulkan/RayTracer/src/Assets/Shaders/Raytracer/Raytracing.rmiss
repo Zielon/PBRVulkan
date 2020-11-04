@@ -44,7 +44,7 @@ void main()
 		#ifdef USE_HDR
 		float lightPdf = 1.0f;
 		float misWeight = 1.0f;
-		float hdrMultiplier = 5.0f;
+		float hdrMultiplier = 7.0f;
 		vec2 uv = vec2((PI + atan(gl_WorldRayDirectionNV.z, gl_WorldRayDirectionNV.x)) * (1.0 / TWO_PI), acos(gl_WorldRayDirectionNV.y) * (1.0 / PI));
 		if (payload.depth > 0 && !payload.specularBounce)
 		{
