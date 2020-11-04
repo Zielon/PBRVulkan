@@ -37,6 +37,8 @@ namespace Vulkan
 		std::unique_ptr<class ImageView> accumulationImageView;
 		std::unique_ptr<class Image> outputImage;
 		std::unique_ptr<class ImageView> outputImageView;
+		std::unique_ptr<class Image> normalsImage;
+		std::unique_ptr<class ImageView> normalsImageView;
 		std::unique_ptr<class Buffer> instanceBuffer;
 		std::unique_ptr<class Buffer> BLASBuffer;
 		std::unique_ptr<class Buffer> ScratchBLASBuffer;

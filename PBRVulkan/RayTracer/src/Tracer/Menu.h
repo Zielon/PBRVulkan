@@ -25,6 +25,7 @@ namespace Tracer
 	{
 		bool UseRasterizer{};
 		bool UseGammaCorrection = true;
+		bool UseDenoiser = false;
 		int IntegratorType{};
 		int SceneId = 5;
 		int MaxDepth = 3;
@@ -33,10 +34,12 @@ namespace Tracer
 		float Aperture = 0.1f;
 		float FocalDistance = 1.f;
 		float AORayLength = 0.5f;
+		float DenoiseStrength = 1.f;
 
 		[[nodiscard]] bool RequiresShaderRecompliation(const Settings& prev) const
 		{
-			return UseGammaCorrection != prev.UseGammaCorrection || IntegratorType != prev.IntegratorType;
+			return UseGammaCorrection != prev.UseGammaCorrection || IntegratorType != prev.IntegratorType || UseDenoiser
+				!= prev.UseDenoiser;
 		}
 
 		[[nodiscard]] bool RequiresAccumulationReset(const Settings& prev) const
@@ -51,7 +54,8 @@ namespace Tracer
 				Fov != prev.Fov ||
 				Aperture != prev.Aperture ||
 				FocalDistance != prev.FocalDistance ||
-				AORayLength != prev.AORayLength;
+				AORayLength != prev.AORayLength ||
+				DenoiseStrength != prev.DenoiseStrength;
 		}
 	};
 

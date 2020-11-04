@@ -15,7 +15,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="Scripts\Compile.py" />
-    <None Include="src\Assets\Shaders\BSDFs\UE4BRSF.glsl" />
+    <None Include="src\Assets\Shaders\BSDFs\UE4BSDF.glsl" />
+    <None Include="src\Assets\Shaders\Common\Denoiser.glsl" />
     <None Include="src\Assets\Shaders\Common\HDR.glsl" />
     <None Include="src\Assets\Shaders\Common\Math.glsl" />
     <None Include="src\Assets\Shaders\Common\Random.glsl" />

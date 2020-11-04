@@ -20,6 +20,7 @@ namespace Vulkan
 		const Tracer::Scene& scene,
 		const ImageView& accumulationImage,
 		const ImageView& outputImage,
+		const ImageView& normalsImage,
 		const std::vector<std::unique_ptr<Buffer>>& uniformBuffers,
 		VkAccelerationStructureNV topLevelAS):
 		device(device),
@@ -133,6 +134,11 @@ namespace Vulkan
 				9, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
 				VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
 			},
+
+			// Normal
+			{
+				10, 1, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, VK_SHADER_STAGE_RAYGEN_BIT_NV
+			}
 		};
 
 		// HDRs
@@ -140,7 +146,7 @@ namespace Vulkan
 		{
 			descriptorBindings.push_back(
 				{
-					10, static_cast<uint32_t>(scene.GetHDRTextures().size()), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+					11, static_cast<uint32_t>(scene.GetHDRTextures().size()), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 					VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV | VK_SHADER_STAGE_MISS_BIT_NV
 				});
 		}
@@ -163,7 +169,7 @@ namespace Vulkan
 
 		for (size_t imageIndex = 0; imageIndex < swapChain.GetImage().size(); imageIndex++)
 		{
-			std::vector<VkWriteDescriptorSet> descriptorWrites(10);
+			std::vector<VkWriteDescriptorSet> descriptorWrites(11);
 
 			// Top level acceleration structure.
 			VkWriteDescriptorSetAccelerationStructureNV structureInfo = {};
@@ -302,6 +308,19 @@ namespace Vulkan
 			descriptorWrites[9].descriptorCount = 1;
 			descriptorWrites[9].pBufferInfo = &lightsBufferInfo;
 
+			// Normal image
+			VkDescriptorImageInfo normalsImageInfo = {};
+			normalsImageInfo.imageView = normalsImage.Get();
+			normalsImageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+
+			descriptorWrites[10].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[10].dstSet = descriptorSets[imageIndex];
+			descriptorWrites[10].dstBinding = 10;
+			descriptorWrites[10].dstArrayElement = 0;
+			descriptorWrites[10].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+			descriptorWrites[10].descriptorCount = 1;
+			descriptorWrites[10].pImageInfo = &normalsImageInfo;
+
 			// Outside the block because of RAII 
 			std::vector<VkDescriptorImageInfo> hdrInfos(scene.GetHDRTextures().size());
 			VkWriteDescriptorSet descriptor{};
@@ -318,7 +337,7 @@ namespace Vulkan
 
 				descriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 				descriptor.dstSet = descriptorSets[imageIndex];
-				descriptor.dstBinding = 10;
+				descriptor.dstBinding = 11;
 				descriptor.dstArrayElement = 0;
 				descriptor.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 				descriptor.descriptorCount = static_cast<uint32_t>(hdrInfos.size());

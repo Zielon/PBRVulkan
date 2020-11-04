@@ -1,5 +1,5 @@
 /*
- *
+ *	Based on https://github.com/knightcrawler25/GLSL-PathTracer
  */
 
 float UE4Pdf(in Material material, in vec3 bsdfDir)

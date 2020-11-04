@@ -111,7 +111,10 @@
     <None Include="src\Assets\Shaders\Raytracer\Integrators\AO.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
-    <None Include="src\Assets\Shaders\BSDFs\UE4BRSF.glsl">
+    <None Include="src\Assets\Shaders\Common\Denoiser.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\BSDFs\UE4BSDF.glsl">
       <Filter>Assets\Shaders\BSDFs</Filter>
     </None>
   </ItemGroup>

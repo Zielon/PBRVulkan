@@ -14,12 +14,14 @@ precision highp int;
 layout(binding = 0, set = 0) uniform accelerationStructureNV TLAS;
 layout(binding = 1, rgba32f) uniform image2D AccumulationImage;
 layout(binding = 2, rgba8) uniform image2D OutputImage;
+layout(binding = 10, rgba32f) uniform image2D NormalsImage;
 layout(binding = 3) readonly uniform UniformBufferObject { Uniform ubo; };
 
 layout(location = 0) rayPayloadNV RayPayload payload;
 
 #include "../Common/Random.glsl"
 #include "../Common/Math.glsl"
+#include "../Common/Denoiser.glsl"
 
 void main() 
 {
@@ -57,7 +59,6 @@ void main()
 		bool specularBounce = false;
 		BsdfSample bsdf;
 
-		[[unroll]]
 		for (uint j = 0; j < ubo.maxDepth; ++j)
 		{
 			payload.depth = j;
@@ -85,6 +86,11 @@ void main()
 			beta = payload.beta;
 			specularBounce = payload.specularBounce;
 			
+			if (j == 0)
+			{
+				imageStore(NormalsImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.ffnormal, 1.0));
+			}
+
 			ray = payload.ray;
 			bsdf = payload.bsdf;
 
@@ -96,7 +102,7 @@ void main()
 
 		radiance += pathRadiance;
 	}
-
+	
 	// HDR scale
 	vec3 accumulatedRadiance = ubo.frame > 1 ? imageLoad(AccumulationImage, ivec2(gl_LaunchIDNV.xy)).rbg : vec3(0);
 	accumulatedRadiance += radiance;	
@@ -111,5 +117,13 @@ void main()
 	ldr = gammaCorrection(ldr);
 	#endif
 
-	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(ldr, 1.0));
+	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(ldr, 1.f));
+
+	#ifdef USE_DENOISER
+	if (ubo.frame > 1)
+	{
+		vec4 denoised = denoise();
+		imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), denoised);
+	}
+	#endif
 }

@@ -13,6 +13,14 @@ namespace Interface
 
 		ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
 		ImGui::Checkbox("Gamma correction", &settings.UseGammaCorrection);
+		ImGui::Checkbox("Use Denoiser", &settings.UseDenoiser);
+
+		if(settings.UseDenoiser)
+		{
+			ImGui::Text("Strength  ");
+			ImGui::SameLine();
+			ImGui::InputFloat("denoiser", &settings.DenoiseStrength, 0.1);
+		}
 
 		ImGui::Text("# samples ");
 		ImGui::SameLine();

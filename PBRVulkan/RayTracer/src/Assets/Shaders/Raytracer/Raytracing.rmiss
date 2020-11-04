@@ -22,7 +22,7 @@ layout(location = 0) rayPayloadInNV RayPayload payload;
 #include "../Common/Sampling.glsl"
 
 #ifdef USE_HDR
-layout(binding = 10) uniform sampler2D[] HDRs;
+layout(binding = 11) uniform sampler2D[] HDRs;
 #include "../Common/HDR.glsl"
 #endif
 

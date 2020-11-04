@@ -80,6 +80,9 @@ namespace Tracer
 		if(settings.UseGammaCorrection)
 			defines.push_back(Parser::Define::USE_GAMMA_CORRECTION);
 
+		if (settings.UseDenoiser)
+			defines.push_back(Parser::Define::USE_DENOISER);
+		
 		includes.push_back(static_cast<Parser::Include>(settings.IntegratorType));
 
 		compiler->Compile(includes, defines);
@@ -138,6 +141,7 @@ namespace Tracer
 		uniform.hdrResolution = scene->UseHDR() ? scene->GetHDRResolution() : 0.f;
 		uniform.frame = frame;
 		uniform.AORayLength = settings.AORayLength;
+		uniform.denoiserStrength = settings.DenoiseStrength;
 	
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}

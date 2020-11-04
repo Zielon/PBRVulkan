@@ -137,7 +137,7 @@ namespace Tracer
 			ImGuiWindowFlags_NoSavedSettings;
 
 		ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
-		ImGui::SetNextWindowSize(ImVec2(185, 400), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(ImVec2(185, 450), ImGuiCond_Always);
 
 		if (ImGui::Begin("Settings", &open, flags))
 		{

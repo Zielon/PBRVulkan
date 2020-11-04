@@ -22,7 +22,7 @@ layout(binding = 8) uniform sampler2D[] TextureSamplers;
 layout(binding = 9) readonly buffer LightArray { Light[] Lights; };
 
 #ifdef USE_HDR
-layout(binding = 10) uniform sampler2D[] HDRs;
+layout(binding = 11) uniform sampler2D[] HDRs;
 #endif
 
 layout(location = 0) rayPayloadInNV RayPayload payload;
@@ -39,7 +39,7 @@ hitAttributeNV vec2 hit;
 #endif
 
 #include "../Common/Sampling.glsl"
-#include "../BSDFs/UE4BRSF.glsl"
+#include "../BSDFs/UE4BSDF.glsl"
 
 #include "Integrators/DirectLight.glsl"
 
@@ -62,7 +62,7 @@ void main()
 	// face forward normal
 	vec3 ffnormal = dot(normal, gl_WorldRayDirectionNV) <= 0.0 ? normal : normal * -1.0;
 
-	// Update material
+	// Update material using textures
 	{
 		// Albedo
 		if (material.albedoTexID >= 0)
@@ -78,6 +78,7 @@ void main()
 			material.roughness = metallicRoughness.y;
 		}
 
+		// Normal map
 		if (material.normalmapTexID >= 0)
 		{
 			// Orthonormal Basis
@@ -85,6 +86,7 @@ void main()
 			vec3 nrm = texture(TextureSamplers[material.normalmapTexID], texCoord).xyz;
 			nrm = frame * normalize(nrm * 2.0 - 1.0);
 			normal = normalize(nrm);
+			ffnormal = dot(normal, gl_WorldRayDirectionNV) <= 0.0 ? normal : normal * -1.0;
 		}
 	}
 

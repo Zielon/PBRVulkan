@@ -60,6 +60,7 @@ namespace Vulkan
 				*scene,
 				*accumulationImageView,
 				*outputImageView,
+				*normalsImageView,
 				uniformBuffers,
 				// For now assume only one instance of Top Level Instance
 				TLASs.front().Get()));
@@ -84,6 +85,9 @@ namespace Vulkan
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
 		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange, 0,
+		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
+
+		Image::MemoryBarrier(commandBuffer, normalsImage->Get(), subresourceRange, 0,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
@@ -142,8 +146,13 @@ namespace Vulkan
 			          VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
 			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
+		normalsImage.reset(
+			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_STORAGE_BIT,
+			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
 		accumulationImageView.reset(new ImageView(*device, accumulationImage->Get(), accumulationFormat));
 		outputImageView.reset(new ImageView(*device, outputImage->Get(), outputFormat));
+		normalsImageView.reset(new ImageView(*device, normalsImage->Get(), accumulationFormat));
 	}
 
 	void Raytracer::CreateAS()
@@ -223,7 +232,7 @@ namespace Vulkan
 		{
 			geometryInstances.push_back(TLAS::CreateGeometryInstance(BLASs[instanceId], glm::mat4(1), instanceId));
 		}
-	
+
 		TLASs.emplace_back(*device, geometryInstances, false);
 		requirements.push_back(TLASs.back().GetMemoryRequirements());
 
