@@ -78,8 +78,8 @@ void main()
 					0               // payload (location = 0)
 			);
 
-			pathRadiance += payload.radiance;
-			throughput += payload.throughput;
+			pathRadiance = payload.radiance;
+			throughput = payload.throughput;
 			
 			ray = payload.ray;
 			bsdf = payload.bsdf;

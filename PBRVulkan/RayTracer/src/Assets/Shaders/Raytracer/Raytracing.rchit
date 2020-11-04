@@ -31,11 +31,14 @@ layout(location = 1) rayPayloadNV bool isShadowed;
 hitAttributeNV vec2 hit;
 
 #include "../Common/Composition.glsl"
+
 #ifdef USE_HDR
 #include "../Common/HDR.glsl"
 #endif
+
 #include "../Common/Sampling.glsl"
 #include "../BSDFs/UR4BRSF.glsl"
+
 #include "Integrators/DirectLight.glsl"
 
 void main()
