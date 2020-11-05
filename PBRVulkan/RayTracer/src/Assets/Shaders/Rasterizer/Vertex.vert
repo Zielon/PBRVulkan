@@ -16,6 +16,7 @@ layout(location = 0) out vec2 outTexCoord;
 layout(location = 1) out vec3 outNormal;
 layout(location = 2) out vec3 outDirection;
 layout(location = 3) out flat int outMaterialId;
+layout(location = 4) out vec3 outPosition;
 
 void main() 
 {
@@ -24,5 +25,7 @@ void main()
 	outNormal = inNormal;
 	outTexCoord = inTexCoord;
 	outDirection = ubo.direction;
+	vec4 pos = ubo.view * vec4(inPosition, 1.0);
+	outPosition = pos.xyz;
 	outMaterialId = inMaterialId;
 }

@@ -4,6 +4,7 @@ Renderer
 	maxDepth 2
 	tileWidth 200
 	tileHeight 200
+	envMap HDR/sunset.hdr
 	hdrMultiplier 2.0
 }
 
@@ -12,11 +13,6 @@ Camera
 	position .276 .275 -.75
 	lookAt .276 .275 .10
 	fov 40
-}
-
-material orange
-{
-	color 1 0.5 0
 }
 
 material white
@@ -61,7 +57,7 @@ mesh
 mesh
 {
 	file cornell_box/cbox_smallbox.obj
-	material orange
+	material white
 	position .1855 .0825 .169
 	scale 0.01 0.01 0.01
 }
@@ -69,7 +65,7 @@ mesh
 mesh
 {
 	file cornell_box/cbox_largebox.obj
-	material orange
+	material white
 	position .3685 .165 .35125
 	scale 0.01 0.01 0.01
 }

@@ -17,6 +17,7 @@ layout(location = 0) in vec2 inTexCoord;
 layout(location = 1) in vec3 inNormal;
 layout(location = 2) in vec3 inDirection;
 layout(location = 3) in flat int inMaterialId;
+layout(location = 4) in vec3 inPosition;
 
 layout(location = 0) out vec4 outColor;
 
@@ -28,16 +29,27 @@ void main()
 	int textureId = material.albedoTexID;
 	vec3 color = vec3(0);
 
+	// ambient term
+	color += material.albedo.xyz * vec3(0.1);
+
 	for (uint i = 0; i < ubo.lights; ++i)
 	{
 		Light light = Lights[i];
 		// TODO
+
+		// diffuse term
+		vec3 lightDir = normalize(light.position - inPosition);
+		float diffI = max(dot(lightDir, normal), 0.0);
+
+		color +=  light.emission.xyz * material.albedo.xyz * vec3(diffI);
 	}
 
-	if (textureId >= 0)
+	//color = clamp (color, 0.0, 1.0);
+
+	/*if (textureId >= 0)
 		color = texture(textureSamplers[textureId], inTexCoord).rgb;
 	else
-		color = material.albedo.xyz;
+		color = material.albedo.xyz;*/
 
 	outColor = vec4(gammaCorrection(toneMap(color, 1.5)), 1.0);
 }
