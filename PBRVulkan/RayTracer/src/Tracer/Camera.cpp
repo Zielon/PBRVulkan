@@ -11,8 +11,8 @@ float SENSITIVITY = 0.10f;
 
 namespace Tracer
 {
-	Camera::Camera(glm::vec3 eye, glm::vec3 lookAt, float fov)
-		: position(eye), fov(fov)
+	Camera::Camera(glm::vec3 eye, glm::vec3 lookAt, float fov, float aspect)
+		: position(eye), fov(fov), aspect(aspect)
 	{
 		position = eye;
 		pivot = lookAt;
@@ -109,7 +109,6 @@ namespace Tracer
 
 	glm::mat4 Camera::GetProjection() const
 	{
-		const auto aspect = 1280.f / 720.f;
 		auto projection = glm::perspective(glm::radians(fov), aspect, 0.1f, 1000.0f);
 		projection[1][1] *= -1;
 

@@ -59,7 +59,7 @@ namespace Tracer
 	{
 		if (settings.SceneId != menu->GetSettings().SceneId)
 			RecreateSwapChain();
-		
+
 		if (settings.RequiresShaderRecompliation(menu->GetSettings()))
 			RecompileShaders();
 
@@ -77,12 +77,12 @@ namespace Tracer
 		if (scene->UseHDR())
 			defines.push_back(Parser::Define::USE_HDR);
 
-		if(settings.UseGammaCorrection)
+		if (settings.UseGammaCorrection)
 			defines.push_back(Parser::Define::USE_GAMMA_CORRECTION);
 
 		if (settings.UseDenoiser)
 			defines.push_back(Parser::Define::USE_DENOISER);
-		
+
 		includes.push_back(static_cast<Parser::Include>(settings.IntegratorType));
 
 		compiler->Compile(includes, defines);
@@ -95,6 +95,7 @@ namespace Tracer
 		menu.reset();
 		Raytracer::DeleteSwapChain();
 		LoadScene();
+		ResizeWindow();
 		CompileShaders();
 		CreateAS();
 		Raytracer::CreateSwapChain();
@@ -125,6 +126,12 @@ namespace Tracer
 		frame = 0;
 	}
 
+	void Application::ResizeWindow() const
+	{
+		const auto resolution = scene->GetRendererOptions().resolution;
+		glfwSetWindowSize(window->Get(), resolution.x, resolution.y);
+	}
+
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
 	{
 		Uniforms::Global uniform{};
@@ -142,7 +149,7 @@ namespace Tracer
 		uniform.frame = frame;
 		uniform.AORayLength = settings.AORayLength;
 		uniform.denoiserStrength = settings.DenoiseStrength;
-	
+
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}
 

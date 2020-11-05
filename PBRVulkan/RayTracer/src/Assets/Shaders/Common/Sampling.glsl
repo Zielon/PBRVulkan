@@ -99,6 +99,7 @@ bool interesetsEmitter(inout LightSample lightSample, float hit)
 
 			lightSample.emission = light.emission;
 			lightSample.pdf = pdf;
+			lightSample.normal = normal;
 
 			intersects = true;
 		}

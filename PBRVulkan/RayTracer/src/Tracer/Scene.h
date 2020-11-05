@@ -15,6 +15,7 @@
 #include "../Loader/Loader.h"
 #include "../Vulkan/Vulkan.h"
 #include "../Assets/Light.h"
+#include "../Loader/RenderOptions.h"
 
 namespace Vulkan
 {
@@ -47,7 +48,7 @@ namespace Tracer
 			const Vulkan::CommandPool& commandPool);
 		~Scene();
 
-		void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov) override;
+		void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov, float aspect) override;
 		void AddHDR(const std::string& path) override;
 		int AddMesh(const std::string& path) override;
 		int AddTexture(const std::string& path) override;
@@ -136,6 +137,11 @@ namespace Tracer
 			return hdrResolution;
 		}
 
+		[[nodiscard]] Loader::RenderOptions GetRendererOptions() const
+		{
+			return options;
+		}
+
 	private:
 		std::string config;
 		const std::string root = "../Assets/Scenes/";
@@ -169,6 +175,8 @@ namespace Tracer
 
 		std::future<void> hdrLoader{};
 		float hdrResolution{};
+
+		Loader::RenderOptions options;
 
 		void Wait();
 		void Print() const;

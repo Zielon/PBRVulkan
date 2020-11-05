@@ -20,7 +20,11 @@
 	if (interesetsEmitter(lightSample, gl_HitTNV))
 	{
 		vec3 Le = sampleEmitter(lightSample, payload.bsdf);
-		payload.radiance += Le * payload.beta;
+
+		// One sided emitter only
+		// if (dot(payload.ffnormal, lightSample.normal) > 0.f)
+			payload.radiance += Le * payload.beta;
+
 		payload.stop = true;
 		return;
 	}
@@ -35,6 +39,7 @@
 
 		float cosTheta = abs(dot(ffnormal, bsdfSample.bsdfDir));
 		vec3 F = UE4Eval(material, bsdfSample.bsdfDir);
+
 		payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
 	}
 

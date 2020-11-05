@@ -29,6 +29,7 @@ namespace Tracer
 		void RecompileShaders();
 		void CreateMenu();
 		void ResetAccumulation();
+		void ResizeWindow() const;
 		
 		// User interface API
 		void OnKeyChanged(int key, int scanCode, int action, int mods) override;

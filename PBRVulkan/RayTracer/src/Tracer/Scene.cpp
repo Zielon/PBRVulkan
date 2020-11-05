@@ -19,7 +19,6 @@
 #include "../Assets/Mesh.h"
 
 #include "../Loader/Loader.h"
-#include "../Loader/RenderOptions.h"
 
 namespace Tracer
 {
@@ -71,7 +70,6 @@ namespace Tracer
 
 	void Scene::Load()
 	{
-		Loader::RenderOptions options;
 		LoadSceneFromFile(config, *this, options);
 	}
 
@@ -184,9 +182,9 @@ namespace Tracer
 		buffer->Copy(commandPool, *buffer_staging);
 	}
 
-	void Scene::AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov)
+	void Scene::AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov, float aspect)
 	{
-		camera.reset(new Camera(pos, lookAt, fov));
+		camera.reset(new Camera(pos, lookAt, fov, aspect));
 	}
 
 	void Scene::AddHDR(const std::string& path)
