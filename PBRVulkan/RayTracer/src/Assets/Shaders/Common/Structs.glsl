@@ -68,7 +68,6 @@ struct Uniform
 
 struct LightSample
 { 
-	vec3 surfacePos; 
 	vec3 normal; 
 	vec3 emission; 
 	float pdf;
