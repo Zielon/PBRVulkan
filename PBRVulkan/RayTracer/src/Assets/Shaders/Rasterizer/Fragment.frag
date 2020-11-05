@@ -6,8 +6,12 @@
 
 #include "../Common/Structs.glsl"
 
-layout(binding = 1) buffer MaterialArray { Material[] materials; };
+layout(binding = 0) readonly uniform UniformBufferObject { Uniform ubo; };
+layout(binding = 1) readonly buffer MaterialArray { Material[] materials; };
 layout(binding = 2) uniform sampler2D[] textureSamplers;
+layout(binding = 3) readonly buffer LightArray { Light[] Lights; };
+
+#include "../Common/Math.glsl"
 
 layout(location = 0) in vec2 inTexCoord;
 layout(location = 1) in vec3 inNormal;
@@ -16,26 +20,24 @@ layout(location = 3) in flat int inMaterialId;
 
 layout(location = 0) out vec4 outColor;
 
-vec3 toneMap(in vec3 color, float limit)
+void main()
 {
-	float luminance = 0.3 * color.x + 0.6 * color.y + 0.1 * color.z;
-	return color * 1.0 / (1.0 + luminance / limit);
-}
-
-void main() 
-{
-	vec3 normal = normalize(inNormal);
 	Material material = materials[inMaterialId];
 
+	vec3 normal = normalize(inNormal);
 	int textureId = material.albedoTexID;
-	float d = max(dot(inDirection, normalize(normal)), 0.2);
-
 	vec3 color = vec3(0);
+
+	for (uint i = 0; i < ubo.lights; ++i)
+	{
+		Light light = Lights[i];
+		// TODO
+	}
 
 	if (textureId >= 0)
 		color = texture(textureSamplers[textureId], inTexCoord).rgb;
 	else
 		color = material.albedo.xyz;
 
-	outColor = vec4(pow(toneMap(color, 1.5), vec3(1.0 / 2.2)), 1.0);
+	outColor = vec4(gammaCorrection(toneMap(color, 1.5)), 1.0);
 }

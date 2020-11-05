@@ -10,7 +10,10 @@
 #define INFINITY  1000000.0
 #define MINIMUM   0.00001
 
+// See Random.glsl for more details
 uint seed = 0;
+
+// Material types
 int DISNEY = 0;
 int GLASS = 1;
 
@@ -40,7 +43,7 @@ struct Ray
 struct Light
 { 
 	vec3 position;
-	vec3 emission; 
+	vec3 emission;
 	vec3 u;
 	vec3 v;
 	vec3 area;

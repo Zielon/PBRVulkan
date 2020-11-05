@@ -126,9 +126,10 @@ namespace Vulkan
 
 		std::vector<DescriptorBinding> descriptorBindings =
 		{
-			{ 0, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT },
+			{ 0, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT },
 			{ 1, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT },
-			{ 2, scene.GetTextureSize(), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT }
+			{ 2, scene.GetTextureSize(), VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT },
+			{ 3, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT }
 		};
 
 		descriptorsManager.reset(new DescriptorsManager(device, swapChain, descriptorBindings));
@@ -149,7 +150,7 @@ namespace Vulkan
 
 		for (size_t imageIndex = 0; imageIndex < swapChain.GetImage().size(); imageIndex++)
 		{
-			std::array<VkWriteDescriptorSet, 3> descriptorWrites{};
+			std::array<VkWriteDescriptorSet, 4> descriptorWrites{};
 
 			// Uniforms descriptor
 			VkDescriptorBufferInfo bufferInfo{};
@@ -195,6 +196,19 @@ namespace Vulkan
 			descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			descriptorWrites[2].descriptorCount = static_cast<uint32_t>(imageInfos.size());
 			descriptorWrites[2].pImageInfo = imageInfos.data();
+
+			// Lights buffer
+			VkDescriptorBufferInfo lightsBufferInfo = {};
+			lightsBufferInfo.buffer = scene.GetLightsBuffer().Get();
+			lightsBufferInfo.range = VK_WHOLE_SIZE;
+
+			descriptorWrites[3].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[3].dstSet = descriptorSets[imageIndex];
+			descriptorWrites[3].dstBinding = 3;
+			descriptorWrites[3].dstArrayElement = 0;
+			descriptorWrites[3].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+			descriptorWrites[3].descriptorCount = 1;
+			descriptorWrites[3].pBufferInfo = &lightsBufferInfo;
 
 			vkUpdateDescriptorSets(device.Get(), static_cast<uint32_t>(descriptorWrites.size()),
 			                       descriptorWrites.data(), 0, nullptr);

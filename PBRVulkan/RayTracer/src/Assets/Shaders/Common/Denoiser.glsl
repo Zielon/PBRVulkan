@@ -72,8 +72,8 @@ vec4 denoise()
     float c_phi = 1.0;
     float n_phi = 0.5;
 
-	vec4 cval = imageLoad(OutputImage, ivec2(fragCoord)); // color
-	vec4 nval = imageLoad(NormalsImage, ivec2(fragCoord)); // normal
+    vec4 cval = imageLoad(OutputImage, ivec2(fragCoord)); // color
+    vec4 nval = imageLoad(NormalsImage, ivec2(fragCoord)); // normal
 //  vec4 pval = imageLoad(DepthImage, ivec2(fragCoord)); // depth
     
     float cum_w = 0.0;
@@ -81,27 +81,27 @@ vec4 denoise()
     [[unroll]]
     for(uint i = 0; i < 25; ++i)
     {
-        vec2 uv = fragCoord + offset[i] * denoiseStrength;
+        ivec2 uv = ivec2(fragCoord + offset[i] * denoiseStrength);
         
         // Color
-        vec4 ctmp = imageLoad(OutputImage, ivec2(uv));
+        vec4 ctmp = imageLoad(OutputImage, uv);
         vec4 t = cval - ctmp;
         float dist2 = dot(t, t);
         float c_w = min(exp(-(dist2)/c_phi), 1.0);
         
         // Normal
-        vec4 ntmp = imageLoad(NormalsImage, ivec2(uv));
+        vec4 ntmp = imageLoad(NormalsImage, uv);
         t = nval - ntmp;
         dist2 = max(dot(t, t), 0.0);
         float n_w = min(exp(-(dist2)/n_phi), 1.0);
         
         // Depth
-//        vec4 ptmp = imageLoad(DepthImage, ivec2(uv));
-//        t = pval - ptmp;
-//        dist2 = dot(t,t);
-//        float p_w = min(exp(-(dist2)/p_phi), 1.0);
+        // vec4 ptmp = imageLoad(DepthImage, ivec2(uv));
+        // t = pval - ptmp;
+        // dist2 = dot(t,t);
+        // float p_w = min(exp(-(dist2)/p_phi), 1.0);
         
-        float weight = c_w*n_w;
+        float weight = c_w * n_w;
         sum += ctmp * weight * kernel[i];
         cum_w += weight * kernel[i];
     }
