@@ -46,7 +46,7 @@ namespace Vulkan
 		BLASs.clear();
 		TLASs.clear();
 
-		std::cout << "[INFO] Raytracer swap chain has been deleted." << std::endl;
+		std::cout << "[RAYTRACER] Swap chain has been deleted." << std::endl;
 
 		Rasterizer::DeleteSwapChain();
 	}
@@ -169,7 +169,7 @@ namespace Vulkan
 		const auto stop = std::chrono::high_resolution_clock::now();
 		const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
-		std::cout << "[INFO] Acceleration data structure build: " << duration.count() << " milliseconds" << std::endl;
+		std::cout << "[RAYTRACER] Acceleration data structure build: " << duration.count() << " milliseconds" << std::endl;
 	}
 
 	void Raytracer::CreateBLAS(VkCommandBuffer commandBuffer)

@@ -83,7 +83,7 @@ namespace Tracer
 	 */
 	void Compiler::Compile(std::vector<Parser::Include> includes, std::vector<Parser::Define> defines) const
 	{
-		std::cout << "[INFO] Shaders compilation has begin." << std::endl;
+		std::cout << "[COMPILER] Shaders compilation has begin." << std::endl;
 
 		for (const auto& pair : Parser::SHADERS)
 		{
@@ -122,6 +122,6 @@ namespace Tracer
 
 		std::system("python ./scripts/Compile.py");
 
-		std::cout << "[INFO] Shaders compilation has ended." << std::endl;
+		std::cout << "[COMPILER] Shaders compilation has ended." << std::endl;
 	}
 }

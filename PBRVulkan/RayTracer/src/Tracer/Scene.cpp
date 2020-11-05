@@ -113,7 +113,7 @@ namespace Tracer
 		std::vector<Geometry::Vertex> vertices;
 		std::vector<glm::uvec2> offsets;
 
-#pragma omp parallel for threads(4)
+#pragma omp parallel for
 		for (const auto& meshInstance : meshInstances)
 		{
 			auto& mesh = meshes[meshInstance.meshId];
@@ -271,6 +271,6 @@ namespace Tracer
 
 	Scene::~Scene()
 	{
-		std::cout << "[INFO] Scene " << config << " has been unloaded." << std::endl;
+		std::cout << "[SCENE] Scene " << config << " has been unloaded." << std::endl;
 	}
 }

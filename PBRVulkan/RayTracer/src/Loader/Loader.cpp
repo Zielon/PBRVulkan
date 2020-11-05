@@ -54,7 +54,7 @@ namespace Loader
 			return false;
 		}
 
-		Log("[INFO] Loading Scene has begun!\n");
+		Log("[LOADER] Scene processing has begun!\n");
 
 		struct MaterialData
 		{

@@ -108,7 +108,7 @@ namespace Vulkan
 		if (swapChain)
 		{
 			swapChain.reset();
-			std::cout << "[INFO] Rasterizer swap chain has been deleted." << std::endl;
+			std::cout << "[RASTERIZER] Swap chain has been deleted." << std::endl;
 		}
 	}
 
