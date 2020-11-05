@@ -229,7 +229,8 @@ namespace Loader
 					sscanf(line, " fov %f", &fov);
 				}
 
-				scene.AddCamera(position, lookAt, fov);
+				float aspect = float(renderOptions.resolution.x) / renderOptions.resolution.y;
+				scene.AddCamera(position, lookAt, fov, aspect);
 				cameraAdded = true;
 			}
 
@@ -290,6 +291,6 @@ namespace Loader
 
 		// Add default camera if none was specified
 		if (!cameraAdded)
-			scene.AddCamera(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, -10.0f), 35.0f);
+			scene.AddCamera(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, -10.0f), 35.0f, 1.f);
 	}
 }

@@ -35,6 +35,7 @@
 
 		float cosTheta = abs(dot(ffnormal, bsdfSample.bsdfDir));
 		vec3 F = UE4Eval(material, bsdfSample.bsdfDir);
+
 		payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
 	}
 

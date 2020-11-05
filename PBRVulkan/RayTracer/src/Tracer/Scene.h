@@ -47,7 +47,7 @@ namespace Tracer
 			const Vulkan::CommandPool& commandPool);
 		~Scene();
 
-		void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov) override;
+		void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov, float aspect) override;
 		void AddHDR(const std::string& path) override;
 		int AddMesh(const std::string& path) override;
 		int AddTexture(const std::string& path) override;

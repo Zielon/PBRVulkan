@@ -51,17 +51,17 @@ vec3 directLight(in Material material)
 		vec3 lightDir     = sampled - surfacePos;
 		float lightDist   = length(lightDir);
 		float lightDistSq = lightDist * lightDist;
-
-		lightDir /= sqrt(lightDistSq);
+		lightDir = normalize(lightDir);
 
 		isShadowed = true;
 
-		// The light is visible from the surface. Less than 90° between vectors.
-		if (dot(payload.ffnormal, lightDir) > 0.f)
-		{
-			traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, lightDist, 1);
-		}
+		// The light has to be visible from the surface. Less than 90° between vectors.
+		if (dot(payload.ffnormal, lightDir) <= 0.0 || dot(lightDir, lightNormal) >= 0.0)
+			return L;
 
+		// Shadow ray
+		traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, lightDist, 1);
+		
 		if (!isShadowed)
 		{
 			float bsdfPdf = UE4Pdf(material, lightDir);

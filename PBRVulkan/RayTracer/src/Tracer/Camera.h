@@ -15,7 +15,7 @@ namespace Tracer
 	class Camera
 	{
 	public:
-		Camera(glm::vec3 eye, glm::vec3 lookAt, float fov);
+		Camera(glm::vec3 eye, glm::vec3 lookAt, float fov, float aspect);
 		~Camera() = default;
 
 		void OnKeyChanged(int key, int scanCode, int action, int mod);
@@ -57,7 +57,7 @@ namespace Tracer
 		bool isCameraUp = false;
 		bool isCameraDown = false;
 
-		float pitch, yaw, fov, focalDist, aperture, radius;
+		float pitch, yaw, fov, focalDist, aperture, radius, aspect;
 
 		static float DELTA_TIME;
 		static float LAST_FRAME_TIME;

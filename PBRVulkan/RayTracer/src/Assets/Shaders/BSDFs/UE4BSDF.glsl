@@ -36,9 +36,6 @@ vec3 UE4Sample(in Material material)
 	float probability = rnd(seed);
 	float diffuseRatio = 0.5 * (1.0 - material.metallic);
 
-	float r1 = rnd(seed);
-	float r2 = rnd(seed);
-
 	mat3 frame = localFrame(N);
 
 	if (probability < diffuseRatio) // sample diffuse
@@ -48,7 +45,8 @@ vec3 UE4Sample(in Material material)
 	else
 	{
 		float a = max(0.001, material.roughness);
-
+		float r1 = rnd(seed);
+		float r2 = rnd(seed);
 		float phi = r1 * 2.0 * PI;
 
 		float cosTheta = sqrt((1.0 - r2) / (1.0 + (a*a - 1.0) *r2));

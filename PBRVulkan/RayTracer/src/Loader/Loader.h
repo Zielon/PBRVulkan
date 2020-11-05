@@ -24,7 +24,7 @@ namespace Loader
 	{
 	public:
 		virtual ~SceneBase() {};
-		virtual void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov) = 0;
+		virtual void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov, float aspect) = 0;
 		virtual void AddHDR(const std::string& path) = 0;
 		virtual int AddMesh(const std::string& path) = 0;
 		virtual int AddTexture(const std::string& path) = 0;

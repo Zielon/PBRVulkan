@@ -184,9 +184,9 @@ namespace Tracer
 		buffer->Copy(commandPool, *buffer_staging);
 	}
 
-	void Scene::AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov)
+	void Scene::AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov, float aspect)
 	{
-		camera.reset(new Camera(pos, lookAt, fov));
+		camera.reset(new Camera(pos, lookAt, fov, 1.f));
 	}
 
 	void Scene::AddHDR(const std::string& path)
