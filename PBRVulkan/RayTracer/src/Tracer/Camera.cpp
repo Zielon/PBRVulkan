@@ -98,7 +98,7 @@ namespace Tracer
 		if (isCameraLeft) Move(Action::LEFT);
 		if (isCameraRight) Move(Action::RIGHT);
 		if (isCameraUp) Move(Action::UP);
-		
+
 		return isCameraDown | isCameraLeft | isCameraRight | isCameraUp;
 	}
 
@@ -109,7 +109,8 @@ namespace Tracer
 
 	glm::mat4 Camera::GetProjection() const
 	{
-		auto projection = glm::perspective(glm::radians(fov), 1.f, 0.1f, 1000.0f);
+		const auto aspect = 1280.f / 720.f;
+		auto projection = glm::perspective(glm::radians(fov), aspect, 0.1f, 1000.0f);
 		projection[1][1] *= -1;
 
 		return projection;
