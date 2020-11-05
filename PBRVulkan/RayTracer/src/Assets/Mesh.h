@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <future>
 
 #include "../Geometry/Vertex.h"
 
@@ -12,6 +13,8 @@ namespace Assets
 	public:
 		Mesh(const std::string& path);
 
+		void Wait();
+		
 		[[nodiscard]] std::vector<Geometry::Vertex>& GetVertices()
 		{
 			return vertices;
@@ -35,7 +38,8 @@ namespace Assets
 	private:
 		std::vector<Geometry::Vertex> vertices;
 		std::vector<uint32_t> indices;
-
+		std::future<void> loader{};
+		
 		void Load(const std::string& path);
 	};
 

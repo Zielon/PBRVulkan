@@ -6,6 +6,7 @@
 #include <string>
 
 #define GLM_SWIZZLE 
+#include <future>
 #include <glm/glm.hpp>
 
 #include "Application.h"
@@ -166,8 +167,10 @@ namespace Tracer
 		std::unique_ptr<class Vulkan::Buffer> lightsBuffer;
 		std::unique_ptr<class Vulkan::Image> image;
 
+		std::future<void> hdrLoader{};
 		float hdrResolution{};
 
+		void Wait();
 		void Print() const;
 		void Load();
 		void LoadEmptyBuffers();

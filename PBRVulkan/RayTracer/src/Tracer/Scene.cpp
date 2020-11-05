@@ -29,15 +29,39 @@ namespace Tracer
 		const Vulkan::CommandPool& commandPool)
 		: config(config), device(device), commandPool(commandPool)
 	{
+		const auto start = std::chrono::high_resolution_clock::now();
+
 		Load();
 		LoadEmptyBuffers();
+		Wait();
 		CreateBuffers();
 		Print();
+
+		const auto stop = std::chrono::high_resolution_clock::now();
+		const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+
+		std::cout << "[SCENE] Loading time: " << duration.count() << " milliseconds" << std::endl;
+	}
+
+	void Scene::Wait()
+	{
+		for (const auto& mesh : meshes) mesh->Wait();
+
+		for (auto& texture : textures)
+		{
+			texture->Wait();
+			textureImages.emplace_back(new TextureImage(device, commandPool, *texture));
+		}
+
+		if (hdrLoader.valid())
+			hdrLoader.get();
+
+		std::cout << "[SCENE] All assets have been loaded!" << std::endl;
 	}
 
 	void Scene::Print() const
 	{
-		std::cout << "[INFO] Scene has been loaded!" << std::endl;
+		std::cout << "[SCENE] Scene has been loaded!" << std::endl;
 		std::cout << "	# meshes:    " << meshes.size() << std::endl;
 		std::cout << "	# instances: " << meshInstances.size() << std::endl;
 		std::cout << "	# textures:  " << textures.size() << std::endl;
@@ -49,9 +73,6 @@ namespace Tracer
 	{
 		Loader::RenderOptions options;
 		LoadSceneFromFile(config, *this, options);
-
-		// Release loaded pixles from Texture objects
-		textures.clear();
 	}
 
 	void Scene::LoadEmptyBuffers()
@@ -59,9 +80,7 @@ namespace Tracer
 		// Add a dummy texture for texture samplers in Vulkan
 		if (textures.empty())
 		{
-			textures.emplace_back();
-			const auto texture = std::make_unique<Assets::Texture>();
-			textureImages.emplace_back(new TextureImage(device, commandPool, *texture));
+			textures.emplace_back(std::make_unique<Assets::Texture>());
 		}
 
 		if (lights.empty())
@@ -94,6 +113,7 @@ namespace Tracer
 		std::vector<Geometry::Vertex> vertices;
 		std::vector<glm::uvec2> offsets;
 
+#pragma omp parallel for threads(4)
 		for (const auto& meshInstance : meshInstances)
 		{
 			auto& mesh = meshes[meshInstance.meshId];
@@ -104,7 +124,7 @@ namespace Tracer
 				vertex.position = modelMatrix * glm::vec4(vertex.position, 1.f);
 				vertex.materialId = meshInstance.materialId;
 			}
-			
+
 			const auto indexOffset = static_cast<uint32_t>(indices.size());
 			const auto vertexOffset = static_cast<uint32_t>(vertices.size());
 
@@ -118,7 +138,7 @@ namespace Tracer
 
 		auto usage = VkBufferUsageFlagBits(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 		auto size = sizeof(meshes[0]->GetVertices()[0]) * vertices.size();
-		std::cout << "[INFO] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
+		std::cout << "[SCENE] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
 		Fill(vertexBuffer, vertices.data(), size, usage);
 
 		// =============== INDEX BUFFER ===============
@@ -171,18 +191,21 @@ namespace Tracer
 
 	void Scene::AddHDR(const std::string& path)
 	{
-		const auto file = root + path;
-		auto* hdr = Assets::HDRLoader::Load(file.c_str());
-
-		if (hdr == nullptr)
-			std::cerr << "[ERROR] Unable to load HDR!" << std::endl;
-		else
+		hdrLoader = std::async(std::launch::async, [this, path]()
 		{
-			std::cout << "[TEXTURE] " + file + " has been added!" << std::endl;
-			LoadHDR(hdr);
-			hdrResolution = hdr->width * hdr->height;
-			delete hdr;
-		}
+			const auto file = root + path;
+			auto* hdr = Assets::HDRLoader::Load(file.c_str());
+
+			if (hdr == nullptr)
+				std::cerr << "[ERROR] Unable to load HDR!" << std::endl;
+			else
+			{
+				std::cout << "[HDR TEXTURE] " + file + " has been loaded!" << std::endl;
+				LoadHDR(hdr);
+				hdrResolution = hdr->width * hdr->height;
+				delete hdr;
+			}
+		});
 	}
 
 	int Scene::AddMeshInstance(Assets::MeshInstance meshInstance)
@@ -206,7 +229,7 @@ namespace Tracer
 			id = meshes.size();
 			meshes.emplace_back(new Assets::Mesh(file));
 			meshMap[path] = id;
-			std::cout << "[MESH] " + file + " has been added!" << std::endl;
+			std::cout << "[MESH] " + file + " has been requested!" << std::endl;
 		}
 
 		return id;
@@ -225,9 +248,8 @@ namespace Tracer
 			const auto file = root + path;
 			id = textures.size();
 			textures.emplace_back(new Assets::Texture(file));
-			textureImages.emplace_back(new TextureImage(device, commandPool, *textures[id]));
 			textureMap[path] = id;
-			std::cout << "[TEXTURE] " + file + " has been added!" << std::endl;
+			std::cout << "[TEXTURE] " + file + " has been requested!" << std::endl;
 		}
 
 		return id;

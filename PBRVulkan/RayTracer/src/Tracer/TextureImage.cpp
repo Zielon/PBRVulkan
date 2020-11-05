@@ -9,7 +9,7 @@ namespace Tracer
 {
 	TextureImage::TextureImage(const Vulkan::Device& device,
 	                           const Vulkan::CommandPool& commandPool,
-	                           const Assets::Texture& texture,
+	                           Assets::Texture& texture,
 	                           VkFormat format,
 	                           VkImageTiling tiling,
 	                           VkImageType imageType)

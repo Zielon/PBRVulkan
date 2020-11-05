@@ -21,14 +21,17 @@ namespace Assets
 
 	Texture::Texture(const std::string& path): path(path)
 	{
-		pixels = stbi_load(path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-		imageSize = texHeight * texWidth * 4;
-		isHDR = false;
-
-		if (!pixels)
+		loader = std::async(std::launch::async, [this, path]()
 		{
-			throw std::runtime_error("Failed to load texture image!");
-		}
+			pixels = stbi_load(path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+			imageSize = texHeight * texWidth * 4;
+			isHDR = false;
+
+			if (!pixels)
+			{
+				throw std::runtime_error("Failed to load texture image!");
+			}
+		});
 	}
 
 	Texture::Texture(Texture&& texture) noexcept
@@ -67,5 +70,11 @@ namespace Assets
 			stbi_image_free(pixels);
 			pixels = nullptr;
 		}
+	}
+
+	void Texture::Wait()
+	{
+		if (loader.valid())
+			loader.get();
 	}
 }

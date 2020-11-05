@@ -31,7 +31,7 @@ namespace Tracer
 
 		TextureImage(const Vulkan::Device& device,
 		             const Vulkan::CommandPool& commandPool,
-		             const Assets::Texture& texture,
+		             Assets::Texture& texture,
 		             VkFormat format = VK_FORMAT_R8G8B8A8_SRGB,
 		             VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL,
 		             VkImageType imageType = VK_IMAGE_TYPE_2D);

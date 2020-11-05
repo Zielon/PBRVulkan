@@ -8,7 +8,16 @@ namespace Assets
 {
 	Mesh::Mesh(const std::string& path)
 	{
-		Load(path);
+		loader = std::async(std::launch::async, [this, path]()
+		{
+			Load(path);
+		});
+	}
+
+	void Mesh::Wait()
+	{
+		if (loader.valid())
+			loader.get();
 	}
 
 	void Mesh::Load(const std::string& path)
@@ -25,6 +34,7 @@ namespace Assets
 
 		std::unordered_map<Geometry::Vertex, uint32_t> uniqueVertices{};
 
+#pragma omp parallel for threads(4)
 		for (const auto& shape : shapes)
 		{
 			for (const auto& index : shape.mesh.indices)

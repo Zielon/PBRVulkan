@@ -1,5 +1,6 @@
 #pragma once
 
+#include <future>
 #include <string>
 
 #include "../Vulkan/Vulkan.h"
@@ -21,6 +22,8 @@ namespace Assets
 		
 		~Texture();
 
+		void Wait();
+		
 		[[nodiscard]] int GetWidth() const
 		{
 			return texWidth;
@@ -47,6 +50,7 @@ namespace Assets
 		};
 
 	private:
+		std::future<void> loader{};
 		bool isHDR;
 		std::string path;
 		void* pixels;
