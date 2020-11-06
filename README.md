@@ -3,7 +3,7 @@
 
 This project is an engine where you can create/test new shaders in real-time physically based ray tracing system. The main idea is that users can test their own integrators in predefined environment with assets like: meshes, materials, lights and textures. The Vulkan pipeline is abstracted in a shaders form and the only concern for a user is providing either their own scene description or using already existing one.
 
-![bedroom](https://uca1a3fb2c37c126b3777a64fae3.dl.dropboxusercontent.com/cd/0/inline/BCovvta9RqZcPu56ltEKWf-PHbIGTeDvS6m_Rol339b8fi3IlxSiBE692kOx8i6V2VTlXYAV-5rvW0UK7RWrFEYi36TJTn_qY3UxveqY89ssQskxaaVs17vUGYvvJ4AC5-s/file#)
+[bedroom](https://uca1a3fb2c37c126b3777a64fae3.dl.dropboxusercontent.com/cd/0/inline/BCovvta9RqZcPu56ltEKWf-PHbIGTeDvS6m_Rol339b8fi3IlxSiBE692kOx8i6V2VTlXYAV-5rvW0UK7RWrFEYi36TJTn_qY3UxveqY89ssQskxaaVs17vUGYvvJ4AC5-s/file#)
 
 #### How to run:
 
