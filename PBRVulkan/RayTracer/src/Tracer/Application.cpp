@@ -150,6 +150,9 @@ namespace Tracer
 		uniform.AORayLength = settings.AORayLength;
 		uniform.denoiserStrength = settings.DenoiseStrength;
 
+		//Normal matrix (Phong shading, Normal Mapping)
+		uniform.normalMat = glm::transpose(glm::inverse(glm::mat3(uniform.view)));
+
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}
 

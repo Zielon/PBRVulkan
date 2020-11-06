@@ -53,6 +53,7 @@ struct Uniform
 {
 	mat4 view;
 	mat4 proj;
+	mat4 normalMat;
 	vec3 direction;
 	uint lights;
 	bool useHDR;

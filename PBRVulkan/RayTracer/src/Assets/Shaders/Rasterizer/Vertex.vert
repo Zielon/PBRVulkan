@@ -20,12 +20,10 @@ layout(location = 4) out vec3 outPosition;
 
 void main() 
 {
-	mat4 normalMat = transpose(inverse(ubo.view));//Note: precompute outside shader
-
 	gl_Position = ubo.proj * ubo.view * vec4(inPosition, 1.0);
 
 	//outNormal = inNormal;
-	outNormal = vec3(normalMat * vec4(inNormal, 0.0));
+	outNormal = vec3(ubo.normalMat * vec4(inNormal, 0.0));
 	outTexCoord = inTexCoord;
 	outDirection = ubo.direction;
 	vec4 pos = ubo.view * vec4(inPosition, 1.0);
