@@ -1,7 +1,9 @@
-# Ray tracer in Vulkan
+# Ray tracer sandbox in Vulkan
 ####  Vulkan real-time path tracer engine
 
 This project is an engine where you can create/test new shaders in real-time physically based ray tracing system. The main idea is that users can test their own integrators in predefined environment with assets like: meshes, materials, lights and textures. The Vulkan pipeline is abstracted in a shaders form and the only concern for a user is providing either their own scene description or using already existing one.
+
+[](https://www.dropbox.com/s/7b3gubindkfv1t0/bedroom.gif?raw=1)
 
 #### How to run:
 
