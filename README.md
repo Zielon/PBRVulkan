@@ -1,7 +1,13 @@
-# Ray tracer in Vulkan
+# Ray tracer sandbox in Vulkan
 ####  Vulkan real-time path tracer engine
 
 This project is an engine where you can create/test new shaders in real-time physically based ray tracing system. The main idea is that users can test their own integrators in predefined environment with assets like: meshes, materials, lights and textures. The Vulkan pipeline is abstracted in a shaders form and the only concern for a user is providing either their own scene description or using already existing one.
+
+Check out discord [#general](https://discord.gg/365bNPbFTM) for more info or help.
+
+<p align="center">
+  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/bedroom.gif?raw=true">
+</p>
 
 #### How to run:
 
@@ -38,3 +44,9 @@ PBRVulkan/Assets/Scenes/
 [2] [PBR Book](http://www.pbr-book.org/3ed-2018/contents.html) \
 [4] [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) \
 [5] [RayTracingInVulkan](https://github.com/GPSnoopy/RayTracingInVulkan)
+
+#### Demo
+
+<p align="center">
+  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/stormtroopers.gif?raw=true">
+</p>
