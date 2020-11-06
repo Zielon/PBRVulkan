@@ -41,7 +41,7 @@ void main()
 		vec3 lightDir = normalize(light.position - inPosition);
 		float diffI = max(dot(lightDir, normal), 0.0);
 
-		color +=  light.emission.xyz * material.albedo.xyz * vec3(diffI);
+		color +=  light.emission.xyz * material.albedo.xyz * diffI;
 	}
 
 	//color = clamp (color, 0.0, 1.0);
