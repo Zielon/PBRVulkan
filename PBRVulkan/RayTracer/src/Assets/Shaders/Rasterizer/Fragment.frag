@@ -25,12 +25,16 @@ void main()
 {
 	Material material = materials[inMaterialId];
 
+	vec3 albedo = material.albedo.xyz;
+	float shininess = 80.0f;
+	
+	//albedo = vec3(0.0, 0.0, 0.8);
 	vec3 normal = normalize(inNormal);
 	int textureId = material.albedoTexID;
 	vec3 color = vec3(0);
 
 	// ambient term
-	color += material.albedo.xyz * vec3(0.1);
+	color += vec3(0.1);
 
 	for (uint i = 0; i < ubo.lights; ++i)
 	{
@@ -41,15 +45,28 @@ void main()
 		vec3 lightDir = normalize(light.position - inPosition);
 		float diffI = max(dot(lightDir, normal), 0.0);
 
-		color +=  light.emission.xyz * material.albedo.xyz * diffI;
+		// specular term
+		float specI = 0;
+
+		if (diffI > 0.0){
+
+			// Phong
+			vec3 halfwayDir = normalize(lightDir + inDirection);  
+			specI = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+
+			// Blinn-Phong
+			//vec3 R = normalize(reflect(-lightDir, normal)); 
+			//specI = pow( max(dot(R, inDirection), 0.0), shininess);
+		}
+
+		//color +=  light.emission.xyz * albedo * diffI + vec3(0.9) * specI;
+		color +=  albedo * diffI + vec3(0.8) * specI;
 	}
 
 	//color = clamp (color, 0.0, 1.0);
 
-	/*if (textureId >= 0)
+	if (textureId >= 0)
 		color = texture(textureSamplers[textureId], inTexCoord).rgb;
-	else
-		color = material.albedo.xyz;*/
 
 	outColor = vec4(gammaCorrection(toneMap(color, 1.5)), 1.0);
 }
