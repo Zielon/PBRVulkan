@@ -70,7 +70,8 @@ namespace Tracer
 
 	void Scene::Load()
 	{
-		LoadSceneFromFile(config, *this, options);
+		if (!LoadSceneFromFile(config, *this, options))
+			throw std::runtime_error("[ERROR] File does not exist!");
 	}
 
 	void Scene::LoadEmptyBuffers()
@@ -110,6 +111,7 @@ namespace Tracer
 		std::vector<uint32_t> indices;
 		std::vector<Geometry::Vertex> vertices;
 		std::vector<glm::uvec2> offsets;
+		std::mutex mutex;
 
 #pragma omp parallel for
 		for (const auto& meshInstance : meshInstances)
@@ -126,10 +128,14 @@ namespace Tracer
 			const auto indexOffset = static_cast<uint32_t>(indices.size());
 			const auto vertexOffset = static_cast<uint32_t>(vertices.size());
 
-			offsets.emplace_back(indexOffset, vertexOffset);
+			{
+				const std::lock_guard<std::mutex> lock(mutex);
 
-			vertices.insert(vertices.end(), mesh->GetVertices().begin(), mesh->GetVertices().end());
-			indices.insert(indices.end(), mesh->GetIndecies().begin(), mesh->GetIndecies().end());
+				offsets.emplace_back(indexOffset, vertexOffset);
+
+				vertices.insert(vertices.end(), mesh->GetVertices().begin(), mesh->GetVertices().end());
+				indices.insert(indices.end(), mesh->GetIndecies().begin(), mesh->GetIndecies().end());
+			}
 		}
 
 		// =============== VERTEX BUFFER ===============

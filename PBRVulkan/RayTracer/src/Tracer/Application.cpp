@@ -149,6 +149,7 @@ namespace Tracer
 		uniform.frame = frame;
 		uniform.AORayLength = settings.AORayLength;
 		uniform.denoiserStrength = settings.DenoiseStrength;
+		uniform.integratorType = settings.IntegratorType;
 
 		//Normal matrix (Phong shading, Normal Mapping)
 		uniform.normalMat = glm::transpose(glm::inverse(glm::mat3(uniform.view)));

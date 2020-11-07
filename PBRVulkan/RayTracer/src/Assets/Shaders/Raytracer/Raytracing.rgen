@@ -83,16 +83,16 @@ void main()
 
 			pathRadiance = payload.radiance;
 			beta = payload.beta;
-			specularBounce = payload.specularBounce;
+			specularBounce = payload.specularBounce;		
+			ray = payload.ray;
+			bsdf = payload.bsdf;
 			
-			// First hit normal
+			// First hit payload
 			if (j == 0)
 			{
 				imageStore(NormalsImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.ffnormal, 0.0));
+				//imageStore(DepthImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.worldPos, 0.0));
 			}
-
-			ray = payload.ray;
-			bsdf = payload.bsdf;
 
 			if (payload.stop)
 			{
