@@ -36,4 +36,7 @@
 	}
 
 	payload.radiance = vec3(ao);
+
+	// Stop path tracing loop from rgen shader
+	payload.stop = true;
  }
