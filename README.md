@@ -32,7 +32,7 @@ C++17 is needed to compile the project.
 
 The scene description and assets are taken from [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) project [4]. The whole dataset can be downloaded from [link](https://drive.google.com/file/d/1UFMMoVb5uB7WIvCeHOfQ2dCQSxNMXluB/view).
 
-Download the assets folder and place it in `PBRVulkan/Assets/Scenes/`. The folder structre has to be as follows:
+Download the assets folder and place it in `PBRVulkan/Assets/Scenes/`. The folder structure has to be as follows:
 
 ```
 PBRVulkan/Assets/Scenes/
