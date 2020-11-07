@@ -26,5 +26,5 @@ void main()
 
 	outNormal = vec3(ubo.normalMat * vec4(inNormal, 0.0));
 	vec4 pos = ubo.view * vec4(inPosition, 1.0);
-	outPosition = pos.xyz / pos.w;
+	outPosition = pos.xyz;
 }

@@ -24,15 +24,20 @@ void main()
 {
 	Material material = materials[inMaterialId];
 	vec3 albedo = material.albedo.xyz;
-	float shininess = 80.0f;
 	int textureId = material.albedoTexID;
+	vec3 amb_color = vec3(0.09, 0.09, 0.09);
+	vec3 spec_color = vec3(1.0, 1.0, 1.0);
+	float shininess = 80.0f;
 	
+	if (textureId >= 0)
+		albedo = texture(textureSamplers[textureId], inTexCoord).rgb;
+
 	vec3 normal = normalize(inNormal);
 	vec3 viewDir = normalize(-inPosition);//Camera position in eye coordinates is (0,0,0)
 	vec3 color = vec3(0);
 
-	// ambient term
-	color += vec3(0.1);
+	//Phong shading based on fixed parameters
+	color += amb_color;// ambient term
 
 	for (uint i = 0; i < ubo.lights; ++i)
 	{
@@ -57,13 +62,10 @@ void main()
 			//specI = pow( max(dot(R, ViewDir), 0.0), shininess);
 		}
 
-		color +=  albedo * diffI + vec3(0.9) * specI;
+		color +=  albedo * diffI + spec_color * specI;
 	}
 
 	color = clamp (color, 0.0, 1.0);
-
-	if (textureId >= 0)
-		color = texture(textureSamplers[textureId], inTexCoord).rgb;
 
 	outColor = vec4(gammaCorrection(toneMap(color, 1.5)), 1.0);
 }
