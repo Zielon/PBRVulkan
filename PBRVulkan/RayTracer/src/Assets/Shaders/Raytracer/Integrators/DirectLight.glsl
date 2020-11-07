@@ -24,6 +24,7 @@ vec3 directLight(in Material material)
 
 		isShadowed = true;
 
+		// Shadow ray (payload 1 is Shadow.miss)
 		traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, tMax, 1);
 
 		if (!isShadowed)
@@ -59,7 +60,7 @@ vec3 directLight(in Material material)
 		if (dot(payload.ffnormal, lightDir) <= 0.0 || dot(lightDir, lightNormal) >= 0.0)
 			return L;
 
-		// Shadow ray
+		// Shadow ray (payload 1 is Shadow.miss)
 		traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, lightDist, 1);
 		
 		if (!isShadowed)

@@ -17,6 +17,11 @@ uint seed = 0;
 int DISNEY = 0;
 int GLASS = 1;
 
+// Integrators types
+int PATH_TRACER_DEFAULT = 0;
+int PATH_TRACER_MSM = 1;
+int AMBIENT_OCCLUSION = 2;
+
 struct Material 
 { 
 	vec3 albedo;
@@ -64,6 +69,7 @@ struct Uniform
 	float hdrResolution;
 	float AORayLength;
 	float denoiseStrength;
+	int integratorType;
 };
 
 struct LightSample

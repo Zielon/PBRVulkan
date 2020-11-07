@@ -30,6 +30,11 @@ void main()
 {
 	payload.stop = true;
 	
+	if (ubo.integratorType == AMBIENT_OCCLUSION)
+	{
+		return;
+	}
+
 	LightSample lightSample;
 
 	if (interesetsEmitter(lightSample, INFINITY))

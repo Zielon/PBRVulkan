@@ -149,6 +149,7 @@ namespace Tracer
 		uniform.frame = frame;
 		uniform.AORayLength = settings.AORayLength;
 		uniform.denoiserStrength = settings.DenoiseStrength;
+		uniform.integratorType = settings.IntegratorType;
 
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}

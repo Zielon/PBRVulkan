@@ -19,5 +19,6 @@ namespace Uniforms
 		float hdrResolution{};
 		float AORayLength{};
 		float denoiserStrength{};
+		int32_t integratorType{};
 	};
 }
