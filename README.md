@@ -11,7 +11,7 @@ Check out discord [#general](https://discord.gg/365bNPbFTM) for more info or hel
 
 #### Sandbox
 
-As an example of creating your own shader please take a look at [Ambient Occlusion](https://github.com/Zielon/PBRVulkan/blob/master/PBRVulkan/RayTracer/src/Assets/Shaders/Raytracer/Integrators/AO.glsl) or [Path Tracer](https://github.com/Zielon/PBRVulkan/blob/master/PBRVulkan/RayTracer/src/Assets/Shaders/Raytracer/Integrators/PathTracer.glsl). Those files are automatically included in the `hit shader`. At this level you have many resoruces available to create your own implementation. For now, to make them available for the engine, you would need to add them in the same way I added aforementioned files.
+As an example of creating your own shader please take a look at [Ambient Occlusion](https://github.com/Zielon/PBRVulkan/blob/master/PBRVulkan/RayTracer/src/Assets/Shaders/Raytracer/Integrators/AO.glsl) or [Path Tracer](https://github.com/Zielon/PBRVulkan/blob/master/PBRVulkan/RayTracer/src/Assets/Shaders/Raytracer/Integrators/PathTracer.glsl). Those files are automatically included in the `hit shader`. At this level you have many resources available to create your own implementation. For now, to make them available for the engine, you would need to add them in the same way I added aforementioned files.
 
 #### How to run
 
@@ -32,7 +32,7 @@ C++17 is needed to compile the project.
 
 The scene description and assets are taken from [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) project [4]. The whole dataset can be downloaded from [link](https://drive.google.com/file/d/1UFMMoVb5uB7WIvCeHOfQ2dCQSxNMXluB/view).
 
-Download the assets folder and place it in `PBRVulkan/Assets/Scenes/`. The folder strucutre has to be as follows:
+Download the assets folder and place it in `PBRVulkan/Assets/Scenes/`. The folder structre has to be as follows:
 
 ```
 PBRVulkan/Assets/Scenes/
