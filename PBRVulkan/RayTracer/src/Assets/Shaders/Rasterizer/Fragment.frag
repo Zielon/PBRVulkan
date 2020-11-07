@@ -15,22 +15,20 @@ layout(binding = 3) readonly buffer LightArray { Light[] Lights; };
 
 layout(location = 0) in vec2 inTexCoord;
 layout(location = 1) in vec3 inNormal;
-layout(location = 2) in vec3 inDirection;
+layout(location = 2) in vec3 inPosition;
 layout(location = 3) in flat int inMaterialId;
-layout(location = 4) in vec3 inPosition;
 
 layout(location = 0) out vec4 outColor;
 
 void main()
 {
 	Material material = materials[inMaterialId];
-
 	vec3 albedo = material.albedo.xyz;
 	float shininess = 80.0f;
-	
-	//albedo = vec3(0.0, 0.0, 0.8);
-	vec3 normal = normalize(inNormal);
 	int textureId = material.albedoTexID;
+	
+	vec3 normal = normalize(inNormal);
+	vec3 viewDir = normalize(-inPosition);//Camera position in eye coordinates is (0,0,0)
 	vec3 color = vec3(0);
 
 	// ambient term
@@ -39,10 +37,10 @@ void main()
 	for (uint i = 0; i < ubo.lights; ++i)
 	{
 		Light light = Lights[i];
-		// TODO
 
 		// diffuse term
-		vec3 lightDir = normalize(light.position - inPosition);
+		vec3 lightPos = vec3 (ubo.view * vec4(light.position, 1.0));//Better to precomputed the light positions in eye space
+		vec3 lightDir = normalize(lightPos - inPosition);
 		float diffI = max(dot(lightDir, normal), 0.0);
 
 		// specular term
@@ -50,20 +48,19 @@ void main()
 
 		if (diffI > 0.0){
 
-			// Phong
-			vec3 halfwayDir = normalize(lightDir + inDirection);  
+			// Phong 
+			vec3 halfwayDir = normalize(lightDir + viewDir);  
 			specI = pow(max(dot(normal, halfwayDir), 0.0), shininess);
 
 			// Blinn-Phong
 			//vec3 R = normalize(reflect(-lightDir, normal)); 
-			//specI = pow( max(dot(R, inDirection), 0.0), shininess);
+			//specI = pow( max(dot(R, ViewDir), 0.0), shininess);
 		}
 
-		//color +=  light.emission.xyz * albedo * diffI + vec3(0.9) * specI;
-		color +=  albedo * diffI + vec3(0.8) * specI;
+		color +=  albedo * diffI + vec3(0.9) * specI;
 	}
 
-	//color = clamp (color, 0.0, 1.0);
+	color = clamp (color, 0.0, 1.0);
 
 	if (textureId >= 0)
 		color = texture(textureSamplers[textureId], inTexCoord).rgb;
