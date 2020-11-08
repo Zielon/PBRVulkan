@@ -118,10 +118,12 @@ namespace Tracer
 		{
 			auto& mesh = meshes[meshInstance.meshId];
 			glm::mat4 modelMatrix = meshInstance.modelTransform;
+			glm::mat4 modelTransInv = transpose(inverse(modelMatrix));
 
 			for (auto& vertex : mesh->GetVertices())
 			{
 				vertex.position = modelMatrix * glm::vec4(vertex.position, 1.f);
+				vertex.normal = modelTransInv * glm::vec4(vertex.normal, 1.f);
 				vertex.materialId = meshInstance.materialId;
 			}
 

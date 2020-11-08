@@ -120,6 +120,11 @@ namespace Tracer
 		return front;
 	}
 
+	glm::vec3 Camera::GetPosition() const
+	{
+		return position;
+	}
+
 	void Camera::TimeDeltaUpdate()
 	{
 		const auto currentFrame = static_cast<float>(glfwGetTime());
