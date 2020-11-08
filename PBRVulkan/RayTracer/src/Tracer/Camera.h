@@ -33,6 +33,8 @@ namespace Tracer
 		[[nodiscard]] glm::mat4 GetProjection() const;
 
 		[[nodiscard]] glm::vec3 GetDirection() const;
+		
+		[[nodiscard]] glm::vec3 GetPosition() const;
 
 	private:
 		void Update();

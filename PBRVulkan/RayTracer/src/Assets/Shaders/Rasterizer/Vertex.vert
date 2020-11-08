@@ -17,14 +17,12 @@ layout(location = 1) out vec3 outNormal;
 layout(location = 2) out vec3 outPosition;
 layout(location = 3) out flat int outMaterialId;
 
-void main() 
+void main()
 {
-	gl_Position = ubo.proj * ubo.view * vec4(inPosition, 1.0);
+	gl_Position = ubo.proj * ubo.view * vec4(inPosition, 1.f);
 
+	outPosition = inPosition;
 	outTexCoord = inTexCoord;
 	outMaterialId = inMaterialId;
-
-	outNormal = vec3(ubo.normalMat * vec4(inNormal, 0.0));
-	vec4 pos = ubo.view * vec4(inPosition, 1.0);
-	outPosition = pos.xyz;
+	outNormal = inNormal;
 }

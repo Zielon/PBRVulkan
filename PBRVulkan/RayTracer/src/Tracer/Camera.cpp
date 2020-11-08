@@ -115,6 +115,11 @@ namespace Tracer
 		return projection;
 	}
 
+	glm::vec3 Camera::GetPosition() const
+	{
+		return position;
+	}
+	
 	glm::vec3 Camera::GetDirection() const
 	{
 		return front;

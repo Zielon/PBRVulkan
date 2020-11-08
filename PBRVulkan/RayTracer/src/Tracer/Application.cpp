@@ -138,7 +138,7 @@ namespace Tracer
 
 		uniform.view = scene->GetCamera().GetView();
 		uniform.projection = scene->GetCamera().GetProjection();
-		uniform.direction = scene->GetCamera().GetDirection();
+		uniform.cameraPos = scene->GetCamera().GetPosition();
 		uniform.lights = scene->GetLightsSize();
 		uniform.hasHDR = scene->UseHDR();
 		uniform.ssp = settings.SSP;
@@ -150,9 +150,6 @@ namespace Tracer
 		uniform.AORayLength = settings.AORayLength;
 		uniform.denoiserStrength = settings.DenoiseStrength;
 		uniform.integratorType = settings.IntegratorType;
-
-		//Normal matrix (Phong shading, Normal Mapping)
-		uniform.normalMat = glm::transpose(glm::inverse(glm::mat3(uniform.view)));
 
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}

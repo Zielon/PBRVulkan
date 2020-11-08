@@ -23,49 +23,37 @@ layout(location = 0) out vec4 outColor;
 void main()
 {
 	Material material = materials[inMaterialId];
-	vec3 albedo = material.albedo.xyz;
-	int textureId = material.albedoTexID;
-	vec3 amb_color = vec3(0.09, 0.09, 0.09);
-	vec3 spec_color = vec3(1.0, 1.0, 1.0);
-	float shininess = 80.0f;
-	
-	if (textureId >= 0)
-		albedo = texture(textureSamplers[textureId], inTexCoord).rgb;
 
 	vec3 normal = normalize(inNormal);
-	vec3 viewDir = normalize(-inPosition);//Camera position in eye coordinates is (0,0,0)
-	vec3 color = vec3(0);
+	vec3 lightDir = ubo.cameraPos;
+	vec3 viewDir = normalize(lightDir - inPosition);
 
-	//Phong shading based on fixed parameters
-	color += amb_color;// ambient term
+	int textureId = material.albedoTexID;
+	vec3 color = vec3(0);
+	vec3 albedo = vec3(0);
+
+	if (textureId >= 0)
+		albedo = texture(textureSamplers[textureId], inTexCoord).rgb;
+	else
+		albedo = material.albedo.xyz;
 
 	for (uint i = 0; i < ubo.lights; ++i)
 	{
 		Light light = Lights[i];
+		
+		vec3 lighPos = light.position;
+		vec3 lightDir = normalize(lighPos - inPosition);
 
-		// diffuse term
-		vec3 lightPos = vec3 (ubo.view * vec4(light.position, 1.0));//Better to precomputed the light positions in eye space
-		vec3 lightDir = normalize(lightPos - inPosition);
-		float diffI = max(dot(lightDir, normal), 0.0);
+		float costTheta = max(dot(normal, lightDir), 0.0);
 
-		// specular term
-		float specI = 0;
+		float distance = length(light.position - inPosition);
+		float attenuation = 1.0 / (distance * distance);
+		
+		vec3 ambient = vec3(0.1) * albedo;
+		vec3 diffuse = vec3(0.9) * costTheta * albedo;
 
-		if (diffI > 0.0){
-
-			// Phong 
-			vec3 halfwayDir = normalize(lightDir + viewDir);  
-			specI = pow(max(dot(normal, halfwayDir), 0.0), shininess);
-
-			// Blinn-Phong
-			//vec3 R = normalize(reflect(-lightDir, normal)); 
-			//specI = pow( max(dot(R, ViewDir), 0.0), shininess);
-		}
-
-		color +=  albedo * diffI + spec_color * specI;
+		color += (ambient + diffuse) * attenuation;
 	}
-
-	color = clamp (color, 0.0, 1.0);
 
 	outColor = vec4(gammaCorrection(toneMap(color, 1.5)), 1.0);
 }

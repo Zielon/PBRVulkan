@@ -8,8 +8,7 @@ namespace Uniforms
 	{
 		glm::mat4 view = glm::mat4(1.f);
 		glm::mat4 projection = glm::mat4(1.f);
-		glm::mat4 normalMat = glm::mat4(1.f);
-		glm::vec3 direction{};
+		glm::vec3 cameraPos{};
 		uint32_t lights{};
 		uint32_t hasHDR{};
 		uint32_t ssp{};
