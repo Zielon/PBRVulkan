@@ -25,18 +25,15 @@ void main()
 	Material material = materials[inMaterialId];
 	int textureId = material.albedoTexID;
 	vec3 ka = vec3(0.1);
-	vec3 kd = vec3(0.9);
+	vec3 kd = vec3(0.8);
 	vec3 ks = vec3(0.9);
 	float shininess = 32.0f;
 
 	vec3 normal = normalize(inNormal);
-
 	vec3 viewDir = normalize(ubo.cameraPos - inPosition);
 
 	vec3 color = vec3(0);
 	vec3 albedo = vec3(0);
-
-	// Phong Shading on World Space (https://learnopengl.com/Lighting/Multiple-lights , http://www.cs.toronto.edu/~jacobson/phong-demo/) 
 
 	if (textureId >= 0)
 		albedo = texture(textureSamplers[textureId], inTexCoord).rgb;
@@ -47,22 +44,19 @@ void main()
 	{
 		Light light = Lights[i];
 		
-		vec3 lighPos = light.position + 0.5 * light.v + 0.5 * light.u;// The center of the area light source
+		// The center of an area light source
+		vec3 lighPos = light.position + 0.5 * light.v + 0.5 * light.u;
 		vec3 lightDir = normalize(lighPos - inPosition);
 
-		//diffuse shading
-		float diff = max(dot(normal, lightDir), 0.0);//cosine theta
-
-		// attenuation
-		float distance = length(light.position - inPosition);
+		float cosTheta = max(dot(normal, lightDir), 0.0);
+		float distance = length(lighPos - inPosition);
 		float attenuation = 1.0 / (distance * distance);
 
-		// specular shading
 		vec3 reflectDir = reflect(-lightDir, normal);
 		float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
 
 		vec3 ambient = ka * albedo;
-		vec3 diffuse = kd * diff * albedo;
+		vec3 diffuse = kd * cosTheta * albedo;
 		vec3 specular = ks * spec * albedo;
 
 		color += (ambient + diffuse + specular) * attenuation;

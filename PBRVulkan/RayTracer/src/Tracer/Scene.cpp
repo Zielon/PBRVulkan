@@ -118,20 +118,20 @@ namespace Tracer
 		{
 			auto& mesh = meshes[meshInstance.meshId];
 			glm::mat4 modelMatrix = meshInstance.modelTransform;
-			glm::mat4 modelTransInv = transpose(inverse(modelMatrix));
+			glm::mat4 modelTransInvMatrix = transpose(inverse(modelMatrix));
 
 			for (auto& vertex : mesh->GetVertices())
 			{
 				vertex.position = modelMatrix * glm::vec4(vertex.position, 1.f);
-				vertex.normal = modelTransInv * glm::vec4(vertex.normal, 1.f);
+				vertex.normal = modelTransInvMatrix * glm::vec4(vertex.normal, 1.f);
 				vertex.materialId = meshInstance.materialId;
 			}
 
-			const auto indexOffset = static_cast<uint32_t>(indices.size());
-			const auto vertexOffset = static_cast<uint32_t>(vertices.size());
-
 			{
 				const std::lock_guard<std::mutex> lock(mutex);
+
+				const auto indexOffset = static_cast<uint32_t>(indices.size());
+				const auto vertexOffset = static_cast<uint32_t>(vertices.size());
 
 				offsets.emplace_back(indexOffset, vertexOffset);
 
