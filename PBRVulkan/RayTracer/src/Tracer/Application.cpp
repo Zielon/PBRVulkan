@@ -138,7 +138,7 @@ namespace Tracer
 
 		uniform.view = scene->GetCamera().GetView();
 		uniform.projection = scene->GetCamera().GetProjection();
-		uniform.direction = scene->GetCamera().GetDirection();
+		uniform.cameraPos = scene->GetCamera().GetPosition();
 		uniform.lights = scene->GetLightsSize();
 		uniform.hasHDR = scene->UseHDR();
 		uniform.ssp = settings.SSP;

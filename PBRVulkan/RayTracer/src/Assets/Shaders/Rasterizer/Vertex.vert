@@ -14,15 +14,15 @@ layout(location = 3) in int inMaterialId;
 
 layout(location = 0) out vec2 outTexCoord;
 layout(location = 1) out vec3 outNormal;
-layout(location = 2) out vec3 outDirection;
+layout(location = 2) out vec3 outPosition;
 layout(location = 3) out flat int outMaterialId;
 
 void main() 
 {
-	gl_Position = ubo.proj * ubo.view * vec4(inPosition, 1.0);
+	gl_Position = ubo.proj * ubo.view * vec4(inPosition, 1.f);
 
+	outPosition = inPosition;
 	outNormal = inNormal;
 	outTexCoord = inTexCoord;
-	outDirection = ubo.direction;
 	outMaterialId = inMaterialId;
 }
