@@ -46,18 +46,16 @@ vec3 directLight(in Material material)
 		int index = int(rnd(seed) * float(ubo.lights));
 		light = Lights[index];
 
-		vec3 sampled      = sampleLight(light);
-		vec3 lightNormal  = normalize(cross(light.u, light.v));
-		vec3 emission     = light.emission * float(ubo.lights);
-		vec3 lightDir     = sampled - surfacePos;
-		float lightDist   = length(lightDir);
-		float lightDistSq = lightDist * lightDist;
+		LightSample sampled = sampleLight(light);	
+		vec3 lightDir       = sampled.position - surfacePos;
+		float lightDist     = length(lightDir);
+		float lightDistSq   = lightDist * lightDist;
 		lightDir = normalize(lightDir);
 
 		isShadowed = true;
 
 		// The light has to be visible from the surface. Less than 90° between vectors.
-		if (dot(payload.ffnormal, lightDir) <= 0.0 || dot(lightDir, lightNormal) >= 0.0)
+		if (dot(payload.ffnormal, lightDir) <= 0.0 || dot(lightDir, sampled.normal) >= 0.0)
 			return L;
 
 		// Shadow ray (payload 1 is Shadow.miss)
@@ -66,11 +64,11 @@ vec3 directLight(in Material material)
 		if (!isShadowed)
 		{
 			float bsdfPdf = UE4Pdf(material, lightDir);
-			float lightPdf = lightDistSq / (light.area.x * abs(dot(lightNormal, lightDir)));
+			float lightPdf = lightDistSq / (light.area * abs(dot(sampled.normal, lightDir)));
 			float cosTheta = abs(dot(payload.ffnormal, lightDir));
 			vec3 F = UE4Eval(material, lightDir);
 
-			L += (powerHeuristic(lightPdf, bsdfPdf) * F * cosTheta * emission) / lightPdf;
+			L += (powerHeuristic(lightPdf, bsdfPdf) * F * cosTheta * sampled.emission) / lightPdf;
 		}
 	}
 

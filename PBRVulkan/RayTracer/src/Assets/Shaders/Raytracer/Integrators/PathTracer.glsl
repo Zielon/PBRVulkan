@@ -29,9 +29,7 @@
 		return;
 	}
 
-	int materialType = int(material.albedo.w);
-
-	if (materialType == DISNEY)
+	if (int(material.type) == DISNEY)
 	{
 		payload.specularBounce = false;
 		payload.radiance += directLight(material) * payload.beta;
@@ -45,7 +43,7 @@
 		payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
 	}
 
-	if (materialType == GLASS)
+	if (int(material.type) == GLASS)
 	{
 		payload.specularBounce = true;
 

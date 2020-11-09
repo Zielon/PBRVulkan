@@ -18,6 +18,10 @@ uint seed = 0;
 int DISNEY = 0;
 int GLASS = 1;
 
+// Lights types
+int AREA_LIGHT = 0;
+int SPHERE_LIGHT = 1;
+
 // Integrators types
 int PATH_TRACER_DEFAULT = 0;
 int PATH_TRACER_MSM = 1;
@@ -25,7 +29,8 @@ int AMBIENT_OCCLUSION = 2;
 
 struct Material 
 { 
-	vec4 albedo;
+	vec3 albedo;
+	float type;
 	vec4 emission;
 	// Parameters
 	float metallic;
@@ -51,7 +56,9 @@ struct Light
 	vec3 emission;
 	vec3 u;
 	vec3 v;
-	vec3 area;
+	float area;
+	float type;
+	float radius;
 };
 
 struct Uniform
@@ -75,6 +82,7 @@ struct Uniform
 struct LightSample
 { 
 	vec3 normal; 
+	vec3 position;
 	vec3 emission; 
 	float pdf;
 };

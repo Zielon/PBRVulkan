@@ -1,5 +1,6 @@
 #pragma once
 
+#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #include <glm/glm.hpp>
 
 namespace Assets
@@ -10,8 +11,7 @@ namespace Assets
 		GLASS
 	};
 
-	// Material data structure layout is 32 * 4 bytes
-	struct alignas(16) Material final
+	struct Material final
 	{
 		Material()
 		{
@@ -27,22 +27,15 @@ namespace Assets
 			heightmapTexID = -1;
 		};
 
-		// 32 bytes
 		glm::vec4 albedo{};
-
-		// 32 bytes
 		glm::vec4 emission{};
-
-		// 32 bytes
-		float metallic;
-		float roughness;
-		float ior;
-		float transmittance;
-
-		// 32 bytes
-		int32_t albedoTexID;
-		int32_t metallicRoughnessTexID;
-		int32_t normalmapTexID;
-		int32_t heightmapTexID;
+		glm::float32_t metallic;
+		glm::float32_t roughness;
+		glm::float32_t ior;
+		glm::float32_t transmittance;
+		glm::int32_t albedoTexID;
+		glm::int32_t metallicRoughnessTexID;
+		glm::int32_t normalmapTexID;
+		glm::int32_t heightmapTexID;
 	};
 }

@@ -44,12 +44,18 @@ void main()
 	{
 		Light light = Lights[i];
 		
-		// The center of an area light source
-		vec3 lighPos = light.position + 0.5 * light.v + 0.5 * light.u;
-		vec3 lightDir = normalize(lighPos - inPosition);
+		vec3 lightPos;
+
+		if (int(light.type) == AREA_LIGHT)
+			// The center of an area light source
+			lightPos = light.position + 0.5 * light.v + 0.5 * light.u;
+		else 
+			lightPos = light.position;
+
+		vec3 lightDir = normalize(lightPos - inPosition);
 
 		float cosTheta = max(dot(normal, lightDir), 0.0);
-		float distance = length(lighPos - inPosition);
+		float distance = length(lightPos - inPosition);
 		float attenuation = 1.0 / (distance * distance);
 
 		vec3 reflectDir = reflect(-lightDir, normal);
