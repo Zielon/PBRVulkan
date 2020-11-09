@@ -83,7 +83,7 @@ namespace Tracer
 	 */
 	void Compiler::Compile(std::vector<Parser::Include> includes, std::vector<Parser::Define> defines) const
 	{
-		std::cout << "[COMPILER] Shaders compilation has begin." << std::endl;
+		std::cout << "[COMPILER] Shaders compilation has begun." << std::endl;
 
 		for (const auto& pair : Parser::SHADERS)
 		{

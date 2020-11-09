@@ -41,7 +41,7 @@ hitAttributeNV vec2 hit;
 #include "../Common/Sampling.glsl"
 #include "../BSDFs/UE4BSDF.glsl"
 
-#include "Integrators/DirectLight.glsl"
+#include "../Common/DirectLight.glsl"
 
 void main()
 {
@@ -62,34 +62,33 @@ void main()
 	// face forward normal
 	vec3 ffnormal = dot(normal, gl_WorldRayDirectionNV) <= 0.0 ? normal : normal * -1.0;
 
-	// Update material using textures
+	// Update the material properties using textures
+	
+	// Albedo
+	if (material.albedoTexID >= 0)
 	{
-		// Albedo
-		if (material.albedoTexID >= 0)
-		{
-			material.albedo.xyz *= texture(TextureSamplers[material.albedoTexID], texCoord).xyz;
-		}
-
-		// Metallic and Roughness
-		if (material.metallicRoughnessTexID >= 0)
-		{
-			vec2 metallicRoughness = texture(TextureSamplers[material.metallicRoughnessTexID], texCoord).zy;
-			material.metallic = metallicRoughness.x;
-			material.roughness = metallicRoughness.y;
-		}
-
-		// Normal map
-		if (material.normalmapTexID >= 0)
-		{
-			// Orthonormal Basis
-			mat3 frame = localFrame(ffnormal);
-			vec3 nrm = texture(TextureSamplers[material.normalmapTexID], texCoord).xyz;
-			nrm = frame * normalize(nrm * 2.0 - 1.0);
-			normal = normalize(nrm);
-			ffnormal = dot(normal, gl_WorldRayDirectionNV) <= 0.0 ? normal : normal * -1.0;
-		}
+		material.albedo.xyz *= texture(TextureSamplers[material.albedoTexID], texCoord).xyz;
 	}
 
+	// Metallic and Roughness
+	if (material.metallicRoughnessTexID >= 0)
+	{
+		vec2 metallicRoughness = texture(TextureSamplers[material.metallicRoughnessTexID], texCoord).zy;
+		material.metallic = metallicRoughness.x;
+		material.roughness = metallicRoughness.y;
+	}
+
+	// Normal map
+	if (material.normalmapTexID >= 0)
+	{
+		// Orthonormal Basis
+		mat3 frame = localFrame(ffnormal);
+		vec3 nrm = texture(TextureSamplers[material.normalmapTexID], texCoord).xyz;
+		nrm = frame * normalize(nrm * 2.0 - 1.0);
+		normal = normalize(nrm);
+		ffnormal = dot(normal, gl_WorldRayDirectionNV) <= 0.0 ? normal : normal * -1.0;
+	}
+	
 	payload.worldPos = worldPos;
 	payload.normal = normal;
 	payload.ffnormal = ffnormal;

@@ -93,9 +93,6 @@
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Raytracer\Integrators\DirectLight.glsl">
-      <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
-    </None>
     <None Include="src\Assets\Shaders\Raytracer\Shadow.rmiss">
       <Filter>Assets\Shaders\Raytracer</Filter>
     </None>
@@ -116,6 +113,9 @@
     </None>
     <None Include="src\Assets\Shaders\BSDFs\UE4BSDF.glsl">
       <Filter>Assets\Shaders\BSDFs</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\DirectLight.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

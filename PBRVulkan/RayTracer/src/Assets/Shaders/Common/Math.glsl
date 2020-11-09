@@ -4,11 +4,6 @@
 
 /*
  * Linear interpolate between 3 vectors
- * @param vector a
- * @param vector b
- * @param vector c
- * @param barycentric coordinates (interpolation weights)
- * @returns 3D interpolated values
  */
 vec3 mix(vec3 a, vec3 b, vec3 c, vec3 barycentrics) 
 {
@@ -17,10 +12,6 @@ vec3 mix(vec3 a, vec3 b, vec3 c, vec3 barycentrics)
 
 /*
  * Linear interpolate between 2 vectors
- * @param vector a
- * @param vector b
- * @param barycentric coordinates (interpolation weights)
- * @returns 2D interpolated values
  */
 vec2 mix(vec2 a, vec2 b, vec2 c, vec3 barycentrics)
 {
@@ -29,9 +20,6 @@ vec2 mix(vec2 a, vec2 b, vec2 c, vec3 barycentrics)
 
  /*
   * Encode color from HDR space to LDR. Tone mapping.
-  * @param color Color vector
-  * @param limit Scaling limit
-  * @returns LDR color encoding
   */
 vec3 toneMap(in vec3 rgb, float limit)
 {
@@ -41,8 +29,6 @@ vec3 toneMap(in vec3 rgb, float limit)
 
 /*
  * Gamma correction. Gamut mapping.
- * @param color Color vector
- * @returns LDR color value encoding
  */
 vec3 gammaCorrection(in vec3 ldr)
 {
@@ -51,7 +37,6 @@ vec3 gammaCorrection(in vec3 ldr)
 
 /*
  * Calculates local coordinate frame for a given normal
- * @param normal Normal vector 
  */
 mat3 localFrame(in vec3 normal)
 {
@@ -62,17 +47,18 @@ mat3 localFrame(in vec3 normal)
 }
 
  /*
-  *
+  * Schlick's approximation of the specular reflection coefficient R
+  * (1 - cosTheta)^5
   */
 float SchlickFresnel(float u)
 {
 	float m = clamp(1.0 - u, 0.0, 1.0);
-	float m2 = m * m;
-	return m2 * m2 * m;
+	return m * m * m * m * m; // power of 5
 }
 
  /*
-  *
+  * Generalized-Trowbridge-Reitz (D)
+  * Describes differential area of microfacets for the surface normal
   */
 float GTR2(float NDotH, float a)
 {
@@ -82,9 +68,9 @@ float GTR2(float NDotH, float a)
 }
 
  /*
-  *
+  * The masking shadowing function Smith for GGX noraml distribution (G)
   */
-float GGX(float NDotv, float alphaG)
+float GGX(float NDotv, float alphaG)	
 {
 	float a = alphaG * alphaG;
 	float b = NDotv * NDotv;
@@ -92,7 +78,8 @@ float GGX(float NDotv, float alphaG)
 }
 
  /*
-  *
+  * Power heuristic often reduces variance even further for multiple importance sampling
+  * Chapter 13.10.1 of pbrbook
   */
 float powerHeuristic(float a, float b)
 {
@@ -100,6 +87,9 @@ float powerHeuristic(float a, float b)
 	return t / (b * b + t);
 }
 
+/*
+ * Max component of a vector3
+ */
 float max3(vec3 v) 
 {
 	return max (max (v.x, v.y), v.z);

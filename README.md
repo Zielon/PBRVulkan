@@ -17,7 +17,7 @@ As an example of creating your own shader please take a look at [Ambient Occlusi
 
 1) Download [VulkanSDK](https://vulkan.lunarg.com/sdk/home#windows) and place it in `C:/VulkanSDK/x.x.x.x/`.
 2) Run `install.bat` script to download all necessary libraries.
-3) For shaders compliation you will need `python` and `glslc` available form the shell level. `glslc` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslc.exe`.
+3) For shaders compliation you will need `python` (Python 3.x.x) and `glslc` available form the shell level. Check out `Compiler.h` and `Compile.py` for more details. `glslc` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslc.exe`.
 
 #### Environment variables
 

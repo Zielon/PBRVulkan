@@ -17,6 +17,7 @@
     <None Include="Scripts\Compile.py" />
     <None Include="src\Assets\Shaders\BSDFs\UE4BSDF.glsl" />
     <None Include="src\Assets\Shaders\Common\Denoiser.glsl" />
+    <None Include="src\Assets\Shaders\Common\DirectLight.glsl" />
     <None Include="src\Assets\Shaders\Common\HDR.glsl" />
     <None Include="src\Assets\Shaders\Common\Math.glsl" />
     <None Include="src\Assets\Shaders\Common\Random.glsl" />
@@ -26,7 +27,6 @@
     <None Include="src\Assets\Shaders\Rasterizer\Fragment.frag" />
     <None Include="src\Assets\Shaders\Rasterizer\Vertex.vert" />
     <None Include="src\Assets\Shaders\Raytracer\Integrators\AO.glsl" />
-    <None Include="src\Assets\Shaders\Raytracer\Integrators\DirectLight.glsl" />
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracer.glsl" />
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl" />
     <None Include="src\Assets\Shaders\Raytracer\Raytracing.rchit" />

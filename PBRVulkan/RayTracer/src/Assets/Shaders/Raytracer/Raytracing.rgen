@@ -68,7 +68,8 @@ void main()
 			payload.ray = ray;
 			payload.bsdf = bsdf;
 
-			traceNV(TLAS,           // acceleration structure
+			traceNV(
+					TLAS,           // acceleration structure
 					rayFlags,       // rayFlags
 					0xFF,           // cullMask
 					0,              // sbtRecordOffset
@@ -87,7 +88,7 @@ void main()
 			ray = payload.ray;
 			bsdf = payload.bsdf;
 			
-			// First hit payload
+			// First hit payload. Store infromation for denosing
 			if (j == 0)
 			{
 				imageStore(NormalsImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.ffnormal, 0.0));
@@ -123,7 +124,6 @@ void main()
 	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(ldr, 1.f));
 
 	#ifdef USE_DENOISER
-	vec4 denoised = denoise();
-	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), denoised);
+	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy),  denoise());
 	#endif
 }

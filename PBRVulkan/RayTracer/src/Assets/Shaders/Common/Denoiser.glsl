@@ -37,6 +37,7 @@ vec4 denoise()
     offset[24] = vec2(2,2);
     
     float kernel[25];
+
     kernel[0] = 1.0f/256.0f;
     kernel[1] = 1.0f/64.0f;
     kernel[2] = 3.0f/128.0f;

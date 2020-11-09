@@ -114,6 +114,8 @@ namespace Tracer
 
 	void Application::CreateMenu()
 	{
+		settings.MaxDepth = scene->GetRendererOptions().maxDepth;
+		
 		menu.reset(new Menu(*device, *swapChain, *commandPool, settings));
 
 		menu->AddWidget(std::make_shared<Interface::SceneWidget>());

@@ -20,7 +20,7 @@ float UE4Pdf(in Material material, in vec3 bsdfDir)
 
 	// calculate diffuse and specular pdfs and mix ratio
 	float pdfSpec = pdfGTR2 / (4.0 * abs(dot(L, halfVec)));
-	float pdfDiff = abs(dot(L, N)) * (1.0 / PI);
+	float pdfDiff = abs(dot(L, N)) * INV_PI;
 
 	// weight pdfs according to ratios
 	return diffuseRatio * pdfDiff + specularRatio * pdfSpec;
@@ -47,7 +47,7 @@ vec3 UE4Sample(in Material material)
 		float a = max(0.001, material.roughness);
 		float r1 = rnd(seed);
 		float r2 = rnd(seed);
-		float phi = r1 * 2.0 * PI;
+		float phi = r1 * TWO_PI;
 
 		float cosTheta = sqrt((1.0 - r2) / (1.0 + (a*a - 1.0) *r2));
 		float sinTheta = clamp(sqrt(1.0 - (cosTheta * cosTheta)), 0.0, 1.0);
@@ -68,6 +68,7 @@ vec3 UE4Eval(in Material material, in vec3 bsdfDir)
 	vec3 N = payload.ffnormal;
 	vec3 V = -gl_WorldRayDirectionNV;
 	vec3 L = bsdfDir;
+	vec3 albedo = material.albedo.xyz;
 
 	float NDotL = dot(N, L);
 	float NDotV = dot(N, V);
@@ -79,19 +80,20 @@ vec3 UE4Eval(in Material material, in vec3 bsdfDir)
 	float NDotH = dot(N, H);
 	float LDotH = dot(L, H);
 
-	// specular	
+	// Specular
 	float specular = 0.5;
-	vec3 specularCol = mix(vec3(1.0) * 0.08 * specular, material.albedo.xyz, material.metallic);
+	vec3 specularCol = mix(vec3(1.0) * 0.08 * specular, albedo, material.metallic);
 	float a = max(0.001, material.roughness);
-	float Ds = GTR2(NDotH, a);
+	float D = GTR2(NDotH, a);
 	float FH = SchlickFresnel(LDotH);
-	vec3 Fs = mix(specularCol, vec3(1.0), FH);
+	vec3 F = mix(specularCol, vec3(1.0), FH);
 	float roughg = (material.roughness * 0.5 + 0.5);
 	roughg = roughg * roughg;
 
-	float Gs = GGX(NDotL, roughg) * GGX(NDotV, roughg);
+	float G = GGX(NDotL, roughg) * GGX(NDotV, roughg);
 
-	return (material.albedo.xyz / PI) * (1.0 - material.metallic) + Gs * Fs * Ds;
+	// Diffuse + Specular components
+	return (INV_PI * albedo) * (1.0 - material.metallic) + F * D * G;
 }
 
 float glassPdf()
