@@ -25,8 +25,7 @@ int AMBIENT_OCCLUSION = 2;
 
 struct Material 
 { 
-	vec3 albedo;
-	float type;
+	vec4 albedo;
 	vec4 emission;
 	// Parameters
 	float metallic;
