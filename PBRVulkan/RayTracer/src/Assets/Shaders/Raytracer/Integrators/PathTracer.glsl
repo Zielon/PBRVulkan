@@ -29,7 +29,9 @@
 		return;
 	}
 
-	if (int(material.type) == DISNEY)
+	int materialType = int(material.albedo.w);
+
+	if (materialType == UE4)
 	{
 		payload.specularBounce = false;
 		payload.radiance += directLight(material) * payload.beta;
@@ -43,7 +45,7 @@
 		payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
 	}
 
-	if (int(material.type) == GLASS)
+	if (materialType == GLASS)
 	{
 		payload.specularBounce = true;
 

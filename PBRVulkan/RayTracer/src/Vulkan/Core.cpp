@@ -131,6 +131,7 @@ namespace Vulkan
 		std::vector<const char*> layers = { "VK_LAYER_KHRONOS_validation" };
 #endif
 
+		// Frame pre second monitor
 		layers.push_back("VK_LAYER_LUNARG_monitor");
 
 		window.reset(new Window());

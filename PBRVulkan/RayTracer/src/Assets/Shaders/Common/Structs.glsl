@@ -15,7 +15,7 @@
 uint seed = 0;
 
 // Material types
-int DISNEY = 0;
+int UE4 = 0;
 int GLASS = 1;
 
 // Lights types
@@ -29,8 +29,7 @@ int AMBIENT_OCCLUSION = 2;
 
 struct Material 
 { 
-	vec3 albedo;
-	float type;
+	vec4 albedo;
 	vec4 emission;
 	// Parameters
 	float metallic;

@@ -8,10 +8,10 @@ namespace Vulkan
 		VkApplicationInfo appInfo = {};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		appInfo.pApplicationName = "VulkanRayTracer";
-		appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-		appInfo.pEngineName = "No Engine";
-		appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-		appInfo.apiVersion = VK_API_VERSION_1_1;
+		appInfo.applicationVersion = VK_MAKE_VERSION(1, 2, 0);
+		appInfo.pEngineName = "Engine";
+		appInfo.engineVersion = VK_MAKE_VERSION(1, 2, 0);
+		appInfo.apiVersion = VK_API_VERSION_1_2;
 
 		auto extensions = GetRequiredInstanceExtensions();
 
@@ -29,14 +29,13 @@ namespace Vulkan
 		createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
 		createInfo.ppEnabledLayerNames = layers.data();
 
-
 		if (CheckValidationLayerSupport(layers))
 		{
 			createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
 			createInfo.ppEnabledLayerNames = layers.data();
 		}
 
-		VK_CHECK(vkCreateInstance(&createInfo, nullptr, &instance), "Vulkan MeshInstance creation");
+		VK_CHECK(vkCreateInstance(&createInfo, nullptr, &instance), "Vulkan Instance creation");
 
 		CheckPhysicalDevice();
 	}

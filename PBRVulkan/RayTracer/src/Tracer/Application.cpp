@@ -21,7 +21,7 @@
 
 namespace Tracer
 {
-	std::vector<std::string> CONFIGS =
+	const std::vector<std::string> CONFIGS =
 	{
 		"../Assets/Scenes/ajax.scene",
 		"../Assets/Scenes/bedroom.scene",

@@ -95,10 +95,7 @@ void main()
 				//imageStore(DepthImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.worldPos, 0.0));
 			}
 
-			if (payload.stop)
-			{
-				break;
-			}
+			if (payload.stop) break;
 		}
 
 		radiance += pathRadiance;

@@ -7,15 +7,15 @@ namespace Assets
 {
 	enum MaterialType
 	{
-		DISNEY,
+		UE4,
 		GLASS
 	};
 
-	struct Material final
+	struct alignas(16) Material final
 	{
 		Material()
 		{
-			albedo = glm::vec4(1.0f, 1.0f, 1.0f, DISNEY);
+			albedo = glm::vec4(1.0f, 1.0f, 1.0f, UE4);
 			emission = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 			metallic = 0.0f;
 			roughness = 0.5f;

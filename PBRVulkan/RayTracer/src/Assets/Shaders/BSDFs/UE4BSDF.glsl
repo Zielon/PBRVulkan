@@ -1,5 +1,6 @@
 /*
- *	Based on https://github.com/knightcrawler25/GLSL-PathTracer
+ *	Based on    https://github.com/knightcrawler25/GLSL-PathTracer
+ *  UE4 SIGGAPH https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
  */
 
 float UE4Pdf(in Material material, in vec3 bsdfDir)
@@ -90,7 +91,7 @@ vec3 UE4Eval(in Material material, in vec3 bsdfDir)
 	float roughg = (material.roughness * 0.5 + 0.5);
 	roughg = roughg * roughg;
 
-	float G = GGX(NDotL, roughg) * GGX(NDotV, roughg);
+	float G = SmithGGX(NDotL, roughg) * SmithGGX(NDotV, roughg);
 
 	// Diffuse + Specular components
 	return (INV_PI * albedo) * (1.0 - material.metallic) + F * D * G;
@@ -109,28 +110,23 @@ vec3 glassSample(in Material material)
 	R0 *= R0;
 	float theta = dot(-gl_WorldRayDirectionNV, payload.ffnormal);
 	float prob = R0 + (1. - R0) * SchlickFresnel(theta);
-	vec3 dir;
-
-	//vec3 transmittance = vec3(1.0);
-	//vec3 extinction = -log(vec3(0.1, 0.1, 0.908));
-	//vec3 extinction = -log(vec3(0.905, 0.63, 0.3));
-
 	float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (n1 / n2) : (n2 / n1);
-	vec3 transDir = normalize(refract(gl_WorldRayDirectionNV, payload.ffnormal, eta));
+	vec3 refractDir = normalize(refract(gl_WorldRayDirectionNV, payload.ffnormal, eta));
 	float cos2t = 1.0 - eta * eta * (1.0 - theta * theta);
 
-	//if(dot(-ray.direction, state.normal) <= 0.0)
-	//	transmittance = exp(-extinction * state.hitDist * 100.0);
+	vec3 dir;
 
-	if (cos2t < 0.0 || rnd(seed) < prob) // Reflection
+	// Reflection
+	if (cos2t < 0.0 || rnd(seed) < prob)
 	{
 		dir = normalize(reflect(gl_WorldRayDirectionNV, payload.ffnormal));
 	}
-	else  // Transmission
+	// Transmission
+	else
 	{
-		dir = transDir;
+		dir = refractDir;
 	}
-	//state.mat.albedo.xyz = transmittance;
+	
 	return dir;
 }
 
