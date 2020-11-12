@@ -7,7 +7,7 @@ Check out the discord [#general](https://discord.gg/365bNPbFTM) for more info or
 The current development is available under [project](https://github.com/Zielon/PBRVulkan/projects/1) ![issues](https://img.shields.io/github/issues/Zielon/PBRVulkan)
 
 <p align="center">
-  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/bedroom.gif?raw=true">
+  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/bedroom.gif?raw=true" width="640" height="360">
 </p>
 
 #### Sandbox
@@ -56,5 +56,5 @@ PBRVulkan/Assets/Scenes/
 #### Demo
 
 <p align="center">
-  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/stormtroopers.gif?raw=true">
+  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/stormtroopers.gif?raw=true" width="640" height="360">
 </p>
