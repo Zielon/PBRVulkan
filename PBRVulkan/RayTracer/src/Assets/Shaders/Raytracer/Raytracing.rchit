@@ -31,8 +31,8 @@ layout(location = 1) rayPayloadNV bool isShadowed;
 hitAttributeNV vec2 hit;
 
 #include "../Common/Vertex.glsl"
-#include "../Common/Math.glsl"
 #include "../Common/Random.glsl"
+#include "../Common/Math.glsl"
 
 #ifdef USE_HDR
 #include "../Common/HDR.glsl"

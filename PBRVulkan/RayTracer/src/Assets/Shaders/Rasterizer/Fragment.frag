@@ -11,6 +11,7 @@ layout(binding = 1) readonly buffer MaterialArray { Material[] materials; };
 layout(binding = 2) uniform sampler2D[] textureSamplers;
 layout(binding = 3) readonly buffer LightArray { Light[] Lights; };
 
+#include "../Common/Random.glsl"
 #include "../Common/Math.glsl"
 
 layout(location = 0) in vec2 inTexCoord;

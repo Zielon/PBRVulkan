@@ -30,6 +30,7 @@ namespace Tracer
 		void CreateMenu();
 		void ResetAccumulation();
 		void ResizeWindow() const;
+		void PrintGPUInfo() const;
 		
 		// User interface API
 		void OnKeyChanged(int key, int scanCode, int action, int mods) override;

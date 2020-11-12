@@ -35,7 +35,7 @@ namespace Vulkan
 		const Shader shadowShader(device, "Shadow.compiled.rmiss.spv");
 		const Shader closestHitShader(device, "Raytracing.compiled.rchit.spv");
 
-	std:std::array<VkPipelineShaderStageCreateInfo, 4> shaderStages =
+		std::array<VkPipelineShaderStageCreateInfo, 4> shaderStages =
 		{
 			rayGenShader.CreateShaderStage(VK_SHADER_STAGE_RAYGEN_BIT_NV),
 			missShader.CreateShaderStage(VK_SHADER_STAGE_MISS_BIT_NV),

@@ -31,7 +31,7 @@ namespace Tracer
 		int MaxDepth = 3;
 		int SSP = 1;
 		float Fov{};
-		float Aperture = 0.1f;
+		float Aperture = 0.001f;
 		float FocalDistance = 1.f;
 		float AORayLength = 0.5f;
 		float DenoiseStrength = 1.f;

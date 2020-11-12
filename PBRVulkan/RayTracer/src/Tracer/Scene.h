@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-#define GLM_SWIZZLE 
+#define GLM_FORCE_SWIZZLE 
 #include <future>
 #include <glm/glm.hpp>
 

@@ -2,37 +2,6 @@
  * Set of different sampling functions
  */
 
-vec3 cosineSampleHemisphere()
-{
-	float r1 = rnd(seed);
-	float r2 = rnd(seed);
-
-	vec3 dir;
-	float r = sqrt(r1);
-	float phi = 2.0 * PI * r2;
-
-	dir.x = r * cos(phi);
-	dir.y = r * sin(phi);
-	dir.z = sqrt(max(0.0, 1.0 - dir.x*dir.x - dir.y*dir.y));
-
-	return dir;
-}
-
-vec3 uniformSampleSphere()
-{
-	float r1 = rnd(seed);
-	float r2 = rnd(seed);
-
-	float z = 1.0 - 2.0 * r1;
-	float r = sqrt(max(0.f, 1.0 - z * z));
-	float phi = 2.0 * PI * r2;
-
-	float x = r * cos(phi);
-	float y = r * sin(phi);
-
-	return vec3(x, y, z);
-}
-
 void sampleAreaLight(in Light light, out LightSample lightSample)
 {
 	float r1 = rnd(seed);
@@ -49,19 +18,19 @@ void sampleAreaLight(in Light light, out LightSample lightSample)
 void sampleSphereLight(in Light light, out LightSample lightSample)
 {
 	vec3 position = light.position + uniformSampleSphere() * light.radius;
-	lightSample.position = position;
+
 	lightSample.normal = normalize(position - light.position);
 	lightSample.emission = light.emission * float(ubo.lights);
+	lightSample.position = position;
 }
 
 LightSample sampleLight(in Light light)
 {
 	LightSample lightSample;
 
-	if (int(light.type) == AREA_LIGHT)
-		sampleAreaLight(light, lightSample);
-	
-	if (int(light.type) == SPHERE_LIGHT)
+	if (light.type == AREA_LIGHT)
+		sampleAreaLight(light, lightSample);	
+	else
 		sampleSphereLight(light, lightSample);
 
 	return lightSample;
@@ -119,17 +88,17 @@ float planeIntersect(in Light light)
 
 void checkAreaLightIntersection(inout float closest, float hit, in Light light, inout LightSample lightSample)
 {
-	float distance = planeIntersect(light);
+	float dist = planeIntersect(light);
 
-	if (distance < 0.) distance = INFINITY;
+	if (dist < 0.) dist = INFINITY;
 
-	if (distance < closest && distance < hit)
+	if (dist < closest && dist < hit)
 	{
-		closest = distance;
+		closest = dist;
 
 		vec3 normal = normalize(cross(light.u, light.v));
 		float cosTheta = abs(dot(-gl_WorldRayDirectionNV, normal));
-		float pdf = (distance * distance) / (light.area * cosTheta);
+		float pdf = (dist * dist) / (light.area * cosTheta);
 
 		lightSample.emission = light.emission;
 		lightSample.pdf = pdf;
@@ -140,17 +109,17 @@ void checkAreaLightIntersection(inout float closest, float hit, in Light light, 
 
 void checkSphereLightIntersection(inout float closest, float hit, in Light light, inout LightSample lightSample)
 {
-	float distance = sphereIntersect(light);
+	float dist = sphereIntersect(light);
 
-	if (distance < 0.) distance = INFINITY;
+	if (dist < 0.) dist = INFINITY;
 
-	if (distance < closest && distance < hit)
+	if (dist < closest && dist < hit)
 	{
-		closest = distance;
+		closest = dist;
 
 		vec3 surfacePos = gl_WorldRayOriginNV + gl_WorldRayDirectionNV * hit;
 		vec3 normal = normalize(surfacePos - light.position);
-		float pdf = (distance * distance) / light.area;
+		float pdf = (dist * dist) / light.area;
 
 		lightSample.emission = light.emission;
 		lightSample.pdf = pdf;
@@ -168,8 +137,7 @@ bool interesetsEmitter(inout LightSample lightSample, float hit)
 
 		if (light.type == AREA_LIGHT)
 			checkAreaLightIntersection(closest, hit, light, lightSample);
-
-		if (light.type == SPHERE_LIGHT)
+		else
 			checkSphereLightIntersection(closest, hit, light, lightSample);
 	}
 
