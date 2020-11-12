@@ -104,7 +104,8 @@ namespace Loader
 
 					sscanf(line, " name %s", name);
 					sscanf(line, " color %f %f %f", &material.albedo.x, &material.albedo.y, &material.albedo.z);
-					sscanf(line, " emission %f %f %f", &material.emission.x, &material.emission.y, &material.emission.z);
+					sscanf(line, " emission %f %f %f", &material.emission.x, &material.emission.y,
+					       &material.emission.z);
 					sscanf(line, " materialType %f", &material.albedo.w);
 					sscanf(line, " metallic %f", &material.metallic);
 					sscanf(line, " roughness %f", &material.roughness);
@@ -228,7 +229,7 @@ namespace Loader
 					sscanf(line, " fov %f", &fov);
 				}
 
-				float aspect = float(renderOptions.resolution.x) / renderOptions.resolution.y;
+				float aspect = static_cast<float>(renderOptions.resolution.x) / renderOptions.resolution.y;
 				scene.AddCamera(position, lookAt, fov, aspect);
 				cameraAdded = true;
 			}
@@ -291,5 +292,7 @@ namespace Loader
 		// Add default camera if none was specified
 		if (!cameraAdded)
 			scene.AddCamera(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, -10.0f), 35.0f, 1.f);
+
+		return true;
 	}
 }

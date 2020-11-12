@@ -1,6 +1,8 @@
 #include "Core.h"
 
 #include <array>
+#include <iostream>
+
 
 #include "Vulkan.h"
 #include "Window.h"

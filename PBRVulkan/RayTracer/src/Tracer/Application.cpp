@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <array>
 #include <chrono>
+#include <iostream>
 
 #include "Menu.h"
 #include "Scene.h"
@@ -14,6 +15,7 @@
 #include "../Vulkan/Window.h"
 #include "../Vulkan/Buffer.h"
 #include "../Vulkan/Device.h"
+#include "../Vulkan/Instance.h"
 
 #include "Widgets/CinemaWidget.h"
 #include "Widgets/RendererWidget.h"
@@ -41,6 +43,7 @@ namespace Tracer
 
 	Application::Application()
 	{
+		PrintGPUInfo();
 		LoadScene();
 		compiler.reset(new Compiler());
 		CompileShaders();
@@ -115,7 +118,7 @@ namespace Tracer
 	void Application::CreateMenu()
 	{
 		settings.MaxDepth = scene->GetRendererOptions().maxDepth;
-		
+
 		menu.reset(new Menu(*device, *swapChain, *commandPool, settings));
 
 		menu->AddWidget(std::make_shared<Interface::SceneWidget>());
@@ -225,6 +228,21 @@ namespace Tracer
 	{
 		if (menu->WantCaptureMouse())
 			return;
+	}
+
+	void Application::PrintGPUInfo() const
+	{
+		// Selected by default CreatePhysicalDevice() in Core.cpp
+		auto* physicalDevice = instance->GetDevices().front();
+
+		std::cout << "[INFO] Available Vulkan devices:" << std::endl;
+		for (const auto& device : instance->GetDevices())
+		{
+			VkPhysicalDeviceProperties prop;
+			vkGetPhysicalDeviceProperties(device, &prop);
+			const auto* selected = device == physicalDevice ? "	 (selected)" : "";
+			std::cout << "	" << prop.deviceName << selected << std::endl;
+		}
 	}
 
 	void Application::Run()

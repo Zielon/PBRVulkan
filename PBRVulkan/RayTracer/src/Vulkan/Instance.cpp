@@ -66,11 +66,12 @@ namespace Vulkan
 
 		for (const char* layer : validationLayers)
 		{
-			auto result = std::find_if(availableLayers.begin(), availableLayers.end(),
-			                           [layer](const VkLayerProperties& layerProperties)
-			                           {
-				                           return strcmp(layer, layerProperties.layerName) == 0;
-			                           });
+			auto result =
+				std::find_if(availableLayers.begin(), availableLayers.end(),
+				             [layer](const VkLayerProperties& layerProperties)
+				             {
+					             return strcmp(layer, layerProperties.layerName) == 0;
+				             });
 
 			// Not found
 			if (result == availableLayers.end())
