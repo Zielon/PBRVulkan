@@ -111,9 +111,7 @@ namespace Tracer
 		std::vector<uint32_t> indices;
 		std::vector<Geometry::Vertex> vertices;
 		std::vector<glm::uvec2> offsets;
-		std::mutex mutex;
 
-#pragma omp parallel for
 		for (const auto& meshInstance : meshInstances)
 		{
 			auto& mesh = meshes[meshInstance.meshId];
@@ -127,17 +125,13 @@ namespace Tracer
 				vertex.materialId = meshInstance.materialId;
 			}
 
-			{
-				const std::lock_guard<std::mutex> lock(mutex);
+			const auto indexOffset = static_cast<uint32_t>(indices.size());
+			const auto vertexOffset = static_cast<uint32_t>(vertices.size());
 
-				const auto indexOffset = static_cast<uint32_t>(indices.size());
-				const auto vertexOffset = static_cast<uint32_t>(vertices.size());
+			offsets.emplace_back(indexOffset, vertexOffset);
 
-				offsets.emplace_back(indexOffset, vertexOffset);
-
-				vertices.insert(vertices.end(), mesh->GetVertices().begin(), mesh->GetVertices().end());
-				indices.insert(indices.end(), mesh->GetIndecies().begin(), mesh->GetIndecies().end());
-			}
+			vertices.insert(vertices.end(), mesh->GetVertices().begin(), mesh->GetVertices().end());
+			indices.insert(indices.end(), mesh->GetIndecies().begin(), mesh->GetIndecies().end());
 		}
 
 		// =============== VERTEX BUFFER ===============

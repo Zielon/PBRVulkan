@@ -34,7 +34,6 @@ namespace Assets
 
 		std::unordered_map<Geometry::Vertex, uint32_t> uniqueVertices{};
 
-#pragma omp parallel for collapse(2)
 		for (const auto& shape : shapes)
 		{
 			for (const auto& index : shape.mesh.indices)

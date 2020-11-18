@@ -18,13 +18,13 @@
 namespace Assets
 {
 	typedef unsigned char RGBE[4];
-#define R			0
-#define G			1
-#define B			2
-#define E			3
+	#define R			0
+	#define G			1
+	#define B			2
+	#define E			3
 
-#define  MINELEN	8				// minimum scanline length for encoding
-#define  MAXELEN	0x7fff			// maximum scanline length for encoding
+	#define  MINELEN	8				// minimum scanline length for encoding
+	#define  MAXELEN	0x7fff			// maximum scanline length for encoding
 
 	static void workOnRGBE(RGBE* scan, int len, float* cols);
 	static bool decrunch(RGBE* scanline, int len, FILE* file);
@@ -70,7 +70,6 @@ namespace Assets
 
 		float colWeightSum = 0.0f;
 
-#pragma omp parallel for
 		for (int j = 0; j < height; j++)
 		{
 			float rowWeightSum = 0.0f;
@@ -101,7 +100,7 @@ namespace Assets
 		}
 
 		/* Convert to range 0,1 */
-#pragma omp parallel for
+		#pragma omp parallel for
 		for (int j = 0; j < height; j++)
 		{
 			cdf1D[j] /= colWeightSum;
@@ -109,7 +108,7 @@ namespace Assets
 		}
 
 		/* Precalculate row and col to avoid binary search during lookup in the shader */
-#pragma omp parallel for
+		#pragma omp parallel for
 		for (int i = 0; i < height; i++)
 		{
 			float invHeight = static_cast<float>(i + 1) / height;
@@ -118,7 +117,7 @@ namespace Assets
 			res->marginalDistData[i].y = pdf1D[i];
 		}
 
-#pragma omp parallel for collapse(2)
+		#pragma omp parallel for collapse(2)
 		for (int j = 0; j < height; j++)
 		{
 			for (int i = 0; i < width; i++)
