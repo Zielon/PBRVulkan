@@ -44,13 +44,14 @@ namespace Tracer
 
 	void Scene::Wait()
 	{
-		for (const auto& mesh : meshes) mesh->Wait();
-
 		for (auto& texture : textures)
 		{
 			texture->Wait();
 			textureImages.emplace_back(new TextureImage(device, commandPool, *texture));
 		}
+
+		for (const auto& mesh : meshes)
+			mesh->Wait();
 
 		if (hdrLoader.valid())
 			hdrLoader.get();
