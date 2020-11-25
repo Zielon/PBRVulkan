@@ -20,6 +20,7 @@
 #include "../Vulkan/Instance.h"
 #include "../Vulkan/Image.h"
 #include "../Vulkan/SwapChain.h"
+#include "../Vulkan/ImageView.h"
 #include "../Vulkan/Command.cpp"
 
 #include "Widgets/CinemaWidget.h"
@@ -267,10 +268,9 @@ namespace Tracer
 
 	void Application::Postprocess(VkCommandBuffer commandBuffer, uint32_t imageIndex) const
 	{
-		if (settings.UseComputeShaders)
+		if (settings.UseComputeShaders && frame > 0)
 		{
-			computer->BuildCommand(settings.ComputeShaderId);
-
+			const auto extent = swapChain->Extent;
 			VkImageSubresourceRange subresourceRange;
 			subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			subresourceRange.baseMipLevel = 0;
@@ -278,19 +278,22 @@ namespace Tracer
 			subresourceRange.baseArrayLayer = 0;
 			subresourceRange.layerCount = 1;
 
-			const auto extent = swapChain->Extent;
+			// Compute pipeline
+			{
+				computer->BuildCommand(settings.ComputeShaderId);
 
-			VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT };
-			VkCommandBuffer commandBuffers[]{ computer->GetCommandBuffers()[0] };
+				VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT };
+				VkCommandBuffer commandBuffers[]{ computer->GetCommandBuffers()[0] };
 
-			VkSubmitInfo computeSubmitInfo{};
-			computeSubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			computeSubmitInfo.pWaitDstStageMask = waitStages;
-			computeSubmitInfo.commandBufferCount = 1;
-			computeSubmitInfo.pCommandBuffers = commandBuffers;
+				VkSubmitInfo computeSubmitInfo{};
+				computeSubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+				computeSubmitInfo.pWaitDstStageMask = waitStages;
+				computeSubmitInfo.commandBufferCount = 1;
+				computeSubmitInfo.pCommandBuffers = commandBuffers;
 
-			Vulkan::VK_CHECK(vkQueueSubmit(device->ComputeQueue, 1, &computeSubmitInfo, nullptr),
-			                 "Compute shader submit failed!");
+				Vulkan::VK_CHECK(vkQueueSubmit(device->ComputeQueue, 1, &computeSubmitInfo, nullptr),
+				                 "Compute shader submit failed!");
+			}
 
 			Vulkan::Image::MemoryBarrier(commandBuffer, computer->GetOutputImage().Get(), subresourceRange,
 			                             VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
