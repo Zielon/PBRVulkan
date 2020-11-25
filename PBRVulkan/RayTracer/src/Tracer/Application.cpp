@@ -96,7 +96,7 @@ namespace Tracer
 
 	void Application::RecreateSwapChain()
 	{
-		menu->GetSettings().UseDenoiser = false;
+		menu->GetSettings().UseComputeShaders = false;
 		settings = menu->GetSettings();
 		device->WaitIdle();
 		menu.reset();

@@ -13,7 +13,14 @@ namespace Interface
 
 		ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
 		ImGui::Checkbox("Gamma correction", &settings.UseGammaCorrection);
-		ImGui::Checkbox("Use Denoiser", &settings.UseDenoiser);
+		ImGui::Checkbox("Compute shaders", &settings.UseComputeShaders);
+
+		if (settings.UseComputeShaders)
+		{
+			ImGui::PushItemWidth(-1);
+			ImGui::Combo("compute shaders", &settings.ComputeShaderId, computeShaders, 3);
+			ImGui::PopItemWidth();
+		}
 
 		ImGui::Text("# samples ");
 		ImGui::SameLine();

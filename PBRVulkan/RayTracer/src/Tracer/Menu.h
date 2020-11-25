@@ -25,8 +25,9 @@ namespace Tracer
 	{
 		bool UseRasterizer{};
 		bool UseGammaCorrection = true;
-		bool UseDenoiser = false;
+		bool UseComputeShaders = false;
 		int IntegratorType{};
+		int ComputeShaderId{};
 		int SceneId = 5;
 		int MaxDepth = 3;
 		int SSP = 1;
