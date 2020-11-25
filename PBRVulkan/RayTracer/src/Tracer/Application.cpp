@@ -15,7 +15,12 @@
 #include "../Vulkan/Window.h"
 #include "../Vulkan/Buffer.h"
 #include "../Vulkan/Device.h"
+#include "../Vulkan/Semaphore.h"
+#include "../Vulkan/CommandBuffers.h"
 #include "../Vulkan/Instance.h"
+#include "../Vulkan/Image.h"
+#include "../Vulkan/SwapChain.h"
+#include "../Vulkan/Command.cpp"
 
 #include "Widgets/CinemaWidget.h"
 #include "Widgets/RendererWidget.h"
@@ -96,7 +101,6 @@ namespace Tracer
 
 	void Application::RecreateSwapChain()
 	{
-		menu->GetSettings().UseComputeShaders = false;
 		settings = menu->GetSettings();
 		device->WaitIdle();
 		menu.reset();
@@ -175,6 +179,8 @@ namespace Tracer
 		else
 			Raytracer::Render(framebuffer, commandBuffer, imageIndex);
 
+		Postprocess(commandBuffer, imageIndex);
+
 		menu->Render(framebuffer, commandBuffer);
 
 		++frame;
@@ -248,6 +254,7 @@ namespace Tracer
 			std::cout << "	" << prop.deviceName << selected << std::endl;
 		}
 	}
+
 	void Application::CreateComputePipeline()
 	{
 		computer.reset(new Vulkan::Computer(
@@ -256,6 +263,61 @@ namespace Tracer
 			GetOutputImageView(),
 			GetNormalsImageView(),
 			GetPositionImageView()));
+	}
+
+	void Application::Postprocess(VkCommandBuffer commandBuffer, uint32_t imageIndex) const
+	{
+		if (settings.UseComputeShaders)
+		{
+			computer->BuildCommand(settings.ComputeShaderId);
+
+			VkImageSubresourceRange subresourceRange;
+			subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			subresourceRange.baseMipLevel = 0;
+			subresourceRange.levelCount = 1;
+			subresourceRange.baseArrayLayer = 0;
+			subresourceRange.layerCount = 1;
+
+			const auto extent = swapChain->Extent;
+
+			VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT };
+			VkCommandBuffer commandBuffers[]{ computer->GetCommandBuffers()[0] };
+
+			VkSubmitInfo computeSubmitInfo{};
+			computeSubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+			computeSubmitInfo.pWaitDstStageMask = waitStages;
+			computeSubmitInfo.commandBufferCount = 1;
+			computeSubmitInfo.pCommandBuffers = commandBuffers;
+
+			Vulkan::VK_CHECK(vkQueueSubmit(device->ComputeQueue, 1, &computeSubmitInfo, nullptr),
+			                 "Compute shader submit failed!");
+
+			Vulkan::Image::MemoryBarrier(commandBuffer, computer->GetOutputImage().Get(), subresourceRange,
+			                             VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
+			                             VK_IMAGE_LAYOUT_GENERAL,
+			                             VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+
+			Vulkan::Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange, 0,
+			                             VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
+			                             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+			VkImageCopy copyRegion;
+			copyRegion.srcSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
+			copyRegion.srcOffset = { 0, 0, 0 };
+			copyRegion.dstSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
+			copyRegion.dstOffset = { 0, 0, 0 };
+			copyRegion.extent = { extent.width, extent.height, 1 };
+
+			vkCmdCopyImage(commandBuffer,
+			               computer->GetOutputImage().Get(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+			               swapChain->GetImage()[imageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			               1, &copyRegion);
+
+			Vulkan::Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange,
+			                             VK_ACCESS_TRANSFER_WRITE_BIT,
+			                             0, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			                             VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+		}
 	}
 
 	void Application::Run()

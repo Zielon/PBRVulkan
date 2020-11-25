@@ -25,13 +25,13 @@ namespace Vulkan
 	                   const ImageView& normalsImageView,
 	                   const ImageView& positionsImageView):
 
-		inputImageView(inputImageView), swapChain(swapChain),
-		device(device),
+		swapChain(swapChain), device(device),
+		inputImageView(inputImageView),
 		normalsImageView(normalsImageView),
 		positionsImageView(positionsImageView)
 	{
 		commandPool.reset(new CommandPool(device, device.ComputeFamilyIndex));
-		commandBuffers.reset(new CommandBuffers(*commandPool, static_cast<uint32_t>(swapChain.GetImage().size())));
+		commandBuffers.reset(new CommandBuffers(*commandPool, 1));
 		semaphore.reset(new Semaphore(device));
 
 		CreateOutputTexture();
@@ -56,76 +56,48 @@ namespace Vulkan
 		std::cout << "[COMPUTER] Compute pipeline has been deleted." << std::endl;
 	}
 
-	//void Computer::Denoise() const
-	//{
-	//	float colorSigma = 1.f;
-	//	float positionSigma = 1.f;
-	//	float normalSigma = 0.2f;
-	//	const int iterations = 3;
+	void Computer::BuildCommand(int32_t shaderId)
+	{
+		if (shaderId == currentShader)
+			return;
 
-	//	for (int i = 0; i < iterations; ++i)
-	//	{
-	//		Uniforms::Denoiser uniform;
+		currentShader = shaderId;
 
-	//		float scale = powf(2.f, -static_cast<float>(i));
-	//		float stepWidth = powf(2.f, static_cast<float>(i));
-	//		float colSigmaI = scale * colorSigma;
-	//		float posSigmaI = scale * positionSigma;
-	//		float norSigmaI = scale * normalSigma;
+		vkQueueWaitIdle(device.ComputeQueue);
 
-	//		uniform.iteration = i;
-	//		uniform.stepWidth = stepWidth;
-	//		uniform.positionPhi = posSigmaI * posSigmaI;
-	//		uniform.colorPhi = colSigmaI * colSigmaI;
-	//		uniform.normalPhi = norSigmaI * norSigmaI;
+		const auto extent = swapChain.Extent;
 
-	//		uniformBuffers[0]->Fill(&uniform);
+		VkDescriptorSet descriptorSets[] = { computePipeline->GetDescriptorSets()[0] };
 
-	//		VkImageSubresourceRange subresourceRange;
+		VkCommandBuffer commandBuffer = commandBuffers->Begin(0);
+		{
+			VkImageSubresourceRange subresourceRange;
 
-	//		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	//		subresourceRange.baseMipLevel = 0;
-	//		subresourceRange.levelCount = 1;
-	//		subresourceRange.baseArrayLayer = 0;
-	//		subresourceRange.layerCount = 1;
+			subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			subresourceRange.baseMipLevel = 0;
+			subresourceRange.levelCount = 1;
+			subresourceRange.baseArrayLayer = 0;
+			subresourceRange.layerCount = 1;
 
-	//		const auto extent = swapChain.Extent;
+			Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange, 0,
+			                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
+			                     VK_IMAGE_LAYOUT_GENERAL);
 
-	//		VkDescriptorSet descriptorSets[] = { computePipeline->GetDescriptorSets()[0] };
+			Image::MemoryBarrier(commandBuffer, inputImageView.GetImage(), subresourceRange, 0,
+			                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
+			                     VK_IMAGE_LAYOUT_GENERAL);
 
-	//		VkCommandBuffer commandBuffer = commandBuffers->Begin(0);
-	//		{
-	//			Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange, 0,
-	//			                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
-	//			                     VK_IMAGE_LAYOUT_GENERAL);
+			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE,
+			                  computePipeline->GetComputePipelines()[currentShader]);
 
-	//			Image::MemoryBarrier(commandBuffer, inputImageView.GetImage(), subresourceRange, 0,
-	//			                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
-	//			                     VK_IMAGE_LAYOUT_GENERAL);
+			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE,
+			                        computePipeline->GetPipelineLayout(),
+			                        0, 1, descriptorSets, 0, nullptr);
 
-	//			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE,
-	//			                  computePipeline->GetComputePipelines()[0]);
-
-	//			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE,
-	//			                        computePipeline->GetPipelineLayout(),
-	//			                        0, 1, descriptorSets, 0, nullptr);
-
-	//			vkCmdDispatch(commandBuffer, extent.width / 16, extent.height / 16, 1);
-	//		}
-	//		commandBuffers->End(0);
-
-	//		VkSemaphore signalSemaphores[] = { semaphore->Get() };
-
-	//		VkSubmitInfo submitInfo{};
-	//		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	//		submitInfo.commandBufferCount = 1;
-	//		submitInfo.pCommandBuffers = &commandBuffer;
-	//		submitInfo.pSignalSemaphores = signalSemaphores;
-
-	//		vkQueueSubmit(device.ComputeQueue, 1, &submitInfo, nullptr);
-	//		vkQueueWaitIdle(device.ComputeQueue);
-	//	}
-	//}
+			vkCmdDispatch(commandBuffer, extent.width / 16, extent.height / 16, 1);
+		}
+		commandBuffers->End(0);
+	}
 
 	void Computer::CreateOutputTexture()
 	{

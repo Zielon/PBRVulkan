@@ -21,15 +21,29 @@ namespace Vulkan
 			const class ImageView& positionsImageView);
 		~Computer();
 
+		void BuildCommand(int32_t shaderId);
+
 		[[nodiscard]] const class Image& GetOutputImage() const
 		{
 			return *outputImage;
 		}
 
+		[[nodiscard]] const class CommandBuffers& GetCommandBuffers() const
+		{
+			return *commandBuffers;
+		}
+
+		[[nodiscard]] const class Semaphore& GetSemaphore() const
+		{
+			return *semaphore;
+		}
+
 	private:
 		void CreateOutputTexture();
 		void CreateUniformBuffer();
-		
+
+		int32_t currentShader = -1;
+
 		const SwapChain& swapChain;
 		const Device& device;
 

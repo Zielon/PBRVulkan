@@ -34,6 +34,7 @@ namespace Tracer
 		void ResizeWindow() const;
 		void PrintGPUInfo() const;
 		void CreateComputePipeline();
+		void Postprocess(VkCommandBuffer commandBuffer, uint32_t imageIndex) const;
 		
 		// User interface API
 		void OnKeyChanged(int key, int scanCode, int action, int mods) override;
