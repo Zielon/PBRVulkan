@@ -22,6 +22,26 @@ namespace Vulkan
 		void DeleteSwapChain() override;
 		void CreateGraphicsPipeline() override;
 
+		[[nodiscard]] class ImageView& GetOutputImageView() const
+		{
+			return *outputImageView;
+		}
+
+		[[nodiscard]] class ImageView& GetNormalsImageView() const
+		{
+			return *normalsImageView;
+		}
+
+		[[nodiscard]] class ImageView& GetPositionImageView() const
+		{
+			return *positionsImageView;
+		}
+
+		[[nodiscard]] const class Image& GetOutputImage() const
+		{
+			return *outputImage;
+		}
+
 	protected:
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex) override;
 		void CreateOutputTexture();
@@ -33,12 +53,16 @@ namespace Vulkan
 
 		std::vector<class TLAS> TLASs;
 		std::vector<class BLAS> BLASs;
+
 		std::unique_ptr<class Image> accumulationImage;
 		std::unique_ptr<class ImageView> accumulationImageView;
 		std::unique_ptr<class Image> outputImage;
 		std::unique_ptr<class ImageView> outputImageView;
 		std::unique_ptr<class Image> normalsImage;
 		std::unique_ptr<class ImageView> normalsImageView;
+		std::unique_ptr<class Image> positionsImage;
+		std::unique_ptr<class ImageView> positionsImageView;
+
 		std::unique_ptr<class Buffer> instanceBuffer;
 		std::unique_ptr<class Buffer> BLASBuffer;
 		std::unique_ptr<class Buffer> ScratchBLASBuffer;

@@ -52,10 +52,13 @@ namespace Vulkan
 	}
 
 	void Image::MemoryBarrier(
-		VkCommandBuffer commandBuffer, VkImage image,
-		VkImageSubresourceRange subresourceRange, VkAccessFlags srcAccessMask,
+		VkCommandBuffer commandBuffer,
+		VkImage image,
+		VkImageSubresourceRange subresourceRange,
+		VkAccessFlags srcAccessMask,
 		VkAccessFlags dstAccessMask,
-		VkImageLayout oldLayout, VkImageLayout newLayout)
+		VkImageLayout oldLayout,
+		VkImageLayout newLayout)
 	{
 		VkImageMemoryBarrier barrier;
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;

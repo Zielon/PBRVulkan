@@ -15,13 +15,13 @@ layout(binding = 0, set = 0) uniform accelerationStructureNV TLAS;
 layout(binding = 1, rgba32f) uniform image2D AccumulationImage;
 layout(binding = 2, rgba8) uniform image2D OutputImage;
 layout(binding = 10, rgba32f) uniform image2D NormalsImage;
+layout(binding = 11, rgba32f) uniform image2D PositionImage;
 layout(binding = 3) readonly uniform UniformBufferObject { Uniform ubo; };
 
 layout(location = 0) rayPayloadNV RayPayload payload;
 
 #include "../Common/Random.glsl"
 #include "../Common/Math.glsl"
-#include "../Common/Denoiser.glsl"
 
 void main() 
 {
@@ -92,7 +92,7 @@ void main()
 			if (j == 0)
 			{
 				imageStore(NormalsImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.ffnormal, 0.0));
-				//imageStore(PositionImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.worldPos, 0.0));
+				imageStore(PositionImage, ivec2(gl_LaunchIDNV.xy), vec4(payload.worldPos, 0.0));
 			}
 
 			if (payload.stop) break;
@@ -120,8 +120,4 @@ void main()
 	#endif
 
 	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy), vec4(ldr, 1.f));
-
-	#ifdef USE_DENOISER
-	imageStore(OutputImage, ivec2(gl_LaunchIDNV.xy),  denoise());
-	#endif
 }

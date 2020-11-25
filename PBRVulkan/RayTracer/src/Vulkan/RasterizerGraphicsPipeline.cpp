@@ -160,7 +160,7 @@ namespace Vulkan
 
 			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[0].dstSet = descriptorSets[imageIndex];
-			descriptorWrites[0].dstBinding = 0;
+			descriptorWrites[0].dstBinding = 0;	
 			descriptorWrites[0].dstArrayElement = 0;
 			descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 			descriptorWrites[0].descriptorCount = 1;

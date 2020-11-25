@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Menu.h"
+
 #include "../Vulkan/Raytracer.h"
+#include "../Vulkan/Computer.h"
 
 namespace Tracer
 {
@@ -14,7 +16,7 @@ namespace Tracer
 	{
 	public:
 		Application();
-		~Application() = default;
+		~Application();
 
 		void Run() override;
 
@@ -31,6 +33,7 @@ namespace Tracer
 		void ResetAccumulation();
 		void ResizeWindow() const;
 		void PrintGPUInfo() const;
+		void CreateComputePipeline();
 		
 		// User interface API
 		void OnKeyChanged(int key, int scanCode, int action, int mods) override;
@@ -41,6 +44,7 @@ namespace Tracer
 		Settings settings;
 		std::unique_ptr<class Menu> menu;
 		std::unique_ptr<class Compiler> compiler;
+		std::unique_ptr<class Vulkan::Computer> computer;
 
 		uint32_t frame = 0;
 	};

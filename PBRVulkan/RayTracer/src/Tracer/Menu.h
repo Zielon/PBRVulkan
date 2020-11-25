@@ -34,12 +34,10 @@ namespace Tracer
 		float Aperture = 0.001f;
 		float FocalDistance = 1.f;
 		float AORayLength = 0.5f;
-		float DenoiseStrength = 1.f;
 
 		[[nodiscard]] bool RequiresShaderRecompliation(const Settings& prev) const
 		{
-			return UseGammaCorrection != prev.UseGammaCorrection || IntegratorType != prev.IntegratorType || UseDenoiser
-				!= prev.UseDenoiser;
+			return UseGammaCorrection != prev.UseGammaCorrection || IntegratorType != prev.IntegratorType;
 		}
 
 		[[nodiscard]] bool RequiresAccumulationReset(const Settings& prev) const
@@ -54,8 +52,7 @@ namespace Tracer
 				Fov != prev.Fov ||
 				Aperture != prev.Aperture ||
 				FocalDistance != prev.FocalDistance ||
-				AORayLength != prev.AORayLength ||
-				DenoiseStrength != prev.DenoiseStrength;
+				AORayLength != prev.AORayLength;
 		}
 	};
 
@@ -75,7 +72,7 @@ namespace Tracer
 
 		void AddWidget(const std::shared_ptr<Interface::Widget>& widget);
 
-		[[nodiscard]] const Settings& GetSettings() const
+		[[nodiscard]] Settings& GetSettings()
 		{
 			return settings;
 		};

@@ -34,8 +34,7 @@ namespace Tracer
 
 		std::map<Define, std::string> DEFINES = {
 			{ Define::USE_HDR, "#define USE_HDR" },
-			{ Define::USE_GAMMA_CORRECTION, "#define USE_GAMMA_CORRECTION" },
-			{ Define::USE_DENOISER, "#define USE_DENOISER" }
+			{ Define::USE_GAMMA_CORRECTION, "#define USE_GAMMA_CORRECTION" }
 		};
 
 		std::map<ShaderType, Shader> SHADERS = {

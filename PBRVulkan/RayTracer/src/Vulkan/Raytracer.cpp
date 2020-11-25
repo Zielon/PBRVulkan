@@ -61,6 +61,7 @@ namespace Vulkan
 				*accumulationImageView,
 				*outputImageView,
 				*normalsImageView,
+				*positionsImageView,
 				uniformBuffers,
 				// For now assume only one instance of Top Level Instance
 				TLASs.front().Get()));
@@ -88,6 +89,9 @@ namespace Vulkan
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
 		Image::MemoryBarrier(commandBuffer, normalsImage->Get(), subresourceRange, 0,
+		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
+
+		Image::MemoryBarrier(commandBuffer, positionsImage->Get(), subresourceRange, 0,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
@@ -150,9 +154,14 @@ namespace Vulkan
 			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_STORAGE_BIT,
 			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
+		positionsImage.reset(
+			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_STORAGE_BIT,
+			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
 		accumulationImageView.reset(new ImageView(*device, accumulationImage->Get(), accumulationFormat));
 		outputImageView.reset(new ImageView(*device, outputImage->Get(), outputFormat));
 		normalsImageView.reset(new ImageView(*device, normalsImage->Get(), accumulationFormat));
+		positionsImageView.reset(new ImageView(*device, positionsImage->Get(), accumulationFormat));
 	}
 
 	void Raytracer::CreateAS()
@@ -169,7 +178,8 @@ namespace Vulkan
 		const auto stop = std::chrono::high_resolution_clock::now();
 		const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
-		std::cout << "[RAYTRACER] Acceleration data structure build: " << duration.count() << " milliseconds" << std::endl;
+		std::cout << "[RAYTRACER] Acceleration data structure build: " << duration.count() << " milliseconds" <<
+			std::endl;
 	}
 
 	void Raytracer::CreateBLAS(VkCommandBuffer commandBuffer)

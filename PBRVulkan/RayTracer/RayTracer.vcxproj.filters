@@ -37,12 +37,6 @@
     <Filter Include="Assets\Shaders\Rasterizer">
       <UniqueIdentifier>{2a31afd0-b9b0-4aab-8217-ecc41d1b0bf1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\Shaders\Raytracer">
-      <UniqueIdentifier>{beb57e8b-a27e-4c33-ae4f-1e97dfb6dec7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Assets\Shaders\Raytracer\Integrators">
-      <UniqueIdentifier>{10be8f5e-c6dd-4315-aaa8-3cb1291d48b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="3rdParty">
       <UniqueIdentifier>{26bdf9b1-5805-4c41-92bd-53cbff40afbb}</UniqueIdentifier>
     </Filter>
@@ -57,6 +51,18 @@
     </Filter>
     <Filter Include="Assets\Shaders\BSDFs">
       <UniqueIdentifier>{c7a140a7-fbad-4d12-a1e5-4e28f5a59977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders\Compute">
+      <UniqueIdentifier>{a9b37b53-3a6a-48af-8bd1-cd1ad599f41c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Computer">
+      <UniqueIdentifier>{29b40f75-b6fa-420e-8ab5-741b44f45dcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders\Raytracer">
+      <UniqueIdentifier>{beb57e8b-a27e-4c33-ae4f-1e97dfb6dec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders\Raytracer\Integrators">
+      <UniqueIdentifier>{10be8f5e-c6dd-4315-aaa8-3cb1291d48b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,44 +84,53 @@
     <None Include="src\Assets\Shaders\Raytracer\Raytracing.rmiss">
       <Filter>Assets\Shaders\Raytracer</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Common\Structs.glsl">
-      <Filter>Assets\Shaders\Common</Filter>
-    </None>
-    <None Include="src\Assets\Shaders\Common\Math.glsl">
-      <Filter>Assets\Shaders\Common</Filter>
-    </None>
-    <None Include="src\Assets\Shaders\Common\Vertex.glsl">
-      <Filter>Assets\Shaders\Common</Filter>
-    </None>
-    <None Include="src\Assets\Shaders\Common\Random.glsl">
-      <Filter>Assets\Shaders\Common</Filter>
-    </None>
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracerMSM.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
     <None Include="src\Assets\Shaders\Raytracer\Shadow.rmiss">
       <Filter>Assets\Shaders\Raytracer</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Common\Sampling.glsl">
-      <Filter>Assets\Shaders\Common</Filter>
-    </None>
     <None Include="src\Assets\Shaders\Raytracer\Integrators\PathTracer.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
-    </None>
-    <None Include="src\Assets\Shaders\Common\HDR.glsl">
-      <Filter>Assets\Shaders\Common</Filter>
     </None>
     <None Include="src\Assets\Shaders\Raytracer\Integrators\AO.glsl">
       <Filter>Assets\Shaders\Raytracer\Integrators</Filter>
     </None>
+    <None Include="src\Assets\Shaders\Compute\Denoiser.comp">
+      <Filter>Assets\Shaders\Compute</Filter>
+    </None>
     <None Include="src\Assets\Shaders\Common\Denoiser.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\DirectLight.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\HDR.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\Math.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\Random.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\Sampling.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\Structs.glsl">
+      <Filter>Assets\Shaders\Common</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Common\Vertex.glsl">
       <Filter>Assets\Shaders\Common</Filter>
     </None>
     <None Include="src\Assets\Shaders\BSDFs\UE4BSDF.glsl">
       <Filter>Assets\Shaders\BSDFs</Filter>
     </None>
-    <None Include="src\Assets\Shaders\Common\DirectLight.glsl">
-      <Filter>Assets\Shaders\Common</Filter>
+    <None Include="src\Assets\Shaders\Compute\Edgedetect.comp">
+      <Filter>Assets\Shaders\Compute</Filter>
+    </None>
+    <None Include="src\Assets\Shaders\Compute\Sharpen.comp">
+      <Filter>Assets\Shaders\Compute</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -260,6 +275,12 @@
     </ClCompile>
     <ClCompile Include="src\Tracer\Widgets\CinemaWidget.cpp">
       <Filter>Tracer\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\ComputePipeline.cpp">
+      <Filter>Computer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Computer.cpp">
+      <Filter>Computer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -418,6 +439,15 @@
     </ClInclude>
     <ClInclude Include="src\Tracer\Widgets\CinemaWidget.h">
       <Filter>Tracer\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\ComputePipeline.h">
+      <Filter>Computer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Computer.h">
+      <Filter>Computer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Geometry\Denoiser.h">
+      <Filter>Geometry\Uniforms</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

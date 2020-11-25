@@ -9,7 +9,7 @@ namespace Vulkan
 	public:
 		NON_COPIABLE(CommandPool)
 
-		CommandPool(const class Device& device);
+		CommandPool(const class Device& device, uint32_t familyIndex);
 		~CommandPool();
 
 		[[nodiscard]] VkCommandPool Get() const

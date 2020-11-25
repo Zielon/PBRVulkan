@@ -51,6 +51,12 @@ namespace Tracer
 		RegisterCallbacks();
 		Raytracer::CreateSwapChain();
 		CreateMenu();
+		CreateComputePipeline();
+	}
+
+	Application::~Application()
+	{
+		computer.reset();
 	}
 
 	void Application::LoadScene()
@@ -83,9 +89,6 @@ namespace Tracer
 		if (settings.UseGammaCorrection)
 			defines.push_back(Parser::Define::USE_GAMMA_CORRECTION);
 
-		if (settings.UseDenoiser)
-			defines.push_back(Parser::Define::USE_DENOISER);
-
 		includes.push_back(static_cast<Parser::Include>(settings.IntegratorType));
 
 		compiler->Compile(includes, defines);
@@ -93,6 +96,7 @@ namespace Tracer
 
 	void Application::RecreateSwapChain()
 	{
+		menu->GetSettings().UseDenoiser = false;
 		settings = menu->GetSettings();
 		device->WaitIdle();
 		menu.reset();
@@ -104,6 +108,7 @@ namespace Tracer
 		Raytracer::CreateSwapChain();
 		CreateMenu();
 		ResetAccumulation();
+		CreateComputePipeline();
 	}
 
 	void Application::RecompileShaders()
@@ -153,7 +158,6 @@ namespace Tracer
 		uniform.hdrResolution = scene->UseHDR() ? scene->GetHDRResolution() : 0.f;
 		uniform.frame = frame;
 		uniform.AORayLength = settings.AORayLength;
-		uniform.denoiserStrength = settings.DenoiseStrength;
 		uniform.integratorType = settings.IntegratorType;
 
 		uniformBuffers[imageIndex]->Fill(&uniform);
@@ -243,6 +247,15 @@ namespace Tracer
 			const auto* selected = device == physicalDevice ? "	 (selected)" : "";
 			std::cout << "	" << prop.deviceName << selected << std::endl;
 		}
+	}
+	void Application::CreateComputePipeline()
+	{
+		computer.reset(new Vulkan::Computer(
+			*swapChain,
+			*device,
+			GetOutputImageView(),
+			GetNormalsImageView(),
+			GetPositionImageView()));
 	}
 
 	void Application::Run()

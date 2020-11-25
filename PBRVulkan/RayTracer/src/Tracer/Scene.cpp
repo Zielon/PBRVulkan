@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <future>
+#include <utility>
 
 #include "Camera.h"
 #include "TextureImage.h"
@@ -23,10 +24,10 @@
 namespace Tracer
 {
 	Scene::Scene(
-		const std::string& config,
+		std::string config,
 		const Vulkan::Device& device,
 		const Vulkan::CommandPool& commandPool)
-		: config(config), device(device), commandPool(commandPool)
+		: config(std::move(config)), device(device), commandPool(commandPool)
 	{
 		const auto start = std::chrono::high_resolution_clock::now();
 
