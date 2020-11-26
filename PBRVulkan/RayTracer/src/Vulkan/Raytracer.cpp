@@ -75,12 +75,7 @@ namespace Vulkan
 
 		VkDescriptorSet descriptorSets[] = { raytracerGraphicsPipeline->GetDescriptorsSets()[imageIndex] };
 
-		VkImageSubresourceRange subresourceRange;
-		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		subresourceRange.baseMipLevel = 0;
-		subresourceRange.levelCount = 1;
-		subresourceRange.baseArrayLayer = 0;
-		subresourceRange.layerCount = 1;
+		VkImageSubresourceRange subresourceRange = Image::GetSubresourceRange();
 
 		Image::MemoryBarrier(commandBuffer, accumulationImage->Get(), subresourceRange, 0,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
@@ -117,12 +112,7 @@ namespace Vulkan
 		                     VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
 		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-		VkImageCopy copyRegion;
-		copyRegion.srcSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
-		copyRegion.srcOffset = { 0, 0, 0 };
-		copyRegion.dstSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
-		copyRegion.dstOffset = { 0, 0, 0 };
-		copyRegion.extent = { extent.width, extent.height, 1 };
+		VkImageCopy copyRegion = Image::GetImageCopy(extent.width, extent.height);
 
 		vkCmdCopyImage(commandBuffer,
 		               outputImage->Get(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,

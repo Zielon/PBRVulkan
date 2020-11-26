@@ -180,7 +180,7 @@ namespace Tracer
 		else
 			Raytracer::Render(framebuffer, commandBuffer, imageIndex);
 
-		Postprocess(commandBuffer, imageIndex);
+		ComputePipeline(commandBuffer, imageIndex);
 
 		menu->Render(framebuffer, commandBuffer);
 
@@ -266,17 +266,14 @@ namespace Tracer
 			GetPositionImageView()));
 	}
 
-	void Application::Postprocess(VkCommandBuffer commandBuffer, uint32_t imageIndex) const
+	void Application::ComputePipeline(VkCommandBuffer commandBuffer, uint32_t imageIndex) const
 	{
+		// It uses the previous frame buffers
 		if (settings.UseComputeShaders && frame > 0)
 		{
 			const auto extent = swapChain->Extent;
-			VkImageSubresourceRange subresourceRange;
-			subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			subresourceRange.baseMipLevel = 0;
-			subresourceRange.levelCount = 1;
-			subresourceRange.baseArrayLayer = 0;
-			subresourceRange.layerCount = 1;
+
+			VkImageSubresourceRange subresourceRange = Vulkan::Image::GetSubresourceRange();
 
 			// Compute pipeline
 			{
@@ -304,12 +301,7 @@ namespace Tracer
 			                             VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
 			                             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-			VkImageCopy copyRegion;
-			copyRegion.srcSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
-			copyRegion.srcOffset = { 0, 0, 0 };
-			copyRegion.dstSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
-			copyRegion.dstOffset = { 0, 0, 0 };
-			copyRegion.extent = { extent.width, extent.height, 1 };
+			VkImageCopy copyRegion = Vulkan::Image::GetImageCopy(extent.width, extent.height);
 
 			vkCmdCopyImage(commandBuffer,
 			               computer->GetOutputImage().Get(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,

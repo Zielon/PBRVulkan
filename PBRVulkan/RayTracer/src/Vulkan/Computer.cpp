@@ -71,15 +71,17 @@ namespace Vulkan
 
 		VkCommandBuffer commandBuffer = commandBuffers->Begin(0);
 		{
-			VkImageSubresourceRange subresourceRange;
-
-			subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			subresourceRange.baseMipLevel = 0;
-			subresourceRange.levelCount = 1;
-			subresourceRange.baseArrayLayer = 0;
-			subresourceRange.layerCount = 1;
+			VkImageSubresourceRange subresourceRange = Image::GetSubresourceRange();
 
 			Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange, 0,
+			                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
+			                     VK_IMAGE_LAYOUT_GENERAL);
+
+			Image::MemoryBarrier(commandBuffer, normalsImageView.GetImage(), subresourceRange, 0,
+			                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
+			                     VK_IMAGE_LAYOUT_GENERAL);
+
+			Image::MemoryBarrier(commandBuffer, positionsImageView.GetImage(), subresourceRange, 0,
 			                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
 			                     VK_IMAGE_LAYOUT_GENERAL);
 

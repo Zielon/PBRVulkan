@@ -18,9 +18,9 @@ vec4 denoise(ivec2 coords)
 
     vec2 fragCoord = coords;
     vec3 sum = vec3(0.0);
-    float colorPhi = .8f; //ubo.colorPhi;
+    float colorPhi = .9f; //ubo.colorPhi;
     float normalPhi = .3f; // ubo.normalPhi;
-    float positionPhi = .3f; //ubo.positionPhi;
+    float positionPhi = .6f; //ubo.positionPhi;
 
     vec3 cval = imageLoad(InputImage, ivec2(fragCoord)).rgb;     // color
     vec3 nval = imageLoad(NormalsImage, ivec2(fragCoord)).rgb;   // normal
