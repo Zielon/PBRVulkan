@@ -222,7 +222,7 @@ namespace Vulkan
 		VkDeviceSize resultOffset = 0;
 		VkDeviceSize scratchOffset = 0;
 
-		for (size_t i = 0; i != BLASs.size(); ++i)
+		for (size_t i = 0; i < BLASs.size(); ++i)
 		{
 			BLASs[i].Generate(commandBuffer, *ScratchBLASBuffer, scratchOffset, *BLASBuffer, resultOffset, false);
 			resultOffset += requirements[i].result.size;

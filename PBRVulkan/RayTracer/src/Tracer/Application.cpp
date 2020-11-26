@@ -178,7 +178,10 @@ namespace Tracer
 			ResetAccumulation();
 
 		if (settings.UseRasterizer)
+		{
+			Clear(commandBuffer);
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
+		}
 		else
 			Raytracer::Render(framebuffer, commandBuffer, imageIndex);
 
