@@ -9,7 +9,7 @@ namespace Interface
 	public:
 		~SceneWidget() = default;
 
-		void Render(Tracer::Settings& settings) override;
+		void Render(Settings& settings) override;
 
 	private:
 		const char* integrators[3] = {

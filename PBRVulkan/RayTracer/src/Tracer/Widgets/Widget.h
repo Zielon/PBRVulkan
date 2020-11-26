@@ -1,9 +1,6 @@
 #pragma once
 
-namespace Tracer
-{
-	struct Settings;
-}
+#include "../Settings.h"
 
 namespace Interface
 {
@@ -11,6 +8,6 @@ namespace Interface
 	{
 	public:
 		virtual ~Widget() = default;
-		virtual void Render(Tracer::Settings& settings) = 0;
+		virtual void Render(Settings& settings) = 0;
 	};
 }

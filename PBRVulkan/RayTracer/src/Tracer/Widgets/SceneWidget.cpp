@@ -2,11 +2,9 @@
 
 #include <imgui.h>
 
-#include "../Menu.h"
-
 namespace Interface
 {
-	void SceneWidget::Render(Tracer::Settings& settings)
+	void SceneWidget::Render(Settings& settings)
 	{
 		ImGui::Text("Shaders");
 

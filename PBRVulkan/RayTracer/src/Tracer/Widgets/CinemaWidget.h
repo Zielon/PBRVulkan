@@ -9,6 +9,6 @@ namespace Interface
 	public:
 		~CinemaWidget() = default;
 		
-		void Render(Tracer::Settings& settings) override;
+		void Render(Settings& settings) override;
 	};
 }

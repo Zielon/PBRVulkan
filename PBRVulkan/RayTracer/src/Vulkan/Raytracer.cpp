@@ -104,6 +104,10 @@ namespace Vulkan
 		                             nullptr, 0, 0,
 		                             extent.width, extent.height, 1);
 
+		// Do not copy image to swap chain
+		if (settings.UseComputeShaders)
+			return;
+
 		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT, VK_IMAGE_LAYOUT_GENERAL,
 		                     VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);

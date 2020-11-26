@@ -449,5 +449,8 @@
     <ClInclude Include="src\Geometry\Denoiser.h">
       <Filter>Geometry\Uniforms</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tracer\Settings.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

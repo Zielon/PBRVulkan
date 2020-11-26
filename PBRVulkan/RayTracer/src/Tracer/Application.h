@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Menu.h"
-
 #include "../Vulkan/Raytracer.h"
 #include "../Vulkan/Computer.h"
 
@@ -42,7 +40,6 @@ namespace Tracer
 		void OnMouseButtonChanged(int button, int action, int mods) override;
 		void OnScrollChanged(double xoffset, double yoffset) override;
 
-		Settings settings;
 		std::unique_ptr<class Menu> menu;
 		std::unique_ptr<class Compiler> compiler;
 		std::unique_ptr<class Vulkan::Computer> computer;

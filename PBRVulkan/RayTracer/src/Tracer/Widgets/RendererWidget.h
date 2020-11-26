@@ -9,7 +9,7 @@ namespace Interface
 	public:
 		~RendererWidget() = default;
 
-		void Render(Tracer::Settings& settings) override;
+		void Render(Settings& settings) override;
 
 	private:
 		const char* computeShaders[3] = {

@@ -2,11 +2,9 @@
 
 #include <imgui.h>
 
-#include "../Menu.h"
-
 namespace Interface
 {
-	void RendererWidget::Render(Tracer::Settings& settings)
+	void RendererWidget::Render(Settings& settings)
 	{
 		ImGui::Text("Renderer");
 		ImGui::Separator();

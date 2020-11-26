@@ -107,6 +107,7 @@
     <ClInclude Include="src\Tracer\Menu.h" />
     <ClInclude Include="src\Tracer\Application.h" />
     <ClInclude Include="src\Tracer\Scene.h" />
+    <ClInclude Include="src\Tracer\Settings.h" />
     <ClInclude Include="src\Tracer\TextureImage.h" />
     <ClInclude Include="src\Tracer\Widgets\CinemaWidget.h" />
     <ClInclude Include="src\Tracer\Widgets\RendererWidget.h" />
