@@ -51,6 +51,12 @@ namespace Vulkan
 		}
 	}
 
+	VkClearColorValue Image::GetColor(float r, float g, float b)
+	{
+		VkClearColorValue color = { r, g, b };
+		return color;
+	}
+
 	VkImageSubresourceRange Image::GetSubresourceRange()
 	{
 		VkImageSubresourceRange subresourceRange;

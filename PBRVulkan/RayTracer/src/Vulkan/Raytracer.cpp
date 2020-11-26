@@ -69,6 +69,26 @@ namespace Vulkan
 		shaderBindingTable.reset(new ShaderBindingTable(*raytracerGraphicsPipeline));
 	}
 
+	void Raytracer::Clear(VkCommandBuffer commandBuffer) const
+	{
+		VkImageSubresourceRange subresourceRange = Image::GetSubresourceRange();
+
+		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
+		                     VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
+		                     VK_IMAGE_LAYOUT_UNDEFINED,
+		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+		VkClearColorValue color = Image::GetColor(0, 0, 0);
+
+		vkCmdClearColorImage(commandBuffer, outputImage->Get(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &color, 1,
+		                     &subresourceRange);
+
+		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
+		                     VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT,
+		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+		                     VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+	}
+
 	void Raytracer::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
 	{
 		const auto extent = swapChain->Extent;
@@ -108,24 +128,7 @@ namespace Vulkan
 		if (settings.UseComputeShaders)
 			return;
 
-		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
-		                     VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT, VK_IMAGE_LAYOUT_GENERAL,
-		                     VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-
-		Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange, 0,
-		                     VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
-		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-		VkImageCopy copyRegion = Image::GetImageCopy(extent.width, extent.height);
-
-		vkCmdCopyImage(commandBuffer,
-		               outputImage->Get(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-		               swapChain->GetImage()[imageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-		               1, &copyRegion);
-
-		Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange,
-		                     VK_ACCESS_TRANSFER_WRITE_BIT,
-		                     0, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+		Copy(commandBuffer, outputImage->Get(), swapChain->GetImage()[imageIndex]);
 	}
 
 	void Raytracer::CreateOutputTexture()
@@ -136,12 +139,13 @@ namespace Vulkan
 		const auto tiling = VK_IMAGE_TILING_OPTIMAL;
 
 		accumulationImage.reset(
-			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_STORAGE_BIT,
+			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D,
+			          VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
 			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		outputImage.reset(
 			new Image(*device, extent, outputFormat, tiling, VK_IMAGE_TYPE_2D,
-			          VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+			          VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
 			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		normalsImage.reset(

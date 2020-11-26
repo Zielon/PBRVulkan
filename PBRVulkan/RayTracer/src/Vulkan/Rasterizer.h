@@ -15,6 +15,7 @@ namespace Vulkan
 		void CreateSwapChain() override;
 		void DeleteSwapChain() override;
 		void CreateGraphicsPipeline() override;
+		void Copy(VkCommandBuffer commandBuffer, VkImage src, VkImage dst) const;
 		
 	protected:
 		void Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex) override;

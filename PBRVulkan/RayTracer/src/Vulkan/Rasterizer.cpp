@@ -130,4 +130,27 @@ namespace Vulkan
 
 		commandBuffers.reset(new CommandBuffers(*commandPool, static_cast<uint32_t>(swapChainFrameBuffers.size())));
 	}
+
+	void Rasterizer::Copy(VkCommandBuffer commandBuffer, VkImage src, VkImage dst) const
+	{
+		VkExtent2D extent = swapChain->Extent;
+		VkImageSubresourceRange subresourceRange = Image::GetSubresourceRange();
+		VkImageCopy copyRegion = Image::GetImageCopy(extent.width, extent.height);
+
+		Image::MemoryBarrier(commandBuffer, src, subresourceRange,
+		                     VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT, VK_IMAGE_LAYOUT_GENERAL,
+		                     VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+
+		Image::MemoryBarrier(commandBuffer, dst, subresourceRange, 0,
+		                     VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
+		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+		vkCmdCopyImage(commandBuffer, src, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dst,
+		               VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);
+
+		Image::MemoryBarrier(commandBuffer, dst, subresourceRange,
+		                     VK_ACCESS_TRANSFER_WRITE_BIT, 0,
+		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			VK_IMAGE_LAYOUT_GENERAL);
+	}
 }

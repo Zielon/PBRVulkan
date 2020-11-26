@@ -114,6 +114,11 @@ namespace Tracer
 		CreateMenu();
 		ResetAccumulation();
 		CreateComputePipeline();
+
+		Vulkan::Command::Submit(*commandPool, [this](VkCommandBuffer commandBuffer)
+		{
+			Clear(commandBuffer);
+		});
 	}
 
 	void Application::RecompileShaders()
@@ -269,12 +274,8 @@ namespace Tracer
 	void Application::ComputePipeline(VkCommandBuffer commandBuffer, uint32_t imageIndex) const
 	{
 		// It uses the previous frame buffers
-		if (settings.UseComputeShaders && frame > 0)
+		if (settings.UseComputeShaders)
 		{
-			const auto extent = swapChain->Extent;
-
-			VkImageSubresourceRange subresourceRange = Vulkan::Image::GetSubresourceRange();
-
 			// Compute pipeline
 			{
 				computer->BuildCommand(settings.ComputeShaderId);
@@ -292,26 +293,7 @@ namespace Tracer
 				                 "Compute shader submit failed!");
 			}
 
-			Vulkan::Image::MemoryBarrier(commandBuffer, computer->GetOutputImage().Get(), subresourceRange,
-			                             VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
-			                             VK_IMAGE_LAYOUT_GENERAL,
-			                             VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-
-			Vulkan::Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange, 0,
-			                             VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
-			                             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-			VkImageCopy copyRegion = Vulkan::Image::GetImageCopy(extent.width, extent.height);
-
-			vkCmdCopyImage(commandBuffer,
-			               computer->GetOutputImage().Get(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-			               swapChain->GetImage()[imageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			               1, &copyRegion);
-
-			Vulkan::Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange,
-			                             VK_ACCESS_TRANSFER_WRITE_BIT,
-			                             0, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			                             VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+			Copy(commandBuffer, computer->GetOutputImage().Get(), swapChain->GetImage()[imageIndex]);
 		}
 	}
 

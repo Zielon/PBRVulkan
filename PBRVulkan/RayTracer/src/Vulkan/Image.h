@@ -47,6 +47,8 @@ namespace Vulkan
 			return device;
 		}
 
+		static VkClearColorValue GetColor(float r, float g, float b);
+		
 		static VkImageSubresourceRange GetSubresourceRange();
 
 		static VkImageCopy GetImageCopy(uint32_t width, uint32_t height);
