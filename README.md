@@ -7,7 +7,7 @@ Check out the discord [#general](https://discord.gg/365bNPbFTM) for more info or
 The current development is available under [project](https://github.com/Zielon/PBRVulkan/projects/1) ![issues](https://img.shields.io/github/issues/Zielon/PBRVulkan)
 
 <p align="center">
-  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/bedroom.gif?raw=true" width="640" height="360">
+  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/bedroom.gif?raw=true" width=auto height=auto>
 </p>
 
 #### Sandbox
@@ -45,6 +45,12 @@ PBRVulkan/Assets/Scenes/
     ...
 ```
 
+#### Demo
+
+<p align="center">
+  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/stormtroopers.gif?raw=true" width="640" height="360">
+</p
+  
 #### References/Credits
 
 [0] [Vulkan Tutorial](https://vulkan-tutorial.com/) \
@@ -52,9 +58,3 @@ PBRVulkan/Assets/Scenes/
 [2] [PBR Book](http://www.pbr-book.org/3ed-2018/contents.html) \
 [4] [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) \
 [5] [RayTracingInVulkan](https://github.com/GPSnoopy/RayTracingInVulkan)
-
-#### Demo
-
-<p align="center">
-  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/stormtroopers.gif?raw=true" width="640" height="360">
-</p>
