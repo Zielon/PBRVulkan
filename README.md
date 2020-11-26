@@ -45,12 +45,6 @@ PBRVulkan/Assets/Scenes/
     ...
 ```
 
-#### Demo
-
-<p align="center">
-  <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/stormtroopers.gif?raw=true" width="640" height="360">
-</p
-  
 #### References/Credits
 
 [0] [Vulkan Tutorial](https://vulkan-tutorial.com/) \
