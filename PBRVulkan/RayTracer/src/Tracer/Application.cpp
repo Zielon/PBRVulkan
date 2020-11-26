@@ -60,10 +60,7 @@ namespace Tracer
 		CreateComputePipeline();
 	}
 
-	Application::~Application()
-	{
-		computer.reset();
-	}
+	Application::~Application() { }
 
 	void Application::LoadScene()
 	{
