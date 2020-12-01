@@ -12,8 +12,7 @@ namespace Tracer
 		enum class Define
 		{
 			USE_HDR,
-			USE_GAMMA_CORRECTION,
-			USE_DENOISER
+			USE_GAMMA_CORRECTION
 		};
 
 		enum class Include

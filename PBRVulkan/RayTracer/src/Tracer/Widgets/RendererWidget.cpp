@@ -2,24 +2,22 @@
 
 #include <imgui.h>
 
-#include "../Menu.h"
-
 namespace Interface
 {
-	void RendererWidget::Render(Tracer::Settings& settings)
+	void RendererWidget::Render(Settings& settings)
 	{
 		ImGui::Text("Renderer");
 		ImGui::Separator();
 
 		ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
 		ImGui::Checkbox("Gamma correction", &settings.UseGammaCorrection);
-		ImGui::Checkbox("Use Denoiser", &settings.UseDenoiser);
+		ImGui::Checkbox("Compute shaders", &settings.UseComputeShaders);
 
-		if(settings.UseDenoiser)
+		if (settings.UseComputeShaders)
 		{
-			ImGui::Text("Strength  ");
-			ImGui::SameLine();
-			ImGui::InputFloat("denoiser", &settings.DenoiseStrength, 0.1);
+			ImGui::PushItemWidth(-1);
+			ImGui::Combo("compute shaders", &settings.ComputeShaderId, computeShaders, 3);
+			ImGui::PopItemWidth();
 		}
 
 		ImGui::Text("# samples ");

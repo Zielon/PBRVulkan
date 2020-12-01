@@ -67,7 +67,6 @@ namespace Vulkan
 		inFlightFence->Reset();
 
 		UpdateUniformBuffer(imageIndex);
-
 		QueueSubmit(commandBuffer);
 		Present(imageIndex);
 
@@ -111,7 +110,7 @@ namespace Vulkan
 		VkSubmitInfo submitInfo{};
 		VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame]->Get() };
 		VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame]->Get() };
-		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR };
 
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 		submitInfo.waitSemaphoreCount = 1;
@@ -146,6 +145,6 @@ namespace Vulkan
 		auto* physicalDevice = instance->GetDevices().front();
 
 		device.reset(new Device(physicalDevice, *surface));
-		commandPool.reset(new CommandPool(*device));
+		commandPool.reset(new CommandPool(*device, device->GraphicsFamilyIndex));
 	}
 }

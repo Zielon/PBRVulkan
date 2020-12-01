@@ -51,11 +51,46 @@ namespace Vulkan
 		}
 	}
 
+	VkClearColorValue Image::GetColor(float r, float g, float b)
+	{
+		VkClearColorValue color = { r, g, b };
+		return color;
+	}
+
+	VkImageSubresourceRange Image::GetSubresourceRange()
+	{
+		VkImageSubresourceRange subresourceRange;
+		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		subresourceRange.baseMipLevel = 0;
+		subresourceRange.levelCount = 1;
+		subresourceRange.baseArrayLayer = 0;
+		subresourceRange.layerCount = 1;
+
+		return subresourceRange;
+	}
+
+	VkImageCopy Image::GetImageCopy(uint32_t width, uint32_t height)
+	{
+		VkImageCopy copyRegion;
+		copyRegion.srcSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
+		copyRegion.srcOffset = { 0, 0, 0 };
+		copyRegion.dstSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
+		copyRegion.dstOffset = { 0, 0, 0 };
+		copyRegion.extent = { width, height, 1 };
+
+		return copyRegion;
+	}
+
 	void Image::MemoryBarrier(
-		VkCommandBuffer commandBuffer, VkImage image,
-		VkImageSubresourceRange subresourceRange, VkAccessFlags srcAccessMask,
+		VkCommandBuffer commandBuffer,
+		VkImage image,
+		VkImageSubresourceRange subresourceRange,
+		VkAccessFlags srcAccessMask,
 		VkAccessFlags dstAccessMask,
-		VkImageLayout oldLayout, VkImageLayout newLayout)
+		VkImageLayout oldLayout,
+		VkImageLayout newLayout,
+		VkPipelineStageFlagBits srcStageMask,
+		VkPipelineStageFlagBits dstStageMask)
 	{
 		VkImageMemoryBarrier barrier;
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -69,9 +104,17 @@ namespace Vulkan
 		barrier.image = image;
 		barrier.subresourceRange = subresourceRange;
 
-		vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-		                     VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 0, nullptr, 1,
-		                     &barrier);
+		vkCmdPipelineBarrier(
+			commandBuffer,
+			srcStageMask,
+			dstStageMask,
+			0,
+			0,
+			nullptr,
+			0,
+			nullptr,
+			1,
+			&barrier);
 	}
 
 	void Image::Copy(const CommandPool& commandPool, const Buffer& buffer)

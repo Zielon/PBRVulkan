@@ -24,6 +24,9 @@
     <None Include="src\Assets\Shaders\Common\Sampling.glsl" />
     <None Include="src\Assets\Shaders\Common\Structs.glsl" />
     <None Include="src\Assets\Shaders\Common\Vertex.glsl" />
+    <None Include="src\Assets\Shaders\Compute\Denoiser.comp" />
+    <None Include="src\Assets\Shaders\Compute\Edgedetect.comp" />
+    <None Include="src\Assets\Shaders\Compute\Sharpen.comp" />
     <None Include="src\Assets\Shaders\Rasterizer\Fragment.frag" />
     <None Include="src\Assets\Shaders\Rasterizer\Vertex.vert" />
     <None Include="src\Assets\Shaders\Raytracer\Integrators\AO.glsl" />
@@ -53,6 +56,8 @@
     <ClCompile Include="src\Tracer\Widgets\SceneWidget.cpp" />
     <ClCompile Include="src\Vulkan\AccelerationStructure.cpp" />
     <ClCompile Include="src\Vulkan\BLAS.cpp" />
+    <ClCompile Include="src\Vulkan\ComputePipeline.cpp" />
+    <ClCompile Include="src\Vulkan\Computer.cpp" />
     <ClCompile Include="src\Vulkan\Core.cpp" />
     <ClCompile Include="src\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Vulkan\Command.cpp" />
@@ -90,6 +95,7 @@
     <ClInclude Include="src\Assets\Material.h" />
     <ClInclude Include="src\Assets\Mesh.h" />
     <ClInclude Include="src\Assets\Texture.h" />
+    <ClInclude Include="src\Geometry\Denoiser.h" />
     <ClInclude Include="src\Geometry\Global.h" />
     <ClInclude Include="src\Geometry\Vertex.h" />
     <ClInclude Include="src\ImGui\imgui_impl_glfw.h" />
@@ -101,6 +107,7 @@
     <ClInclude Include="src\Tracer\Menu.h" />
     <ClInclude Include="src\Tracer\Application.h" />
     <ClInclude Include="src\Tracer\Scene.h" />
+    <ClInclude Include="src\Tracer\Settings.h" />
     <ClInclude Include="src\Tracer\TextureImage.h" />
     <ClInclude Include="src\Tracer\Widgets\CinemaWidget.h" />
     <ClInclude Include="src\Tracer\Widgets\RendererWidget.h" />
@@ -108,6 +115,8 @@
     <ClInclude Include="src\Tracer\Widgets\Widget.h" />
     <ClInclude Include="src\Vulkan\AccelerationStructure.h" />
     <ClInclude Include="src\Vulkan\BLAS.h" />
+    <ClInclude Include="src\Vulkan\ComputePipeline.h" />
+    <ClInclude Include="src\Vulkan\Computer.h" />
     <ClInclude Include="src\Vulkan\Core.h" />
     <ClInclude Include="src\Vulkan\Buffer.h" />
     <ClInclude Include="src\Vulkan\CommandBuffers.h" />
@@ -172,7 +181,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level2</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -180,7 +189,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -196,10 +205,13 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <FxCompile>
+      <EntryPointName />
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level2</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -227,6 +239,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <FxCompile>
+      <EntryPointName />
+    </FxCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

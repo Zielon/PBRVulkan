@@ -43,7 +43,7 @@ namespace Tracer
 		NON_COPIABLE(Scene)
 
 		Scene(
-			const std::string& config,
+			std::string config,
 			const class Vulkan::Device& device,
 			const Vulkan::CommandPool& commandPool);
 		~Scene();

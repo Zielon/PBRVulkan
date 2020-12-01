@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 
+#include "../Tracer/Settings.h"
+
 namespace Tracer
 {
 	class Scene;
@@ -25,7 +27,7 @@ namespace Vulkan
 		virtual void CreateSwapChain() = 0;
 		virtual void DeleteSwapChain() = 0;
 		virtual void CreateGraphicsPipeline() = 0;
-		
+
 	protected:
 		void DrawFrame();
 		void CreatePhysicalDevice();
@@ -43,6 +45,7 @@ namespace Vulkan
 		virtual void OnMouseButtonChanged(int button, int action, int mods) = 0;
 		virtual void OnScrollChanged(double xoffset, double yoffset) = 0;
 
+		Settings settings;
 		size_t currentFrame{};
 
 		std::unique_ptr<class Tracer::Scene> scene;

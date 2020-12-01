@@ -61,11 +61,32 @@ namespace Vulkan
 				*accumulationImageView,
 				*outputImageView,
 				*normalsImageView,
+				*positionsImageView,
 				uniformBuffers,
 				// For now assume only one instance of Top Level Instance
 				TLASs.front().Get()));
 
 		shaderBindingTable.reset(new ShaderBindingTable(*raytracerGraphicsPipeline));
+	}
+
+	void Raytracer::Clear(VkCommandBuffer commandBuffer) const
+	{
+		VkImageSubresourceRange subresourceRange = Image::GetSubresourceRange();
+
+		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
+		                     VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
+		                     VK_IMAGE_LAYOUT_UNDEFINED,
+		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+		VkClearColorValue color = Image::GetColor(0, 0, 0);
+
+		vkCmdClearColorImage(commandBuffer, outputImage->Get(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &color, 1,
+		                     &subresourceRange);
+
+		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
+		                     VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT,
+		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+		                     VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 	}
 
 	void Raytracer::Render(VkFramebuffer framebuffer, VkCommandBuffer commandBuffer, uint32_t imageIndex)
@@ -74,12 +95,7 @@ namespace Vulkan
 
 		VkDescriptorSet descriptorSets[] = { raytracerGraphicsPipeline->GetDescriptorsSets()[imageIndex] };
 
-		VkImageSubresourceRange subresourceRange;
-		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		subresourceRange.baseMipLevel = 0;
-		subresourceRange.levelCount = 1;
-		subresourceRange.baseArrayLayer = 0;
-		subresourceRange.layerCount = 1;
+		VkImageSubresourceRange subresourceRange = Image::GetSubresourceRange();
 
 		Image::MemoryBarrier(commandBuffer, accumulationImage->Get(), subresourceRange, 0,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
@@ -88,6 +104,9 @@ namespace Vulkan
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
 		Image::MemoryBarrier(commandBuffer, normalsImage->Get(), subresourceRange, 0,
+		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
+
+		Image::MemoryBarrier(commandBuffer, positionsImage->Get(), subresourceRange, 0,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
@@ -105,29 +124,11 @@ namespace Vulkan
 		                             nullptr, 0, 0,
 		                             extent.width, extent.height, 1);
 
-		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
-		                     VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT, VK_IMAGE_LAYOUT_GENERAL,
-		                     VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+		// Do not copy image to swap chain
+		if (settings.UseComputeShaders)
+			return;
 
-		Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange, 0,
-		                     VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
-		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-		VkImageCopy copyRegion;
-		copyRegion.srcSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
-		copyRegion.srcOffset = { 0, 0, 0 };
-		copyRegion.dstSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
-		copyRegion.dstOffset = { 0, 0, 0 };
-		copyRegion.extent = { extent.width, extent.height, 1 };
-
-		vkCmdCopyImage(commandBuffer,
-		               outputImage->Get(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-		               swapChain->GetImage()[imageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-		               1, &copyRegion);
-
-		Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange,
-		                     VK_ACCESS_TRANSFER_WRITE_BIT,
-		                     0, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+		Copy(commandBuffer, outputImage->Get(), swapChain->GetImage()[imageIndex]);
 	}
 
 	void Raytracer::CreateOutputTexture()
@@ -138,21 +139,27 @@ namespace Vulkan
 		const auto tiling = VK_IMAGE_TILING_OPTIMAL;
 
 		accumulationImage.reset(
-			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_STORAGE_BIT,
+			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D,
+			          VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
 			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		outputImage.reset(
 			new Image(*device, extent, outputFormat, tiling, VK_IMAGE_TYPE_2D,
-			          VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+			          VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
 			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		normalsImage.reset(
 			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_STORAGE_BIT,
 			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
+		positionsImage.reset(
+			new Image(*device, extent, accumulationFormat, tiling, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_STORAGE_BIT,
+			          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
 		accumulationImageView.reset(new ImageView(*device, accumulationImage->Get(), accumulationFormat));
 		outputImageView.reset(new ImageView(*device, outputImage->Get(), outputFormat));
 		normalsImageView.reset(new ImageView(*device, normalsImage->Get(), accumulationFormat));
+		positionsImageView.reset(new ImageView(*device, positionsImage->Get(), accumulationFormat));
 	}
 
 	void Raytracer::CreateAS()
@@ -169,7 +176,8 @@ namespace Vulkan
 		const auto stop = std::chrono::high_resolution_clock::now();
 		const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
-		std::cout << "[RAYTRACER] Acceleration data structure build: " << duration.count() << " milliseconds" << std::endl;
+		std::cout << "[RAYTRACER] Acceleration data structure build: " << duration.count() << " milliseconds" <<
+			std::endl;
 	}
 
 	void Raytracer::CreateBLAS(VkCommandBuffer commandBuffer)
@@ -214,7 +222,7 @@ namespace Vulkan
 		VkDeviceSize resultOffset = 0;
 		VkDeviceSize scratchOffset = 0;
 
-		for (size_t i = 0; i != BLASs.size(); ++i)
+		for (size_t i = 0; i < BLASs.size(); ++i)
 		{
 			BLASs[i].Generate(commandBuffer, *ScratchBLASBuffer, scratchOffset, *BLASBuffer, resultOffset, false);
 			resultOffset += requirements[i].result.size;

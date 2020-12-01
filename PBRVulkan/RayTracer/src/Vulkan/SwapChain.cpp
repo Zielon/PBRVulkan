@@ -47,7 +47,7 @@ namespace Vulkan
 			createInfo.queueFamilyIndexCount = 0; // Optional
 			createInfo.pQueueFamilyIndices = nullptr; // Optional
 		}
-
+		
 		VK_CHECK(vkCreateSwapchainKHR(device.Get(), &createInfo, nullptr, &swapChain), "Create swap chain");
 
 		vkGetSwapchainImagesKHR(device.Get(), swapChain, &imageCount, nullptr);

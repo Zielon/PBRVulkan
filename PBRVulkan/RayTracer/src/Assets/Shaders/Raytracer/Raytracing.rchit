@@ -22,7 +22,7 @@ layout(binding = 8) uniform sampler2D[] TextureSamplers;
 layout(binding = 9) readonly buffer LightArray { Light[] Lights; };
 
 #ifdef USE_HDR
-layout(binding = 11) uniform sampler2D[] HDRs;
+layout(binding = 12) uniform sampler2D[] HDRs;
 #endif
 
 layout(location = 0) rayPayloadInNV RayPayload payload;

@@ -15,7 +15,13 @@
 #include "../Vulkan/Window.h"
 #include "../Vulkan/Buffer.h"
 #include "../Vulkan/Device.h"
+#include "../Vulkan/Semaphore.h"
+#include "../Vulkan/CommandBuffers.h"
 #include "../Vulkan/Instance.h"
+#include "../Vulkan/Image.h"
+#include "../Vulkan/SwapChain.h"
+#include "../Vulkan/ImageView.h"
+#include "../Vulkan/Command.cpp"
 
 #include "Widgets/CinemaWidget.h"
 #include "Widgets/RendererWidget.h"
@@ -51,7 +57,10 @@ namespace Tracer
 		RegisterCallbacks();
 		Raytracer::CreateSwapChain();
 		CreateMenu();
+		CreateComputePipeline();
 	}
+
+	Application::~Application() { }
 
 	void Application::LoadScene()
 	{
@@ -83,9 +92,6 @@ namespace Tracer
 		if (settings.UseGammaCorrection)
 			defines.push_back(Parser::Define::USE_GAMMA_CORRECTION);
 
-		if (settings.UseDenoiser)
-			defines.push_back(Parser::Define::USE_DENOISER);
-
 		includes.push_back(static_cast<Parser::Include>(settings.IntegratorType));
 
 		compiler->Compile(includes, defines);
@@ -104,6 +110,12 @@ namespace Tracer
 		Raytracer::CreateSwapChain();
 		CreateMenu();
 		ResetAccumulation();
+		CreateComputePipeline();
+
+		Vulkan::Command::Submit(*commandPool, [this](VkCommandBuffer commandBuffer)
+		{
+			Clear(commandBuffer);
+		});
 	}
 
 	void Application::RecompileShaders()
@@ -153,7 +165,6 @@ namespace Tracer
 		uniform.hdrResolution = scene->UseHDR() ? scene->GetHDRResolution() : 0.f;
 		uniform.frame = frame;
 		uniform.AORayLength = settings.AORayLength;
-		uniform.denoiserStrength = settings.DenoiseStrength;
 		uniform.integratorType = settings.IntegratorType;
 
 		uniformBuffers[imageIndex]->Fill(&uniform);
@@ -167,9 +178,14 @@ namespace Tracer
 			ResetAccumulation();
 
 		if (settings.UseRasterizer)
+		{
+			Clear(commandBuffer);
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
+		}
 		else
 			Raytracer::Render(framebuffer, commandBuffer, imageIndex);
+
+		ComputePipeline(commandBuffer, imageIndex);
 
 		menu->Render(framebuffer, commandBuffer);
 
@@ -242,6 +258,42 @@ namespace Tracer
 			vkGetPhysicalDeviceProperties(device, &prop);
 			const auto* selected = device == physicalDevice ? "	 (selected)" : "";
 			std::cout << "	" << prop.deviceName << selected << std::endl;
+		}
+	}
+
+	void Application::CreateComputePipeline()
+	{
+		computer.reset(new Vulkan::Computer(
+			*swapChain,
+			*device,
+			GetOutputImageView(),
+			GetNormalsImageView(),
+			GetPositionImageView()));
+	}
+
+	void Application::ComputePipeline(VkCommandBuffer commandBuffer, uint32_t imageIndex) const
+	{
+		// It uses the previous frame buffers
+		if (settings.UseComputeShaders)
+		{
+			// Compute pipeline
+			{
+				computer->BuildCommand(settings.ComputeShaderId);
+
+				VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT };
+				VkCommandBuffer commandBuffers[]{ computer->GetCommandBuffers()[0] };
+
+				VkSubmitInfo computeSubmitInfo{};
+				computeSubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+				computeSubmitInfo.pWaitDstStageMask = waitStages;
+				computeSubmitInfo.commandBufferCount = 1;
+				computeSubmitInfo.pCommandBuffers = commandBuffers;
+
+				Vulkan::VK_CHECK(vkQueueSubmit(device->ComputeQueue, 1, &computeSubmitInfo, nullptr),
+				                 "Compute shader submit failed!");
+			}
+
+			Copy(commandBuffer, computer->GetOutputImage().Get(), swapChain->GetImage()[imageIndex]);
 		}
 	}
 

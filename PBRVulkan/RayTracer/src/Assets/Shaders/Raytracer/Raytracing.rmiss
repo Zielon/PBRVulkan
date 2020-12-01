@@ -22,7 +22,7 @@ layout(location = 0) rayPayloadInNV RayPayload payload;
 #include "../Common/Sampling.glsl"
 
 #ifdef USE_HDR
-layout(binding = 11) uniform sampler2D[] HDRs;
+layout(binding = 12) uniform sampler2D[] HDRs;
 #include "../Common/HDR.glsl"
 #endif
 
@@ -30,6 +30,8 @@ void main()
 {
 	// Stop path tracing loop from rgen shader
 	payload.stop = true;
+	payload.ffnormal = vec3(0.);
+	payload.worldPos = vec3(0.);
 	
 	if (ubo.integratorType == AMBIENT_OCCLUSION)
 	{

@@ -2,5 +2,5 @@
 
 namespace Interface
 {
-	void CinemaWidget::Render(Tracer::Settings& settings) {}
+	void CinemaWidget::Render(Settings& settings) {}
 }
