@@ -2,8 +2,10 @@
 
 This project is an engine where you can create/test new shaders in real-time physically based ray tracing system. The main idea is that users can test their own integrators in predefined environment with assets like: meshes, materials, lights and textures. The Vulkan pipeline is abstracted in a shaders form and the only concern for a user is providing either their own scene description or using already existing one.
 
-Check out the discord [#general](https://discord.gg/365bNPbFTM) for more info or help ![discord](https://img.shields.io/discord/774330363810938890) \
-The current development is available under [project](https://github.com/Zielon/PBRVulkan/projects/1) ![issues](https://img.shields.io/github/issues/Zielon/PBRVulkan)
+ ![discord](https://img.shields.io/discord/774330363810938890) ![issues](https://img.shields.io/github/issues/Zielon/PBRVulkan) ![release](https://img.shields.io/github/v/release/Zielon/PBRVulkan)
+
+Check out the discord [#general](https://discord.gg/365bNPbFTM) for more info or help  
+The current development is available under [project](https://github.com/Zielon/PBRVulkan/projects/1)  
 
 <p align="center">
   <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/bedroom.gif?raw=true" width=auto height=auto>
@@ -13,16 +15,20 @@ The current development is available under [project](https://github.com/Zielon/P
 
 As an example of creating your own shader please take a look at [Ambient Occlusion](https://github.com/Zielon/PBRVulkan/blob/master/PBRVulkan/RayTracer/src/Assets/Shaders/Raytracer/Integrators/AO.glsl) or [Path Tracer](https://github.com/Zielon/PBRVulkan/blob/master/PBRVulkan/RayTracer/src/Assets/Shaders/Raytracer/Integrators/PathTracer.glsl). Those files are automatically included in the `hit shader`. At this level you have many resources available to create your own implementation. For now, to make them available for the engine, you would need to add them in the same way I added aforementioned files.
 
+#### Features
+
+1) Ray tracing pipeline
+2) Rasterizer pipeline
+3) Compute shader pipeline
+
 #### How to run
 
-1) Download [VulkanSDK](https://vulkan.lunarg.com/sdk/home#windows) and place it in `C:/VulkanSDK/x.x.x.x/`.
+1) Download [VulkanSDK](https://vulkan.lunarg.com/sdk/home#windows) and install it (`C:/VulkanSDK/x.x.x.x/`).
 2) Run `install.bat` script to download all necessary libraries.
 3) For shaders compliation you will need `python` (Python 3.x.x) and `glslc` available form the shell level. Check out `Compiler.h` and `Compile.py` for more details. `glslc` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslc.exe`.
 
-#### Environment variables
-
-Add vulkan path `C:/VulkanSDK/x.x.x.x/Bin32` to the `Path` variable \
-System variable needed for the project
+Add vulkan path `C:/VulkanSDK/x.x.x.x/Bin32` to the `Path` variable.  
+System variable needed for the project (they will be created after `Vulkan SDK` installation)
 1) `VULKAN_SDK`
 2) `VK_SDK_PATH`
 
