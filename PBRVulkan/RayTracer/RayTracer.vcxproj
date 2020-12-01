@@ -95,7 +95,7 @@
     <ClInclude Include="src\Assets\Material.h" />
     <ClInclude Include="src\Assets\Mesh.h" />
     <ClInclude Include="src\Assets\Texture.h" />
-    <ClInclude Include="src\Geometry\Denoiser.h" />
+    <ClInclude Include="src\Geometry\Compute.h" />
     <ClInclude Include="src\Geometry\Global.h" />
     <ClInclude Include="src\Geometry\Vertex.h" />
     <ClInclude Include="src\ImGui\imgui_impl_glfw.h" />

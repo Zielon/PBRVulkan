@@ -446,11 +446,11 @@
     <ClInclude Include="src\Vulkan\Computer.h">
       <Filter>Computer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Geometry\Denoiser.h">
-      <Filter>Geometry\Uniforms</Filter>
-    </ClInclude>
     <ClInclude Include="src\Tracer\Settings.h">
       <Filter>Tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Geometry\Compute.h">
+      <Filter>Geometry\Uniforms</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

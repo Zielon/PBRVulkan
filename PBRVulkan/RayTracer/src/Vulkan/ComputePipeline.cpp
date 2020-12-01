@@ -11,7 +11,7 @@
 #include "DescriptorSetLayout.h"
 #include "DescriptorsManager.h"
 
-#include "../Geometry/Denoiser.h"
+#include "../Geometry/Compute.h"
 
 namespace Vulkan
 {
@@ -117,7 +117,7 @@ namespace Vulkan
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = uniformBuffers[0]->Get();
 		bufferInfo.offset = 0;
-		bufferInfo.range = sizeof(Uniforms::Denoiser);
+		bufferInfo.range = sizeof(Uniforms::Compute);
 
 		descriptorWrites[4].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptorWrites[4].dstSet = descriptorSets[0];
