@@ -15,7 +15,7 @@
 #include "Buffer.h"
 #include "Command.cpp"
 
-#include "../Geometry/Denoiser.h"
+#include "../Geometry/Compute.h"
 
 namespace Vulkan
 {
@@ -117,7 +117,7 @@ namespace Vulkan
 	void Computer::CreateUniformBuffer()
 	{
 		uniformBuffers.emplace_back(
-			new Buffer(device, sizeof(Uniforms::Denoiser),
+			new Buffer(device, sizeof(Uniforms::Compute),
 			           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 			           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 	}
