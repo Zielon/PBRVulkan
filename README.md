@@ -15,11 +15,22 @@ Check out the discord [#general](https://discord.gg/365bNPbFTM) for more info or
 As an example of creating your own shader please take a look at [Ambient Occlusion](https://github.com/Zielon/PBRVulkan/blob/master/PBRVulkan/RayTracer/src/Assets/Shaders/Raytracer/Integrators/AO.glsl) or [Path Tracer](https://github.com/Zielon/PBRVulkan/blob/master/PBRVulkan/RayTracer/src/Assets/Shaders/Raytracer/Integrators/PathTracer.glsl). Those files are automatically included in the `hit shader`. At this level you have many resources available to create your own implementation. For now, to make them available for the engine, you would need to add them in the same way I added aforementioned files.
 
 #### Features
-
+```
 1) Ray tracing pipeline
-2) Rasterizer pipeline
-3) Compute shader pipeline
-
+    scene/assets description with:
+      materials
+      meshes
+      lights (area, spherical)
+    HDR
+    path tracer integral
+    Unreal Engine 4 BRDF
+2) Rasterizer pipeline     
+    Phong-Blinn model
+3) Compute shader pipeline 
+    denoiser
+    egde detection
+    edge sharpner
+```
 #### How to run
 
 1) Download [VulkanSDK](https://vulkan.lunarg.com/sdk/home#windows) and install it (`C:/VulkanSDK/x.x.x.x/`).
