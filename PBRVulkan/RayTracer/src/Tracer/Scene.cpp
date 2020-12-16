@@ -123,7 +123,7 @@ namespace Tracer
 			for (auto& vertex : mesh->GetVertices())
 			{
 				vertex.position = modelMatrix * glm::vec4(vertex.position, 1.f);
-				vertex.normal = modelTransInvMatrix * glm::vec4(vertex.normal, 1.f);
+				vertex.normal = normalize(modelTransInvMatrix * glm::vec4(vertex.normal, 1.f));
 				vertex.materialId = meshInstance.materialId;
 			}
 
@@ -193,8 +193,7 @@ namespace Tracer
 
 	void Scene::AddHDR(const std::string& path)
 	{
-		hdrLoader = std::async(std::launch::async, [this, path]()
-		{
+		hdrLoader = std::async(std::launch::async, [this, path]() {
 			const auto file = root + path;
 			auto* hdr = Assets::HDRLoader::Load(file.c_str());
 
