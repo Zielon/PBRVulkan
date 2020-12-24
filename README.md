@@ -4,7 +4,7 @@ This project is an engine where you can create/test new shaders in real-time phy
 
  ![discord](https://img.shields.io/discord/774330363810938890) ![issues](https://img.shields.io/github/issues/Zielon/PBRVulkan) ![release](https://img.shields.io/github/v/release/Zielon/PBRVulkan) ![closed](https://img.shields.io/github/issues-closed-raw/Zielon/PBRVulkan)
 
-Check out the discord [#general](https://discord.gg/365bNPbFTM) for more info or help. The current development is available under [project](https://github.com/Zielon/PBRVulkan/projects/1).  
+Check out the discord [#general](https://discord.gg/365bNPbFTM) for more info or [discussions](https://github.com/Zielon/PBRVulkan/discussions). The current development is available under [project](https://github.com/Zielon/PBRVulkan/projects/1).  
 
 <p align="center">
   <img src="https://github.com/Zielon/PBRVulkan/blob/readme-assets/gifs/bedroom.gif?raw=true" width=auto height=auto>
