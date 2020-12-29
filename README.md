@@ -2,7 +2,7 @@
 
 This project is an engine where you can create/test new shaders in real-time physically based ray tracing system. The main idea is that users can test their own integrators in predefined environment with assets like: meshes, materials, lights and textures. The Vulkan pipeline is abstracted in a shaders form and the only concern for a user is providing either their own scene description or using already existing one.
 
- ![discord](https://img.shields.io/discord/774330363810938890) ![issues](https://img.shields.io/github/issues/Zielon/PBRVulkan) ![release](https://img.shields.io/github/v/release/Zielon/PBRVulkan) ![closed](https://img.shields.io/github/issues-closed-raw/Zielon/PBRVulkan)
+ ![discord](https://img.shields.io/discord/774330363810938890) ![issues](https://img.shields.io/github/issues/Zielon/PBRVulkan) ![release](https://img.shields.io/github/v/release/Zielon/PBRVulkan) ![closed](https://img.shields.io/github/issues-closed-raw/Zielon/PBRVulkan) ![Windwos](https://img.shields.io/badge/system-Windows-green)
 
 Check out the discord [#general](https://discord.gg/365bNPbFTM) for more info or [discussions](https://github.com/Zielon/PBRVulkan/discussions). The current development is available under [project](https://github.com/Zielon/PBRVulkan/projects/1).  
 
