@@ -10,16 +10,18 @@ namespace Vulkan
 	Extensions::Extensions(const Device& device) : device(device)
 	{
 		GetDeviceProcAddr(vkSetDebugUtilsObjectNameEXT);
-		GetDeviceProcAddr(vkCreateAccelerationStructureNV);
-		GetDeviceProcAddr(vkDestroyAccelerationStructureNV);
-		GetDeviceProcAddr(vkGetAccelerationStructureMemoryRequirementsNV);
-		GetDeviceProcAddr(vkBindAccelerationStructureMemoryNV);
-		GetDeviceProcAddr(vkCmdBuildAccelerationStructureNV);
-		GetDeviceProcAddr(vkCmdTraceRaysNV);
-		GetDeviceProcAddr(vkCreateRayTracingPipelinesNV);
-		GetDeviceProcAddr(vkGetRayTracingShaderGroupHandlesNV);
-		GetDeviceProcAddr(vkGetAccelerationStructureHandleNV);
-		GetDeviceProcAddr(vkCmdWriteAccelerationStructuresPropertiesNV);
-		GetDeviceProcAddr(vkCompileDeferredNV);
+
+		GetDeviceProcAddr(vkCreateAccelerationStructureKHR);
+		GetDeviceProcAddr(vkDestroyAccelerationStructureKHR);
+		GetDeviceProcAddr(vkGetAccelerationStructureBuildSizesKHR);
+
+		GetDeviceProcAddr(vkCreateRayTracingPipelinesKHR);
+		GetDeviceProcAddr(vkGetRayTracingShaderGroupHandlesKHR);
+		GetDeviceProcAddr(vkGetAccelerationStructureDeviceAddressKHR);
+
+		GetDeviceProcAddr(vkCmdBuildAccelerationStructuresKHR);
+		GetDeviceProcAddr(vkCmdCopyAccelerationStructureKHR);
+		GetDeviceProcAddr(vkCmdWriteAccelerationStructuresPropertiesKHR);
+		GetDeviceProcAddr(vkCmdTraceRaysKHR);
 	}
 }
