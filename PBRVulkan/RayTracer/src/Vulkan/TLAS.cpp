@@ -49,16 +49,8 @@ namespace Vulkan
 		class Buffer& topBuffer,
 		VkDeviceSize topOffset,
 		class Buffer& instanceBuffer,
-		VkDeviceSize instanceOffset,
-		bool updateOnly) const
+		VkDeviceSize instanceOffset) const
 	{
-		if (updateOnly && !allowUpdate)
-		{
-			throw std::invalid_argument("Cannot update readonly structure");
-		}
-
-		const VkAccelerationStructureNV previousStructure = updateOnly ? accelerationStructure : nullptr;
-
 		// Copy the instance descriptors into the provider buffer.
 		const auto instancesBufferSize = geometryInstances.size() * sizeof(VkGeometryInstance);
 		void* data = instanceBuffer.Map(0, instancesBufferSize);

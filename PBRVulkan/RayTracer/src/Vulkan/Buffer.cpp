@@ -60,6 +60,17 @@ namespace Vulkan
 		return memory->Map(offset, size);
 	}
 
+	VkDeviceAddress Buffer::GetDeviceAddress() const
+	{
+		VkBufferDeviceAddressInfo info = {};
+
+		info.sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO;
+		info.pNext = nullptr;
+		info.buffer = buffer;
+
+		return vkGetBufferDeviceAddress(device.Get(), &info);
+	}
+
 	VkMemoryRequirements Buffer::GetMemoryRequirements() const
 	{
 		VkMemoryRequirements memRequirements;

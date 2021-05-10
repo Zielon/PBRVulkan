@@ -20,6 +20,8 @@ namespace Vulkan
 		
 		[[nodiscard]] void* Map(size_t offset, size_t size) const;
 
+		[[nodiscard]] VkDeviceAddress GetDeviceAddress() const;
+
 		[[nodiscard]] const VkBuffer& Get() const
 		{
 			return buffer;

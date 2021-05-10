@@ -17,22 +17,14 @@ namespace Vulkan
 	class BLAS final : public AccelerationStructure
 	{
 	public:
-		BLAS(const BLAS&) = delete;
-		BLAS& operator =(const BLAS&) = delete;
-		BLAS& operator =(BLAS&&) = delete;
-		BLAS(const class Device& device, const std::vector<VkGeometryNV>& geometries, bool allowUpdate);
-		BLAS(BLAS&& other) noexcept;
-		~BLAS() = default;
-
 		void Generate(
 			VkCommandBuffer commandBuffer,
 			const class Buffer& scratchBuffer,
 			VkDeviceSize scratchOffset,
 			const class Buffer& blasBuffer,
-			VkDeviceSize resultOffset,
-			bool updateOnly) const;
+			VkDeviceSize resultOffset);
 
-		static VkGeometryNV CreateGeometry(
+		static VkAccelerationStructureGeometryKHR CreateGeometry(
 			const Tracer::Scene& scene,
 			uint32_t vertexOffset,
 			uint32_t vertexCount,
@@ -41,6 +33,7 @@ namespace Vulkan
 			bool isOpaque);
 
 	private:
-		std::vector<VkGeometryNV> geometries;
+		std::vector<VkAccelerationStructureGeometryKHR> geometries;
+		std::vector<VkAccelerationStructureBuildRangeInfoKHR> buildOffsets;
 	};
 }
