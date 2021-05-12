@@ -11,6 +11,20 @@ namespace Vulkan
 	AccelerationStructure::AccelerationStructure(const class Device& device) : device(device)
 	{
 		extensions.reset(new Extensions(device));
+
+		accelerationPropoerties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
+		pipelineRTPropoerties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR;
+		pipelineRTPropoerties.pNext = &accelerationPropoerties;
+
+		VkPhysicalDeviceProperties2 props = {};
+		props.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+		props.pNext = &pipelineRTPropoerties;
+		vkGetPhysicalDeviceProperties2(device.GetPhysical(), &props);
+	}
+
+	uint64_t AccelerationStructure::RoundUp(uint64_t numToRound, uint64_t multiple) const
+	{
+		return ((numToRound + multiple - 1) / multiple) * multiple;
 	}
 
 	AccelerationStructure::AccelerationStructure(AccelerationStructure&& other) noexcept :
@@ -58,8 +72,8 @@ namespace Vulkan
 			VK_ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR,
 			&buildGeometryInfo, count, &sizeInfo);
 
-		sizeInfo.accelerationStructureSize = 0;
-		sizeInfo.buildScratchSize = 0;
+		sizeInfo.accelerationStructureSize = RoundUp(sizeInfo.accelerationStructureSize, 256);
+		sizeInfo.buildScratchSize = RoundUp(sizeInfo.buildScratchSize, accelerationPropoerties.minAccelerationStructureScratchOffsetAlignment);
 
 		return sizeInfo;
 	}

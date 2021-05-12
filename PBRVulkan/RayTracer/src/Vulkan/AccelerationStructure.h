@@ -53,11 +53,17 @@ namespace Vulkan
 			return accelerationStructure;
 		}
 
+		VkPhysicalDeviceAccelerationStructurePropertiesKHR accelerationPropoerties{};
+		VkPhysicalDeviceRayTracingPipelinePropertiesKHR pipelineRTPropoerties{};
+
 		VkAccelerationStructureBuildGeometryInfoKHR buildGeometryInfo{};
 		VkAccelerationStructureBuildSizesInfoKHR buildSizesInfo{};
 
 	protected:
 		AccelerationStructure(const class Device& device);
+
+		// Rounding up to the nearest multiple of a number
+		uint64_t RoundUp(uint64_t numToRound, uint64_t multiple) const;
 
 		const class Device& device;
 		std::unique_ptr<class Extensions> extensions;

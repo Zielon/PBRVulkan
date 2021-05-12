@@ -83,7 +83,7 @@ namespace Vulkan
 		buildInfo.geometryCount = 0;
 		buildInfo.pGeometries = nullptr;
 
-		extensions->vkCmdBuildAccelerationStructureNV(
+		extensions->vkCmdBuildAccelerationStructuresKHR(
 			commandBuffer, &buildInfo, instanceBuffer.Get(), instanceOffset, updateOnly, accelerationStructure,
 			previousStructure, topScratchBuffer.Get(), scratchOffset);
 	}
