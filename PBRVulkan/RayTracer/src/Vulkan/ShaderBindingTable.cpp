@@ -20,19 +20,23 @@ namespace Vulkan
 	ShaderBindingTable::ShaderBindingTable(const RaytracerGraphicsPipeline& raytracerPipeline)
 		: raytracerPipeline(raytracerPipeline)
 	{
-		VkPhysicalDeviceRayTracingPropertiesNV propertiesNV{};
-		propertiesNV.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV;
+		VkPhysicalDeviceAccelerationStructurePropertiesKHR accelerationProperties{};
+		VkPhysicalDeviceRayTracingPipelinePropertiesKHR pipelineRTProperties{};
+
+		accelerationProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
+		pipelineRTProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR;
+		pipelineRTProperties.pNext = &accelerationProperties;
 
 		VkPhysicalDeviceProperties2 properties = {};
 		properties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-		properties.pNext = &propertiesNV;
+		properties.pNext = &pipelineRTProperties;
 		vkGetPhysicalDeviceProperties2(raytracerPipeline.GetDevice().GetPhysical(), &properties);
 
 		extensions.reset(new Extensions(raytracerPipeline.GetDevice()));
 
-		uint32_t handleSize = propertiesNV.shaderGroupHandleSize;
+		uint32_t handleSize = pipelineRTProperties.shaderGroupHandleSize;
 		uint32_t groupCount = 4;
-		entrySize = SBT::RoundUp(handleSize, propertiesNV.shaderGroupBaseAlignment);
+		entrySize = SBT::RoundUp(handleSize, pipelineRTProperties.shaderGroupBaseAlignment);
 
 		const size_t stbSize = groupCount * entrySize;
 
@@ -41,7 +45,7 @@ namespace Vulkan
 
 		std::vector<uint8_t> shaderHandleStorage(groupCount * handleSize);
 
-		VK_CHECK(extensions->vkGetRayTracingShaderGroupHandlesNV(
+		VK_CHECK(extensions->vkGetRayTracingShaderGroupHandlesKHR(
 			         raytracerPipeline.GetDevice().Get(),
 			         raytracerPipeline.GetPipeline(), uint32_t(0), groupCount,
 			         shaderHandleStorage.size(),

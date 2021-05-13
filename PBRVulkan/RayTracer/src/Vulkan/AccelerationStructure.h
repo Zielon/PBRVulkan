@@ -53,8 +53,8 @@ namespace Vulkan
 			return accelerationStructure;
 		}
 
-		VkPhysicalDeviceAccelerationStructurePropertiesKHR accelerationPropoerties{};
-		VkPhysicalDeviceRayTracingPipelinePropertiesKHR pipelineRTPropoerties{};
+		VkPhysicalDeviceAccelerationStructurePropertiesKHR accelerationProperties{};
+		VkPhysicalDeviceRayTracingPipelinePropertiesKHR pipelineRTProperties{};
 
 		VkAccelerationStructureBuildGeometryInfoKHR buildGeometryInfo{};
 		VkAccelerationStructureBuildSizesInfoKHR buildSizesInfo{};
