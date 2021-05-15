@@ -40,14 +40,18 @@ namespace Vulkan
 
 		const size_t stbSize = groupCount * entrySize;
 
-		stbBuffer.reset(new Buffer(raytracerPipeline.GetDevice(), stbSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		const auto usage = static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
+			VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
+
+		stbBuffer.reset(new Buffer(raytracerPipeline.GetDevice(), stbSize, usage,
+		                           VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
 		                           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
 
 		std::vector<uint8_t> shaderHandleStorage(groupCount * handleSize);
 
 		VK_CHECK(extensions->vkGetRayTracingShaderGroupHandlesKHR(
 			         raytracerPipeline.GetDevice().Get(),
-			         raytracerPipeline.GetPipeline(), uint32_t(0), groupCount,
+			         raytracerPipeline.GetPipeline(), static_cast<uint32_t>(0), groupCount,
 			         shaderHandleStorage.size(),
 			         shaderHandleStorage.data()),
 		         "Get ray tracing shader group handles");
@@ -68,7 +72,7 @@ namespace Vulkan
 
 		// Hit
 		std::memcpy(dst, shaderHandleStorage.data() + 3 * handleSize, handleSize);
-		
+
 		stbBuffer->Unmap();
 	}
 

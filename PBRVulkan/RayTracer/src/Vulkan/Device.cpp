@@ -36,14 +36,39 @@ namespace Vulkan
 		VkPhysicalDeviceFeatures deviceFeatures{};
 		deviceFeatures.fillModeNonSolid = VK_TRUE;
 		deviceFeatures.samplerAnisotropy = VK_TRUE;
+		deviceFeatures.shaderInt64 = VK_TRUE;
 
-		VkPhysicalDeviceDescriptorIndexingFeaturesEXT indexingFeatures = {};
-		indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
-		indexingFeatures.runtimeDescriptorArray = VK_TRUE;
+		// Opt-in into mandatory device features.
+		VkPhysicalDeviceShaderClockFeaturesKHR shaderClockFeatures = {};
+		shaderClockFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR;
+		shaderClockFeatures.pNext = nullptr;
+		shaderClockFeatures.shaderSubgroupClock = true;
 
+		// Required device features.
+		VkPhysicalDeviceBufferDeviceAddressFeatures bufferDeviceAddressFeatures = {};
+		bufferDeviceAddressFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
+		bufferDeviceAddressFeatures.pNext = &shaderClockFeatures;
+		bufferDeviceAddressFeatures.bufferDeviceAddress = true;
+
+		VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures = {};
+		indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+		indexingFeatures.pNext = &bufferDeviceAddressFeatures;
+		indexingFeatures.runtimeDescriptorArray = true;
+		indexingFeatures.shaderSampledImageArrayNonUniformIndexing = true;
+
+		VkPhysicalDeviceAccelerationStructureFeaturesKHR accelerationStructureFeatures = {};
+		accelerationStructureFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
+		accelerationStructureFeatures.pNext = &indexingFeatures;
+		accelerationStructureFeatures.accelerationStructure = true;
+
+		VkPhysicalDeviceRayTracingPipelineFeaturesKHR rayTracingFeatures = {};
+		rayTracingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR;
+		rayTracingFeatures.pNext = &accelerationStructureFeatures;
+		rayTracingFeatures.rayTracingPipeline = true;
+	
 		VkDeviceCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-		createInfo.pNext = &indexingFeatures;
+		createInfo.pNext = &rayTracingFeatures;
 		createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
 		createInfo.pQueueCreateInfos = queueCreateInfos.data();
 		createInfo.pEnabledFeatures = &deviceFeatures;
@@ -117,14 +142,10 @@ namespace Vulkan
 	const std::vector<const char*> Device::RequiredExtensions =
 	{
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-		VK_NV_RAY_TRACING_EXTENSION_NAME,
-		// For 1.2.163 version
-		//VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME,
-		//VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME,
-		//VK_KHR_PIPELINE_LIBRARY_EXTENSION_NAME,
-		//VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME,
-		//VK_KHR_MAINTENANCE3_EXTENSION_NAME,
-		//VK_KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME,
+		VK_KHR_SHADER_CLOCK_EXTENSION_NAME,
+		VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME,
+		VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME,
+		VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
 	};
 
 	bool Device::CheckDeviceExtensionSupport(VkPhysicalDevice physicalDevice)

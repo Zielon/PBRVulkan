@@ -109,10 +109,10 @@ namespace Vulkan
 		Image::MemoryBarrier(commandBuffer, positionsImage->Get(), subresourceRange, 0,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR,
 		                  raytracerGraphicsPipeline->GetPipeline());
 
-		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR,
 		                        raytracerGraphicsPipeline->GetPipelineLayout(), 0, 1, descriptorSets, 0, nullptr);
 
 		auto address = shaderBindingTable->GetBuffer().GetDeviceAddress();
@@ -135,11 +135,11 @@ namespace Vulkan
 		VkStridedDeviceAddressRegionKHR callableShaderBindingTable = {};
 
 		extensions->vkCmdTraceRaysKHR(commandBuffer,
-			&raygenShaderBindingTable, 
-			&missShaderBindingTable, 
-			&hitShaderBindingTable,
-			&callableShaderBindingTable,
-			extent.width, extent.height, 1);
+		                              &raygenShaderBindingTable,
+		                              &missShaderBindingTable,
+		                              &hitShaderBindingTable,
+		                              &callableShaderBindingTable,
+		                              extent.width, extent.height, 1);
 
 		// Do not copy image to swap chain
 		if (settings.UseComputeShaders)
@@ -205,13 +205,11 @@ namespace Vulkan
 		for (const auto& model : scene->GetMeshInstances())
 		{
 			const auto& mesh = scene->GetMeshes()[model.meshId];
+			const auto vertexCount = mesh->GetVerticesSize();
+			const auto indexCount = mesh->GetIndeciesSize();
 
-			const auto vertexCount = static_cast<uint32_t>(mesh->GetVerticesSize());
-			const auto indexCount = static_cast<uint32_t>(mesh->GetIndeciesSize());
-
-			VkAccelerationStructureGeometryKHR geometry = 
-				BLAS::CreateGeometry(*scene, vertexOffset, vertexCount, indexOffset, indexCount, true);
-
+			BLASGeometry geometry;
+			geometry.CreateGeometry(*scene, vertexOffset, vertexCount, indexOffset, indexCount, true);
 			BLASs.emplace_back(*device, geometry);
 
 			vertexOffset += vertexCount * sizeof(Geometry::Vertex);
@@ -219,16 +217,18 @@ namespace Vulkan
 		}
 
 		// Allocate the structure memory.
-		const auto total = AccelerationStructure::ReduceMemory(BLASs);
+		const auto total = AccelerationStructure::Reduce(BLASs);
 
 		BLASBuffer.reset(new Buffer(
-			*device, total.accelerationStructureSize, 
-			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR, 
+			*device, total.accelerationStructureSize,
+			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
+		const auto usage = static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
+			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR);
+
 		ScratchBLASBuffer.reset(new Buffer(
-			*device, total.buildScratchSize, 
-			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR, 
+			*device, total.buildScratchSize, usage, VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		// Generate the structures.
@@ -251,26 +251,50 @@ namespace Vulkan
 
 		for (auto instanceId = 0; instanceId < scene->GetMeshInstances().size(); ++instanceId)
 		{
-			geometryInstances.push_back(TLAS::CreateGeometryInstance(BLASs[instanceId], glm::mat4(1), instanceId));
+			geometryInstances.push_back(TLAS::CreateInstance(BLASs[instanceId], glm::mat4(1), instanceId));
 		}
 
-		TLASs.emplace_back(*device, geometryInstances);
+		const auto size = sizeof(geometryInstances[0]) * geometryInstances.size();
+		instanceBuffer.reset(
+			new Buffer(*device, size,
+			           static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+				           VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT),
+			           VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+			           VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
-		const auto total = AccelerationStructure::ReduceMemory(TLASs);
+		// ========== TODO Improve ==========
+
+		std::unique_ptr<Buffer> buffer_staging(
+			new Buffer(*device, size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+			           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
+
+		buffer_staging->Fill(geometryInstances.data());
+
+		instanceBuffer->Copy(*commandPool, *buffer_staging);
+
+		buffer_staging.reset();
+
+		// ========== TODO Improve ==========
 
 		AccelerationStructure::MemoryBarrier(commandBuffer);
 
+		TLASs.emplace_back(*device, instanceBuffer->GetDeviceAddress(), geometryInstances.size());
+
+		const auto total = AccelerationStructure::Reduce(TLASs);
+
 		TLASBuffer.reset(new Buffer(
-			*device, total.accelerationStructureSize, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+			*device, total.accelerationStructureSize, VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
+		const auto usage = static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
+			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR);
 
 		ScratchTLASBuffer.reset(new Buffer(
-			*device, total.buildScratchSize, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-
-		instanceBuffer.reset(
-			new Buffer(*device, instancesBufferSize, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV,
-			           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
+			*device, total.buildScratchSize, usage,
+			VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		// For now assume only one instance of Top Level Instance
-		TLASs.front().Generate(commandBuffer, *ScratchTLASBuffer, 0, *TLASBuffer, 0, *instanceBuffer, 0);
+		TLASs.front().Generate(commandBuffer, *ScratchTLASBuffer, 0, *TLASBuffer, 0);
 	}
 }

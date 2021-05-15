@@ -31,7 +31,7 @@ namespace Vulkan
 		                          const class ImageView& normalsImage,
 		                          const class ImageView& positionsImage,
 		                          const std::vector<std::unique_ptr<class Buffer>>& uniformBuffers,
-		                          VkAccelerationStructureNV topLevelAS);
+		                          VkAccelerationStructureKHR topLevelAS);
 		~RaytracerGraphicsPipeline();
 
 		[[nodiscard]] const class Device& GetDevice() const

@@ -13,26 +13,27 @@ namespace Vulkan
 	class TLAS final : public AccelerationStructure
 	{
 	public:
-		[[nodiscard]] const std::vector<VkGeometryInstance>& GeometryInstances() const
-		{
-			return geometryInstances;
-		}
-
+		TLAS(const TLAS&) = delete;
+		TLAS& operator = (const TLAS&) = delete;
+		TLAS& operator = (TLAS&&) = delete;
+		TLAS(TLAS&& other) noexcept;
+		TLAS(const class Device& device, VkDeviceAddress instanceAddress, uint32_t instancesCount);
+		
 		void Generate(
 			VkCommandBuffer commandBuffer,
 			class Buffer& topScratchBuffer,
 			VkDeviceSize scratchOffset,
 			class Buffer& topBuffer,
-			VkDeviceSize topOffset,
-			class Buffer& instanceBuffer,
-			VkDeviceSize instanceOffset) const;
+			VkDeviceSize topOffset);
 
-		static VkGeometryInstance CreateGeometryInstance(
+		static VkAccelerationStructureInstanceKHR CreateInstance(
 			const class BLAS& blas,
 			const glm::mat4& transform,
 			uint32_t instanceId);
 
 	private:
-		std::vector<VkGeometryInstance> geometryInstances;
+		uint32_t instancesCount;
+		VkAccelerationStructureGeometryInstancesDataKHR instances{};
+		VkAccelerationStructureGeometryKHR geometry{};
 	};
 }

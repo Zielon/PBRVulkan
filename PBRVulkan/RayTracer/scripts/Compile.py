@@ -22,6 +22,6 @@ for path in glob.iglob(shaders + '**/*', recursive=True):
 
     shader_name = os.path.split(path)[-1] + ".spv"
     output = output_folder + assets + shader_name
-    cmd = "glslc " + path + " -o " + output
+    cmd = "glslangValidator --target-env vulkan1.2 -V " + path + " -o " + output
     subprocess.run(cmd.split())
     print("[SHADER] {} has been processed".format(shader_name))

@@ -1,5 +1,6 @@
 #include "BLAS.h"
 
+#include <utility>
 #include <vector>
 
 #include "Device.h"
@@ -12,29 +13,33 @@
 
 namespace Vulkan
 {
-	void BLAS::Generate(
-		VkCommandBuffer commandBuffer,
-		const Buffer& scratchBuffer,
-		VkDeviceSize scratchOffset,
-		const Buffer& blasBuffer,
-		VkDeviceSize resultOffset)
+	BLAS::BLAS(BLAS&& other) noexcept
+		: AccelerationStructure(std::move(other)), geometry(std::move(other.geometry)) { }
+
+	BLAS::BLAS(const Device& _device, BLASGeometry _geometry):
+		AccelerationStructure(_device), geometry(std::move(_geometry))
 	{
-		Create(blasBuffer, resultOffset);
+		buildGeometryInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
+		buildGeometryInfo.flags = VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR;
+		buildGeometryInfo.geometryCount = static_cast<uint32_t>(geometry.triangles.size());
+		buildGeometryInfo.pGeometries = geometry.triangles.data();
+		buildGeometryInfo.mode = VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR;
+		buildGeometryInfo.type = VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR;
+		buildGeometryInfo.srcAccelerationStructure = nullptr;
 
-		const VkAccelerationStructureBuildRangeInfoKHR* buildOffsetInfo = buildOffsets.data();
+		std::vector<uint32_t> maxPrimCount(geometry.buildOffsets.size());
 
-		buildGeometryInfo.dstAccelerationStructure = accelerationStructure;
-		buildGeometryInfo.scratchData.deviceAddress = scratchBuffer.GetDeviceAddress() + scratchOffset;
-		extensions->vkCmdBuildAccelerationStructuresKHR(commandBuffer, 1, &buildGeometryInfo, &buildOffsetInfo);
+		for (size_t i = 0; i != maxPrimCount.size(); ++i)
+		{
+			maxPrimCount[i] = geometry.buildOffsets[i].primitiveCount;
+		}
+
+		buildSizesInfo = GetMemorySizes(maxPrimCount.data());
 	}
 
-	VkAccelerationStructureGeometryKHR BLAS::CreateGeometry(
-		const Tracer::Scene& scene,
-		uint32_t vertexOffset,
-		uint32_t vertexCount,
-		uint32_t indexOffset,
-		uint32_t indexCount,
-		bool isOpaque)
+	void BLASGeometry::CreateGeometry(
+		const Tracer::Scene& scene, uint32_t vertexOffset, uint32_t vertexCount,
+		uint32_t indexOffset, uint32_t indexCount, bool isOpaque)
 	{
 		VkAccelerationStructureGeometryKHR geometry = {};
 
@@ -58,5 +63,24 @@ namespace Vulkan
 		buildOffsetInfo.primitiveOffset = indexOffset;
 		buildOffsetInfo.primitiveCount = indexCount / 3;
 		buildOffsetInfo.transformOffset = 0;
+
+		triangles.emplace_back(geometry);
+		buildOffsets.emplace_back(buildOffsetInfo);
+	}
+
+	void BLAS::Generate(
+		VkCommandBuffer commandBuffer,
+		const Buffer& scratchBuffer,
+		VkDeviceSize scratchOffset,
+		const Buffer& blasBuffer,
+		VkDeviceSize resultOffset)
+	{
+		Create(blasBuffer, resultOffset);
+
+		const VkAccelerationStructureBuildRangeInfoKHR* buildOffsetInfo = geometry.buildOffsets.data();
+
+		buildGeometryInfo.dstAccelerationStructure = accelerationStructure;
+		buildGeometryInfo.scratchData.deviceAddress = scratchBuffer.GetDeviceAddress() + scratchOffset;
+		extensions->vkCmdBuildAccelerationStructuresKHR(commandBuffer, 1, &buildGeometryInfo, &buildOffsetInfo);
 	}
 }

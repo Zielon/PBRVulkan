@@ -12,22 +12,24 @@ namespace Vulkan
 	{
 		extensions.reset(new Extensions(device));
 
-		accelerationPropoerties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
-		pipelineRTPropoerties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR;
-		pipelineRTPropoerties.pNext = &accelerationPropoerties;
+		accelerationProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
+		pipelineRTProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR;
+		pipelineRTProperties.pNext = &accelerationProperties;
 
 		VkPhysicalDeviceProperties2 props = {};
 		props.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-		props.pNext = &pipelineRTPropoerties;
+		props.pNext = &pipelineRTProperties;
 		vkGetPhysicalDeviceProperties2(device.GetPhysical(), &props);
 	}
 
-	uint64_t AccelerationStructure::RoundUp(uint64_t numToRound, uint64_t multiple) const
+	uint64_t AccelerationStructure::RoundUp(uint64_t numToRound, uint64_t multiple)
 	{
 		return ((numToRound + multiple - 1) / multiple) * multiple;
 	}
 
 	AccelerationStructure::AccelerationStructure(AccelerationStructure&& other) noexcept :
+		buildGeometryInfo(other.buildGeometryInfo),
+		buildSizesInfo(other.buildSizesInfo),
 		device(other.device),
 		extensions(std::move(other.extensions)),
 		accelerationStructure(other.accelerationStructure)
@@ -73,7 +75,8 @@ namespace Vulkan
 			&buildGeometryInfo, count, &sizeInfo);
 
 		sizeInfo.accelerationStructureSize = RoundUp(sizeInfo.accelerationStructureSize, 256);
-		sizeInfo.buildScratchSize = RoundUp(sizeInfo.buildScratchSize, accelerationPropoerties.minAccelerationStructureScratchOffsetAlignment);
+		sizeInfo.buildScratchSize = RoundUp(sizeInfo.buildScratchSize,
+		                                    accelerationProperties.minAccelerationStructureScratchOffsetAlignment);
 
 		return sizeInfo;
 	}
@@ -90,8 +93,8 @@ namespace Vulkan
 		memoryBarrier.dstAccessMask = flags;
 
 		vkCmdPipelineBarrier(commandBuffer,
-			VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
-			VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
-			0, 1, &memoryBarrier, 0, nullptr, 0, nullptr);
+		                     VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
+		                     VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
+		                     0, 1, &memoryBarrier, 0, nullptr, 0, nullptr);
 	}
 }

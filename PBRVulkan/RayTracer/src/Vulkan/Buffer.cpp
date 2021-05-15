@@ -7,7 +7,13 @@
 
 namespace Vulkan
 {
-	Buffer::Buffer(const Device& device, size_t size, VkBufferUsageFlagBits usage,
+	Buffer::Buffer(const Device& device, size_t size, VkBufferUsageFlagBits usage, VkMemoryPropertyFlags properties):
+		Buffer(device, size, usage, 0, properties) { }
+
+	Buffer::Buffer(const Device& device,
+	               size_t size,
+	               VkBufferUsageFlagBits usage,
+	               VkMemoryAllocateFlags allocateFLags,
 	               VkMemoryPropertyFlags properties) : size(size), device(device)
 	{
 		VkBufferCreateInfo bufferInfo{};
@@ -18,7 +24,7 @@ namespace Vulkan
 
 		VK_CHECK(vkCreateBuffer(device.Get(), &bufferInfo, nullptr, &buffer), "Create buffer");
 
-		memory.reset(new Memory(device, GetMemoryRequirements(), properties));
+		memory.reset(new Memory(device, GetMemoryRequirements(), allocateFLags, properties));
 
 		VK_CHECK(vkBindBufferMemory(device.Get(), buffer, memory->Get(), 0), "Bind buffer memory");
 	}

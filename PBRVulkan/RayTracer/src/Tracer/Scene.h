@@ -46,7 +46,7 @@ namespace Tracer
 			std::string config,
 			const class Vulkan::Device& device,
 			const Vulkan::CommandPool& commandPool);
-		~Scene();
+		~Scene() override;
 
 		void AddCamera(glm::vec3 pos, glm::vec3 lookAt, float fov, float aspect) override;
 		void AddHDR(const std::string& path) override;
@@ -184,6 +184,7 @@ namespace Tracer
 		void LoadEmptyBuffers();
 		void LoadHDR(Assets::HDRData* hdr);
 		void Fill(std::unique_ptr<class Vulkan::Buffer>& buffer, void* data, size_t size,
-		          VkBufferUsageFlagBits storage) const;
+		          VkBufferUsageFlagBits storage,
+		          VkMemoryAllocateFlags allocateFlags) const;
 	};
 }

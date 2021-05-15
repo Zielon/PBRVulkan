@@ -10,6 +10,7 @@ namespace Vulkan
 	class AccelerationStructure
 	{
 	public:
+		AccelerationStructure() = delete;
 		AccelerationStructure(const AccelerationStructure&) = delete;
 		AccelerationStructure& operator =(const AccelerationStructure&) = delete;
 		AccelerationStructure& operator =(AccelerationStructure&&) = delete;
@@ -21,7 +22,7 @@ namespace Vulkan
 		static void MemoryBarrier(VkCommandBuffer commandBuffer);
 
 		template<class T>
-		static VkAccelerationStructureBuildSizesInfoKHR ReduceMemory(
+		static VkAccelerationStructureBuildSizesInfoKHR Reduce(
 			const std::vector<T>& structures)
 		{
 			VkAccelerationStructureBuildSizesInfoKHR total{};
@@ -34,7 +35,7 @@ namespace Vulkan
 			}
 
 			return total;
-		};
+		}
 		
 		[[nodiscard]] VkAccelerationStructureBuildSizesInfoKHR GetMemorySizes(const uint32_t* count) const;
 
@@ -63,7 +64,7 @@ namespace Vulkan
 		AccelerationStructure(const class Device& device);
 
 		// Rounding up to the nearest multiple of a number
-		uint64_t RoundUp(uint64_t numToRound, uint64_t multiple) const;
+		static uint64_t RoundUp(uint64_t numToRound, uint64_t multiple);
 
 		const class Device& device;
 		std::unique_ptr<class Extensions> extensions;

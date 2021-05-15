@@ -7,7 +7,7 @@ vec3 directLight(in Material material)
 	vec3 L      = vec3(0);
 	float tMin  = MINIMUM;
 	float tMax  = INFINITY;
-	uint flags  = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
+	uint flags  = gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsOpaqueEXT | gl_RayFlagsSkipClosestHitShaderEXT;
 
 	BsdfSample bsdfSample;
 
@@ -59,7 +59,7 @@ vec3 directLight(in Material material)
 			return L;
 
 		// Shadow ray (payload 1 is Shadow.miss)
-		traceNV(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, lightDist, 1);
+		traceRayEXT(TLAS, flags, 0xFF, 0, 0, 1, surfacePos, tMin, lightDir, lightDist, 1);
 		
 		if (!isShadowed)
 		{

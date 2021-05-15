@@ -4,7 +4,7 @@ precision highp float;
 precision highp int;
 
 #extension GL_GOOGLE_include_directive : require
-#extension GL_NV_ray_tracing : require
+#extension GL_EXT_ray_tracing : require
 
 // Replaced by Compiler.h
 // ====== DEFINES ======
@@ -15,7 +15,7 @@ layout(binding = 3) readonly uniform UniformBufferObject { Uniform ubo; };
 layout(binding = 4) readonly buffer VertexArray { float Vertices[]; };
 layout(binding = 9) readonly buffer LightArray { Light[] Lights; };
 
-layout(location = 0) rayPayloadInNV RayPayload payload;
+layout(location = 0) rayPayloadInEXT RayPayload payload;
 
 #include "../Common/Random.glsl"
 #include "../Common/Math.glsl"
