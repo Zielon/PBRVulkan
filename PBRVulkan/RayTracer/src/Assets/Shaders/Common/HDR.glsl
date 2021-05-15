@@ -2,7 +2,7 @@
 
 float envPdf()
 {
-	vec3 direction = gl_WorldRayDirectionNV;
+	vec3 direction = gl_WorldRayDirectionEXT;
 	float theta = acos(clamp(direction.y, -1.0, 1.0));
 	vec2 uv = vec2((PI + atan(direction.z, direction.x)) * INV_2PI, theta * INV_PI);
 	float pdf = texture(HDRs[1], uv).y * texture(HDRs[2], vec2(uv.y, 0.)).y;

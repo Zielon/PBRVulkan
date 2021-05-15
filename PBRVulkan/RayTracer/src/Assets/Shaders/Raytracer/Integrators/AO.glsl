@@ -14,7 +14,7 @@
  {
 	float tMin = MINIMUM;
 	float tMax = ubo.AORayLength;
-	uint flags = gl_RayFlagsTerminateOnFirstHitNV | gl_RayFlagsOpaqueNV | gl_RayFlagsSkipClosestHitShaderNV;
+	uint flags = gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsOpaqueEXT | gl_RayFlagsSkipClosestHitShaderEXT;
 
 	uint samples = 5;
 	float ao = 1.f;
@@ -27,7 +27,7 @@
 		isShadowed = true;
 
 		// Shadow ray (payload 1 is Shadow.miss)
-		traceNV(TLAS, flags, 0xFF, 0, 0, 1, worldPos, tMin, dir, tMax, 1);
+		traceRayEXT(TLAS, flags, 0xFF, 0, 0, 1, worldPos, tMin, dir, tMax, 1);
 
 		if (isShadowed)
 		{

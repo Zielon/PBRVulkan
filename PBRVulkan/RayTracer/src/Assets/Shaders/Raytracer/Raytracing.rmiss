@@ -53,7 +53,7 @@ void main()
 		float lightPdf = 1.0f;
 		float misWeight = 1.0f;
 		float hdrMultiplier = 7.0f;
-		vec2 uv = vec2((PI + atan(gl_WorldRayDirectionNV.z, gl_WorldRayDirectionNV.x)) * INV_2PI, acos(gl_WorldRayDirectionNV.y) * INV_PI);
+		vec2 uv = vec2((PI + atan(gl_WorldRayDirectionEXT.z, gl_WorldRayDirectionEXT.x)) * INV_2PI, acos(gl_WorldRayDirectionEXT.y) * INV_PI);
 		if (payload.depth > 0 && !payload.specularBounce)
 		{
 			lightPdf = envPdf();
