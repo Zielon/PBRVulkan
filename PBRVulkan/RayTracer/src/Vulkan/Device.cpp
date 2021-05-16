@@ -6,6 +6,17 @@
 
 namespace Vulkan
 {
+	const std::vector<const char*> Device::RequiredExtensions =
+	{
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+		VK_KHR_SHADER_CLOCK_EXTENSION_NAME,
+		VK_KHR_PIPELINE_LIBRARY_EXTENSION_NAME,
+		VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME,
+		VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME,
+		VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME,
+		VK_KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+	};
+
 	Device::Device(VkPhysicalDevice physicalDevice, const Surface& surface) :
 		surface(surface), physicalDevice(physicalDevice)
 	{
@@ -38,13 +49,11 @@ namespace Vulkan
 		deviceFeatures.samplerAnisotropy = VK_TRUE;
 		deviceFeatures.shaderInt64 = VK_TRUE;
 
-		// Opt-in into mandatory device features.
 		VkPhysicalDeviceShaderClockFeaturesKHR shaderClockFeatures = {};
 		shaderClockFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR;
 		shaderClockFeatures.pNext = nullptr;
 		shaderClockFeatures.shaderSubgroupClock = true;
 
-		// Required device features.
 		VkPhysicalDeviceBufferDeviceAddressFeatures bufferDeviceAddressFeatures = {};
 		bufferDeviceAddressFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
 		bufferDeviceAddressFeatures.pNext = &shaderClockFeatures;
@@ -65,7 +74,7 @@ namespace Vulkan
 		rayTracingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR;
 		rayTracingFeatures.pNext = &accelerationStructureFeatures;
 		rayTracingFeatures.rayTracingPipeline = true;
-	
+
 		VkDeviceCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 		createInfo.pNext = &rayTracingFeatures;
@@ -138,15 +147,6 @@ namespace Vulkan
 
 		return indices;
 	}
-
-	const std::vector<const char*> Device::RequiredExtensions =
-	{
-		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-		VK_KHR_SHADER_CLOCK_EXTENSION_NAME,
-		VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME,
-		VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME,
-		VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
-	};
 
 	bool Device::CheckDeviceExtensionSupport(VkPhysicalDevice physicalDevice)
 	{

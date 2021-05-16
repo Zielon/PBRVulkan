@@ -87,7 +87,7 @@ namespace Vulkan
 		geometryInstance.instanceCustomIndex = instanceId;
 		geometryInstance.mask = 0xFF;
 		geometryInstance.instanceShaderBindingTableRecordOffset = 0;
-		geometryInstance.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV;
+		geometryInstance.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;
 		geometryInstance.accelerationStructureReference = address;
 
 		return geometryInstance;
