@@ -19,7 +19,7 @@
 
 namespace Vulkan
 {
-	Rasterizer::Rasterizer() { }
+	Rasterizer::Rasterizer() = default;
 
 	Rasterizer::~Rasterizer()
 	{
@@ -151,6 +151,6 @@ namespace Vulkan
 		Image::MemoryBarrier(commandBuffer, dst, subresourceRange,
 		                     VK_ACCESS_TRANSFER_WRITE_BIT, 0,
 		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			VK_IMAGE_LAYOUT_GENERAL);
+		                     VK_IMAGE_LAYOUT_GENERAL);
 	}
 }

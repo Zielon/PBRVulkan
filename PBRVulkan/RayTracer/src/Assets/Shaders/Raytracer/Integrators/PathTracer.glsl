@@ -17,7 +17,7 @@
 
 	payload.radiance += material.emission.xyz * payload.beta;
 
-	if (interesetsEmitter(lightSample, gl_HitTNV))
+	if (interesetsEmitter(lightSample, gl_HitTEXT))
 	{
 		vec3 Le = sampleEmitter(lightSample, payload.bsdf);
 

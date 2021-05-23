@@ -37,7 +37,7 @@ namespace Vulkan
 		VkMemoryRequirements memRequirements;
 		vkGetImageMemoryRequirements(device.Get(), image, &memRequirements);
 
-		memory.reset(new Memory(device, memRequirements, properties));
+		memory.reset(new Memory(device, memRequirements, 0, properties));
 
 		vkBindImageMemory(device.Get(), image, memory->Get(), 0);
 	}

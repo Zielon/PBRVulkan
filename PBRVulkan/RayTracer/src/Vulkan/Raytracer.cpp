@@ -109,20 +109,37 @@ namespace Vulkan
 		Image::MemoryBarrier(commandBuffer, positionsImage->Get(), subresourceRange, 0,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR,
 		                  raytracerGraphicsPipeline->GetPipeline());
 
-		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR,
 		                        raytracerGraphicsPipeline->GetPipelineLayout(), 0, 1, descriptorSets, 0, nullptr);
 
-		extensions->vkCmdTraceRaysNV(commandBuffer,
-		                             shaderBindingTable->GetBuffer().Get(), size_t(0),
-		                             shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize(),
-		                             shaderBindingTable->GetEntrySize(),
-		                             shaderBindingTable->GetBuffer().Get(), shaderBindingTable->GetEntrySize() * 3,
-		                             shaderBindingTable->GetEntrySize(),
-		                             nullptr, 0, 0,
-		                             extent.width, extent.height, 1);
+		auto address = shaderBindingTable->GetBuffer().GetDeviceAddress();
+
+		VkStridedDeviceAddressRegionKHR raygenShaderBindingTable = {};
+		raygenShaderBindingTable.deviceAddress = address;
+		raygenShaderBindingTable.stride = shaderBindingTable->GetEntrySize();
+		raygenShaderBindingTable.size = shaderBindingTable->GetEntrySize();
+
+		VkStridedDeviceAddressRegionKHR missShaderBindingTable = {};
+		missShaderBindingTable.deviceAddress = address + shaderBindingTable->GetEntrySize();
+		missShaderBindingTable.stride = shaderBindingTable->GetEntrySize();
+		missShaderBindingTable.size = shaderBindingTable->GetEntrySize();
+
+		VkStridedDeviceAddressRegionKHR hitShaderBindingTable = {};
+		hitShaderBindingTable.deviceAddress = address + shaderBindingTable->GetEntrySize() * 3;
+		hitShaderBindingTable.stride = shaderBindingTable->GetEntrySize();
+		hitShaderBindingTable.size = shaderBindingTable->GetEntrySize();
+
+		VkStridedDeviceAddressRegionKHR callableShaderBindingTable = {};
+
+		extensions->vkCmdTraceRaysKHR(commandBuffer,
+		                              &raygenShaderBindingTable,
+		                              &missShaderBindingTable,
+		                              &hitShaderBindingTable,
+		                              &callableShaderBindingTable,
+		                              extent.width, extent.height, 1);
 
 		// Do not copy image to swap chain
 		if (settings.UseComputeShaders)
@@ -185,38 +202,34 @@ namespace Vulkan
 		uint32_t vertexOffset = 0;
 		uint32_t indexOffset = 0;
 
-		// Prefer fast ray tracking option
-		constexpr bool ALLOW_UPDATE_BIT_NV = false;
-
-		std::vector<ASMemoryRequirementsNV> requirements;
-
 		for (const auto& model : scene->GetMeshInstances())
 		{
 			const auto& mesh = scene->GetMeshes()[model.meshId];
+			const auto vertexCount = mesh->GetVerticesSize();
+			const auto indexCount = mesh->GetIndeciesSize();
 
-			const auto vertexCount = static_cast<uint32_t>(mesh->GetVerticesSize());
-			const auto indexCount = static_cast<uint32_t>(mesh->GetIndeciesSize());
-
-			const std::vector<VkGeometryNV> geometries =
-			{
-				BLAS::CreateGeometry(*scene, vertexOffset, vertexCount, indexOffset, indexCount, true)
-			};
-
-			BLASs.emplace_back(*device, geometries, ALLOW_UPDATE_BIT_NV);
-			requirements.push_back(BLASs.back().GetMemoryRequirements());
+			BLASGeometry geometry;
+			geometry.CreateGeometry(*scene, vertexOffset, vertexCount, indexOffset, indexCount, true);
+			BLASs.emplace_back(*device, geometry);
 
 			vertexOffset += vertexCount * sizeof(Geometry::Vertex);
 			indexOffset += indexCount * sizeof(uint32_t);
 		}
 
 		// Allocate the structure memory.
-		const auto total = AccelerationStructure::GetTotalRequirements(requirements);
+		const auto total = AccelerationStructure::Reduce(BLASs);
 
 		BLASBuffer.reset(new Buffer(
-			*device, total.result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+			*device, total.accelerationStructureSize,
+			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
+		const auto usage = static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
+			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR);
 
 		ScratchBLASBuffer.reset(new Buffer(
-			*device, total.result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+			*device, total.buildScratchSize, usage, VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		// Generate the structures.
 		VkDeviceSize resultOffset = 0;
@@ -224,40 +237,64 @@ namespace Vulkan
 
 		for (size_t i = 0; i < BLASs.size(); ++i)
 		{
-			BLASs[i].Generate(commandBuffer, *ScratchBLASBuffer, scratchOffset, *BLASBuffer, resultOffset, false);
-			resultOffset += requirements[i].result.size;
-			scratchOffset += requirements[i].build.size;
+			BLASs[i].Generate(commandBuffer, *ScratchBLASBuffer, scratchOffset, *BLASBuffer, resultOffset);
+			resultOffset += BLASs[i].buildSizesInfo.accelerationStructureSize;
+			scratchOffset += BLASs[i].buildSizesInfo.buildScratchSize;
 		}
 	}
 
 	void Raytracer::CreateTLAS(VkCommandBuffer commandBuffer)
 	{
-		std::vector<VkGeometryInstance> geometryInstances;
-		std::vector<ASMemoryRequirementsNV> requirements;
+		std::vector<VkAccelerationStructureInstanceKHR> geometryInstances;
 
 		geometryInstances.reserve(scene->GetMeshes().size());
+
 		for (auto instanceId = 0; instanceId < scene->GetMeshInstances().size(); ++instanceId)
 		{
-			geometryInstances.push_back(TLAS::CreateGeometryInstance(BLASs[instanceId], glm::mat4(1), instanceId));
+			geometryInstances.push_back(TLAS::CreateInstance(BLASs[instanceId], glm::mat4(1), instanceId));
 		}
 
-		TLASs.emplace_back(*device, geometryInstances, false);
-		requirements.push_back(TLASs.back().GetMemoryRequirements());
-
-		const auto total = AccelerationStructure::GetTotalRequirements(requirements);
-		const size_t instancesBufferSize = sizeof(VkGeometryInstance) * geometryInstances.size();
-
-		TLASBuffer.reset(new Buffer(
-			*device, total.result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-
-		ScratchTLASBuffer.reset(new Buffer(
-			*device, total.result.size, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-
+		const auto size = sizeof(geometryInstances[0]) * geometryInstances.size();
 		instanceBuffer.reset(
-			new Buffer(*device, instancesBufferSize, VK_BUFFER_USAGE_RAY_TRACING_BIT_NV,
+			new Buffer(*device, size,
+			           static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+				           VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT),
+			           VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+			           VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
+		// ========== TODO Improve ==========
+
+		std::unique_ptr<Buffer> buffer_staging(
+			new Buffer(*device, size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 
+		buffer_staging->Fill(geometryInstances.data());
+
+		instanceBuffer->Copy(*commandPool, *buffer_staging);
+
+		buffer_staging.reset();
+
+		// ========== TODO Improve ==========
+
+		AccelerationStructure::MemoryBarrier(commandBuffer);
+
+		TLASs.emplace_back(*device, instanceBuffer->GetDeviceAddress(), geometryInstances.size());
+
+		const auto total = AccelerationStructure::Reduce(TLASs);
+
+		TLASBuffer.reset(new Buffer(
+			*device, total.accelerationStructureSize, VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
+		const auto usage = static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
+			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR);
+
+		ScratchTLASBuffer.reset(new Buffer(
+			*device, total.buildScratchSize, usage,
+			VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
 		// For now assume only one instance of Top Level Instance
-		TLASs.front().Generate(commandBuffer, *ScratchTLASBuffer, 0, *TLASBuffer, 0, *instanceBuffer, 0, false);
+		TLASs.front().Generate(commandBuffer, *ScratchTLASBuffer, 0, *TLASBuffer, 0);
 	}
 }

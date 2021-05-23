@@ -6,7 +6,7 @@
 float UE4Pdf(in Material material, in vec3 bsdfDir)
 {
 	vec3 N = payload.ffnormal;
-	vec3 V = -gl_WorldRayDirectionNV;
+	vec3 V = -gl_WorldRayDirectionEXT;
 	vec3 L = bsdfDir;
 
 	float specularAlpha = max(0.001, material.roughness);
@@ -30,7 +30,7 @@ float UE4Pdf(in Material material, in vec3 bsdfDir)
 vec3 UE4Sample(in Material material)
 {
 	vec3 N = payload.ffnormal;
-	vec3 V = -gl_WorldRayDirectionNV;
+	vec3 V = -gl_WorldRayDirectionEXT;
 
 	vec3 dir;
 
@@ -67,7 +67,7 @@ vec3 UE4Sample(in Material material)
 vec3 UE4Eval(in Material material, in vec3 bsdfDir)
 {
 	vec3 N = payload.ffnormal;
-	vec3 V = -gl_WorldRayDirectionNV;
+	vec3 V = -gl_WorldRayDirectionEXT;
 	vec3 L = bsdfDir;
 	vec3 albedo = material.albedo.xyz;
 
@@ -108,10 +108,10 @@ vec3 glassSample(in Material material)
 	float n2 = material.ior;
 	float R0 = (n1 - n2) / (n1 + n2);
 	R0 *= R0;
-	float theta = dot(-gl_WorldRayDirectionNV, payload.ffnormal);
+	float theta = dot(-gl_WorldRayDirectionEXT, payload.ffnormal);
 	float prob = R0 + (1. - R0) * SchlickFresnel(theta);
 	float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (n1 / n2) : (n2 / n1);
-	vec3 refractDir = normalize(refract(gl_WorldRayDirectionNV, payload.ffnormal, eta));
+	vec3 refractDir = normalize(refract(gl_WorldRayDirectionEXT, payload.ffnormal, eta));
 	float cos2t = 1.0 - eta * eta * (1.0 - theta * theta);
 
 	vec3 dir;
@@ -119,7 +119,7 @@ vec3 glassSample(in Material material)
 	// Reflection
 	if (cos2t < 0.0 || rnd(seed) < prob)
 	{
-		dir = normalize(reflect(gl_WorldRayDirectionNV, payload.ffnormal));
+		dir = normalize(reflect(gl_WorldRayDirectionEXT, payload.ffnormal));
 	}
 	// Transmission
 	else

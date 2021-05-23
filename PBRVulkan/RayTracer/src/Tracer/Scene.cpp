@@ -138,36 +138,47 @@ namespace Tracer
 
 		// =============== VERTEX BUFFER ===============
 
-		auto usage = VkBufferUsageFlagBits(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+		auto usage = static_cast<VkBufferUsageFlagBits>(
+			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT |
+			VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT);
 		auto size = sizeof(meshes[0]->GetVertices()[0]) * vertices.size();
 		std::cout << "[SCENE] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
-		Fill(vertexBuffer, vertices.data(), size, usage);
+		Fill(vertexBuffer, vertices.data(), size, usage,
+			VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT);
 
 		// =============== INDEX BUFFER ===============
 
-		usage = VkBufferUsageFlagBits(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+		usage = static_cast<VkBufferUsageFlagBits>(
+			VK_BUFFER_USAGE_INDEX_BUFFER_BIT |
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT |
+			VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT);
 		size = sizeof(indices[0]) * indices.size();
-		Fill(indexBuffer, indices.data(), size, usage);
+		Fill(indexBuffer, indices.data(), size, usage,
+			VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT);
 
 		// =============== MATERIAL BUFFER ===============
 
 		size = sizeof(materials[0]) * materials.size();
-		Fill(materialBuffer, materials.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+		Fill(materialBuffer, materials.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, 0);
 
 		// =============== OFFSET BUFFER ===============
 
 		size = sizeof(offsets[0]) * offsets.size();
-		Fill(offsetBuffer, offsets.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+		Fill(offsetBuffer, offsets.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, 0);
 
 		// =============== LIGHTS BUFFER ===============
 
 		size = sizeof(lights[0]) * lights.size();
-		Fill(lightsBuffer, lights.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+		Fill(lightsBuffer, lights.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, 0);
 	}
 
-	void Scene::Fill(std::unique_ptr<class Vulkan::Buffer>& buffer,
-	                 void* data, size_t size,
-	                 VkBufferUsageFlagBits storage) const
+	void Scene::Fill(
+		std::unique_ptr<class Vulkan::Buffer>& buffer,
+		void* data,
+		size_t size,
+		VkBufferUsageFlagBits usage,
+		VkMemoryAllocateFlags allocateFlags) const
 	{
 		const std::unique_ptr<Vulkan::Buffer> buffer_staging(
 			new Vulkan::Buffer(
@@ -180,7 +191,8 @@ namespace Tracer
 		buffer.reset(
 			new Vulkan::Buffer(
 				device, size,
-				VkBufferUsageFlagBits(VK_BUFFER_USAGE_TRANSFER_DST_BIT | storage),
+				static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage),
+				allocateFlags,
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		buffer->Copy(commandPool, *buffer_staging);
@@ -193,7 +205,8 @@ namespace Tracer
 
 	void Scene::AddHDR(const std::string& path)
 	{
-		hdrLoader = std::async(std::launch::async, [this, path]() {
+		hdrLoader = std::async(std::launch::async, [this, path]()
+		{
 			const auto file = root + path;
 			auto* hdr = Assets::HDRLoader::Load(file.c_str());
 

@@ -5,10 +5,17 @@ namespace Vulkan
 {
 	Memory::Memory(const Device& device,
 	               VkMemoryRequirements requirements,
+	               VkMemoryAllocateFlags allocateFLags,
 	               VkMemoryPropertyFlags properties): device(device)
 	{
+		VkMemoryAllocateFlagsInfo flagsInfo = {};
+		flagsInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO;
+		flagsInfo.pNext = nullptr;
+		flagsInfo.flags = allocateFLags;
+
 		VkMemoryAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		allocInfo.pNext = &flagsInfo;
 		allocInfo.allocationSize = requirements.size;
 		allocInfo.memoryTypeIndex = FindMemoryType(requirements.memoryTypeBits, properties);
 

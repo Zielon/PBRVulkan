@@ -4,7 +4,7 @@ precision highp float;
 precision highp int;
 
 #extension GL_GOOGLE_include_directive : require
-#extension GL_NV_ray_tracing : require
+#extension GL_EXT_ray_tracing : require
 
 // Replaced by Compiler.h
 // ====== DEFINES ======
@@ -15,7 +15,7 @@ layout(binding = 3) readonly uniform UniformBufferObject { Uniform ubo; };
 layout(binding = 4) readonly buffer VertexArray { float Vertices[]; };
 layout(binding = 9) readonly buffer LightArray { Light[] Lights; };
 
-layout(location = 0) rayPayloadInNV RayPayload payload;
+layout(location = 0) rayPayloadInEXT RayPayload payload;
 
 #include "../Common/Random.glsl"
 #include "../Common/Math.glsl"
@@ -53,7 +53,7 @@ void main()
 		float lightPdf = 1.0f;
 		float misWeight = 1.0f;
 		float hdrMultiplier = 7.0f;
-		vec2 uv = vec2((PI + atan(gl_WorldRayDirectionNV.z, gl_WorldRayDirectionNV.x)) * INV_2PI, acos(gl_WorldRayDirectionNV.y) * INV_PI);
+		vec2 uv = vec2((PI + atan(gl_WorldRayDirectionEXT.z, gl_WorldRayDirectionEXT.x)) * INV_2PI, acos(gl_WorldRayDirectionEXT.y) * INV_PI);
 		if (payload.depth > 0 && !payload.specularBounce)
 		{
 			lightPdf = envPdf();

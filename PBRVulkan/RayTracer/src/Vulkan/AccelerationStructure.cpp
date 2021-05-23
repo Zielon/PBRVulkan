@@ -1,5 +1,6 @@
 #include "AccelerationStructure.h"
 
+#include "Buffer.h"
 #include "Device.h"
 #include "Extensions.h"
 
@@ -7,20 +8,28 @@
 
 namespace Vulkan
 {
-	AccelerationStructure::AccelerationStructure(
-		const class Device& device,
-		const VkAccelerationStructureCreateInfoNV& createInfo) :
-		allowUpdate(createInfo.info.flags & VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV), device(device)
+	AccelerationStructure::AccelerationStructure(const class Device& device) : device(device)
 	{
 		extensions.reset(new Extensions(device));
 
-		VK_CHECK(
-			extensions->vkCreateAccelerationStructureNV(device.Get(), &createInfo, nullptr, &accelerationStructure),
-			"Create acceleration structure");
+		accelerationProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
+		pipelineRTProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR;
+		pipelineRTProperties.pNext = &accelerationProperties;
+
+		VkPhysicalDeviceProperties2 props = {};
+		props.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+		props.pNext = &pipelineRTProperties;
+		vkGetPhysicalDeviceProperties2(device.GetPhysical(), &props);
+	}
+
+	uint64_t AccelerationStructure::RoundUp(uint64_t numToRound, uint64_t multiple)
+	{
+		return ((numToRound + multiple - 1) / multiple) * multiple;
 	}
 
 	AccelerationStructure::AccelerationStructure(AccelerationStructure&& other) noexcept :
-		allowUpdate(other.allowUpdate),
+		buildGeometryInfo(other.buildGeometryInfo),
+		buildSizesInfo(other.buildSizesInfo),
 		device(other.device),
 		extensions(std::move(other.extensions)),
 		accelerationStructure(other.accelerationStructure)
@@ -32,73 +41,60 @@ namespace Vulkan
 	{
 		if (accelerationStructure != nullptr)
 		{
-			extensions->vkDestroyAccelerationStructureNV(device.Get(), accelerationStructure, nullptr);
+			extensions->vkDestroyAccelerationStructureKHR(device.Get(), accelerationStructure, nullptr);
 			accelerationStructure = nullptr;
 		}
 	}
 
-	ASMemoryRequirementsNV AccelerationStructure::GetMemoryRequirements() const
+	void AccelerationStructure::Create(const Buffer& buffer, VkDeviceSize resultOffset)
 	{
-		VkAccelerationStructureMemoryRequirementsInfoNV ASMemoryRequirementsInfoNV{};
-		ASMemoryRequirementsInfoNV.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV;
-		ASMemoryRequirementsInfoNV.pNext = nullptr;
-		ASMemoryRequirementsInfoNV.accelerationStructure = accelerationStructure;
+		VkAccelerationStructureCreateInfoKHR createInfo = {};
 
-		// If the descriptor already contains the geometry info, so we can directly compute the estimated size and required scratch memory.
-		VkMemoryRequirements2 memoryRequirements = {};
-		ASMemoryRequirementsInfoNV.type = VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV;
-		extensions->vkGetAccelerationStructureMemoryRequirementsNV(
-			device.Get(), &ASMemoryRequirementsInfoNV, &memoryRequirements);
+		createInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR;
+		createInfo.pNext = nullptr;
+		createInfo.type = buildGeometryInfo.type;
+		createInfo.size = buildSizesInfo.accelerationStructureSize;
+		createInfo.buffer = buffer.Get();
+		createInfo.offset = resultOffset;
 
-		const auto resultRequirements = memoryRequirements.memoryRequirements;
+		VK_CHECK(
+			extensions->vkCreateAccelerationStructureKHR(
+				device.Get(), &createInfo, nullptr, &accelerationStructure),
+			"Create acceleration structure");
+	}
 
-		ASMemoryRequirementsInfoNV.type = VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV;
-		extensions->vkGetAccelerationStructureMemoryRequirementsNV(
-			device.Get(), &ASMemoryRequirementsInfoNV, &memoryRequirements);
+	VkAccelerationStructureBuildSizesInfoKHR AccelerationStructure::GetMemorySizes(const uint32_t* count) const
+	{
+		VkAccelerationStructureBuildSizesInfoKHR sizeInfo = {};
 
-		const auto buildRequirements = memoryRequirements.memoryRequirements;
+		sizeInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR;
 
-		ASMemoryRequirementsInfoNV.type = VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV;
-		extensions->vkGetAccelerationStructureMemoryRequirementsNV(
-			device.Get(), &ASMemoryRequirementsInfoNV, &memoryRequirements);
+		extensions->vkGetAccelerationStructureBuildSizesKHR(
+			device.Get(),
+			VK_ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR,
+			&buildGeometryInfo, count, &sizeInfo);
 
-		const auto updateRequirements = memoryRequirements.memoryRequirements;
+		sizeInfo.accelerationStructureSize = RoundUp(sizeInfo.accelerationStructureSize, 256);
+		sizeInfo.buildScratchSize = RoundUp(sizeInfo.buildScratchSize,
+		                                    accelerationProperties.minAccelerationStructureScratchOffsetAlignment);
 
-		return { resultRequirements, buildRequirements, updateRequirements };
+		return sizeInfo;
 	}
 
 	void AccelerationStructure::MemoryBarrier(VkCommandBuffer commandBuffer)
 	{
-		// Wait for the builder to complete by setting a barrier on the resulting buffer. This is
-		// particularly important as the construction of the top-level hierarchy may be called right
-		// afterwards, before executing the command list.
+		auto flags = VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR | VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR;
+
 		VkMemoryBarrier memoryBarrier = {};
+
 		memoryBarrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
 		memoryBarrier.pNext = nullptr;
-		memoryBarrier.srcAccessMask = VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV |
-			VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV;
-		memoryBarrier.dstAccessMask = VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV |
-			VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV;
+		memoryBarrier.srcAccessMask = flags;
+		memoryBarrier.dstAccessMask = flags;
 
-		vkCmdPipelineBarrier(
-			commandBuffer,
-			VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV,
-			VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV,
-			0, 1, &memoryBarrier, 0, nullptr, 0, nullptr);
-	}
-
-	ASMemoryRequirementsNV AccelerationStructure::GetTotalRequirements(
-		const std::vector<ASMemoryRequirementsNV>& requirements)
-	{
-		ASMemoryRequirementsNV total{};
-
-		for (const auto& req : requirements)
-		{
-			total.result.size += req.result.size;
-			total.build.size += req.build.size;
-			total.update.size += req.update.size;
-		}
-
-		return total;
+		vkCmdPipelineBarrier(commandBuffer,
+		                     VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
+		                     VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
+		                     0, 1, &memoryBarrier, 0, nullptr, 0, nullptr);
 	}
 }
