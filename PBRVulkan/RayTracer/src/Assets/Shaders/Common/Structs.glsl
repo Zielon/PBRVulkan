@@ -14,10 +14,6 @@
 // See Random.glsl for more details
 uint seed = 0;
 
-// Material types
-int UE4 = 0;
-int GLASS = 1;
-
 // Lights types
 int AREA_LIGHT = 0;
 int SPHERE_LIGHT = 1;
@@ -31,16 +27,25 @@ struct Material
 { 
 	vec4 albedo;
 	vec4 emission;
-	// Parameters
+	vec4 extinction;
+	
 	float metallic;
-	float roughness;
-	float ior;
-	float transmittance;
-	// Textures
+    float roughness;
+    float subsurface;
+    float specularTint;
+    
+    float sheen;
+    float sheenTint;
+    float clearcoat;
+    float clearcoatGloss;
+    
+    float transmission;
+    float ior;
+    float atDistance;
+	
 	int albedoTexID;
 	int metallicRoughnessTexID;
 	int normalmapTexID;
-	int heightmapTexID;
 };
 
 struct Ray
@@ -100,7 +105,7 @@ struct BsdfSample
 	float pdf; 
 };
 
-struct RayPayload
+struct RayPayload	
 {
 	Ray ray;
 	BsdfSample bsdf;

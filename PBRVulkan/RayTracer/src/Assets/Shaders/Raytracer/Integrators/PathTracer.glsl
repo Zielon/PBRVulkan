@@ -13,7 +13,7 @@
  */
 {
 	BsdfSample bsdfSample;
-	LightSample lightSample;
+	LightSample lightSample;	
 
 	payload.radiance += material.emission.xyz * payload.beta;
 
@@ -29,32 +29,17 @@
 		return;
 	}
 
-	int materialType = int(material.albedo.w);
+	payload.specularBounce = false;
+	payload.radiance += directLight(material) * payload.beta;
 
-	if (materialType == UE4)
-	{
-		payload.specularBounce = false;
-		payload.radiance += directLight(material) * payload.beta;
+	bsdfSample.bsdfDir = UE4Sample(material);
+	bsdfSample.pdf = UE4Pdf(material, bsdfSample.bsdfDir);
 
-		bsdfSample.bsdfDir = UE4Sample(material);
-		bsdfSample.pdf = UE4Pdf(material, bsdfSample.bsdfDir);
+	float cosTheta = abs(dot(ffnormal, bsdfSample.bsdfDir));
+	vec3 F = UE4Eval(material, bsdfSample.bsdfDir);
 
-		float cosTheta = abs(dot(ffnormal, bsdfSample.bsdfDir));
-		vec3 F = UE4Eval(material, bsdfSample.bsdfDir);
-
-		payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
-	}
-
-	if (materialType == GLASS)
-	{
-		payload.specularBounce = true;
-
-		bsdfSample.bsdfDir = glassSample(material);
-		bsdfSample.pdf = glassPdf();
-
-		payload.beta *= glassEval(material);
-	}
-
+	payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
+	
 	// Russian roulette
 	if (max3(payload.beta) < 0.01f && payload.depth > 2)
 	{
