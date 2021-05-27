@@ -35,5 +35,12 @@ namespace Interface
 		ImGui::Text("Aperture  ");
 		ImGui::SameLine();
 		ImGui::InputFloat("float_aperture", &settings.Aperture, 0.1);
+
+		if (settings.UseEnvMap)
+		{
+			ImGui::Text("HDR factor");
+			ImGui::SameLine();
+			ImGui::InputFloat("HDR_multiplier", &settings.HdrMultiplier, 0.1);
+		}
 	}
 }

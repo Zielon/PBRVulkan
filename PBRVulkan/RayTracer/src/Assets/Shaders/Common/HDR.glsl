@@ -14,10 +14,10 @@ vec4 envSample(inout vec3 color)
 	float r1 = rnd(seed);
 	float r2 = rnd(seed);
 
-	float v = texture(HDRs[2], vec2(r1, 0.)).x; // marginal
+	float v = texture(HDRs[2], vec2(r1, 0)).x; // marginal
 	float u = texture(HDRs[1], vec2(r2, v)).x;  // conditional
 
-	color = texture(HDRs[0], vec2(u, v)).xyz * 5.f;
+	color = texture(HDRs[0], vec2(u, v)).xyz * ubo.hdrMultiplier;
 	float pdf = texture(HDRs[1], vec2(u, v)).y * texture(HDRs[2], vec2(v, 0.)).y;
 
 	float phi = u * TWO_PI;

@@ -60,7 +60,9 @@ namespace Tracer
 		CreateComputePipeline();
 	}
 
-	Application::~Application() { }
+	Application::~Application()
+	{
+	}
 
 	void Application::LoadScene()
 	{
@@ -129,7 +131,10 @@ namespace Tracer
 
 	void Application::CreateMenu()
 	{
-		settings.MaxDepth = scene->GetRendererOptions().maxDepth;
+		const auto renderer = scene->GetRendererOptions();
+		settings.MaxDepth = renderer.maxDepth;
+		settings.UseEnvMap = renderer.useEnvMap;
+		settings.HdrMultiplier = renderer.hdrMultiplier;
 
 		menu.reset(new Menu(*device, *swapChain, *commandPool, settings));
 
@@ -162,6 +167,7 @@ namespace Tracer
 		uniform.maxDepth = settings.MaxDepth;
 		uniform.aperture = settings.Aperture;
 		uniform.focalDistance = settings.FocalDistance;
+		uniform.hdrMultiplier = scene->UseHDR() ? settings.HdrMultiplier : 0.f;
 		uniform.hdrResolution = scene->UseHDR() ? scene->GetHDRResolution() : 0.f;
 		uniform.frame = frame;
 		uniform.AORayLength = settings.AORayLength;
@@ -280,8 +286,8 @@ namespace Tracer
 			{
 				computer->BuildCommand(settings.ComputeShaderId);
 
-				VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT };
-				VkCommandBuffer commandBuffers[]{ computer->GetCommandBuffers()[0] };
+				VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT};
+				VkCommandBuffer commandBuffers[]{computer->GetCommandBuffers()[0]};
 
 				VkSubmitInfo computeSubmitInfo{};
 				computeSubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

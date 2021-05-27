@@ -86,7 +86,9 @@ namespace Tracer
 
 		if (lights.empty())
 		{
-			lights.emplace_back();
+			Assets::Light light;
+			light.type = -1;
+			lights.emplace_back(light);
 		}
 	}
 
@@ -99,12 +101,10 @@ namespace Tracer
 		auto columns = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->cols);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *columns, format, tiling, imageType));
 
-		format = VK_FORMAT_R32G32_SFLOAT;
-
-		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 8, hdr->conditionalDistData);
+		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->conditionalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *conditional, format, tiling, imageType));
 
-		auto marginal = std::make_unique<Assets::Texture>(hdr->width, 1, 8, hdr->marginalDistData);
+		auto marginal = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->marginalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *marginal, format, tiling, imageType));
 	}
 

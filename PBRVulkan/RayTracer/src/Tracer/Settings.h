@@ -11,6 +11,8 @@ struct Settings final
 	int MaxDepth = 3;
 	int SSP = 1;
 	float Fov{};
+	bool UseEnvMap = false;
+	float HdrMultiplier = 0.f;
 	float Aperture = 0.001f;
 	float FocalDistance = 1.f;
 	float AORayLength = 0.5f;
@@ -32,6 +34,8 @@ struct Settings final
 			Fov != prev.Fov ||
 			Aperture != prev.Aperture ||
 			FocalDistance != prev.FocalDistance ||
-			AORayLength != prev.AORayLength;
+			AORayLength != prev.AORayLength ||
+			HdrMultiplier != prev.HdrMultiplier ||
+			UseEnvMap != prev.UseEnvMap;
 	}
 };

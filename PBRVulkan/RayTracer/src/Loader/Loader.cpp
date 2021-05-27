@@ -37,8 +37,6 @@ freely, subject to the following restrictions:
 
 namespace Loader
 {
-	static const float _PI = 3.14159265358979323846f;
-
 	static const int kMaxLineLength = 2048;
 
 	bool LoadSceneFromFile(const std::string& filename, SceneBase& scene, RenderOptions& renderOptions)
@@ -179,7 +177,7 @@ namespace Loader
 				else if (strcmp(light_type, "Sphere") == 0)
 				{
 					light.type = Assets::LightType::SphereLight;
-					light.area = 4.0f * _PI * light.radius * light.radius;
+					light.area = 4.0f * glm::pi<float>() * light.radius * light.radius;
 				}
 
 				scene.AddLight(light);

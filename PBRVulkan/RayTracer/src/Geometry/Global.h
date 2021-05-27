@@ -16,6 +16,7 @@ namespace Uniforms
 		glm::uint32_t frame{};
 		glm::float32_t aperture{};
 		glm::float32_t focalDistance{};
+		glm::float32_t hdrMultiplier{};
 		glm::float32_t hdrResolution{};
 		glm::float32_t AORayLength{};
 		glm::float32_t denoiserStrength{};

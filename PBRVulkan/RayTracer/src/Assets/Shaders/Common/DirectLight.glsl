@@ -4,22 +4,21 @@
 
 vec3 directLight(in Material material)
 {
-	vec3 L      = vec3(0);
-	float tMin  = MINIMUM;
-	float tMax  = INFINITY;
-	uint flags  = gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsOpaqueEXT | gl_RayFlagsSkipClosestHitShaderEXT;
+	vec3 L = vec3(0);
+	float tMin = MINIMUM;
+	float tMax = INFINITY;
+	uint flags = gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsOpaqueEXT | gl_RayFlagsSkipClosestHitShaderEXT;
 
 	BsdfSample bsdfSample;
 
 	vec3 surfacePos = payload.worldPos;
 
 	/* Environment Light */
-	if (ubo.useHDR)
+	#ifdef USE_HDR
 	{
-		#ifdef USE_HDR
-		vec3 color     = vec3(0);
-		vec4 dirPdf    = envSample(color);
-		vec3 lightDir  = dirPdf.xyz;
+		vec3 color = vec3(0);
+		vec4 dirPdf = envSample(color);
+		vec3 lightDir = dirPdf.xyz;
 		float lightPdf = dirPdf.w;
 
 		isShadowed = true;
@@ -35,16 +34,20 @@ vec3 directLight(in Material material)
 			float misWeight = powerHeuristic(lightPdf, bsdfPdf);
 
 			if (misWeight > 0.0)
-				L += (misWeight * F * cosTheta * color) / lightPdf;
+				L += misWeight * F * cosTheta * color / lightPdf;
 		}
-		#endif
 	}
+	#endif
 
 	if (ubo.lights > 0)
 	{
 		Light light;
 		int index = int(rnd(seed) * float(ubo.lights));
 		light = Lights[index];
+
+		// Dummy ligth
+		if (light.type == -1)
+			return L;
 
 		LightSample sampled = sampleLight(light);	
 		vec3 lightDir       = sampled.position - surfacePos;

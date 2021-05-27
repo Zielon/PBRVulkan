@@ -77,6 +77,7 @@ struct Uniform
 	uint frame;
 	float aperture;
 	float focalDistance;
+	float hdrMultiplier;
 	float hdrResolution;
 	float AORayLength;
 	int integratorType;

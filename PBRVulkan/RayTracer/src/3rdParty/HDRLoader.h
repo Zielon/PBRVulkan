@@ -46,8 +46,8 @@ namespace Assets
 		int width, height;
 		// each pixel takes 3 float32, each component can be of any value...
 		float* cols;
-		glm::vec2* marginalDistData; // y component holds the pdf
-		glm::vec2* conditionalDistData; // y component holds the pdf
+		glm::vec3* marginalDistData; // y component holds the pdf
+		glm::vec3* conditionalDistData; // y component holds the pdf
 	};
 
 	class HDRLoader
