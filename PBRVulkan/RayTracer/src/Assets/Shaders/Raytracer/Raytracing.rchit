@@ -40,6 +40,7 @@ hitAttributeEXT vec2 hit;
 
 #include "../Common/Sampling.glsl"
 #include "../BSDFs/UE4BSDF.glsl"
+#include "../BSDFs/DisneyBSDF.glsl"
 
 #include "../Common/DirectLight.glsl"
 

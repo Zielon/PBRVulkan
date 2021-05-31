@@ -32,11 +32,10 @@
 	payload.specularBounce = false;
 	payload.radiance += directLight(material) * payload.beta;
 
-	bsdfSample.bsdfDir = UE4Sample(material);
-	bsdfSample.pdf = UE4Pdf(material, bsdfSample.bsdfDir);
+	DisneySample(material, bsdfSample);
 
 	float cosTheta = abs(dot(ffnormal, bsdfSample.bsdfDir));
-	vec3 F = UE4Eval(material, bsdfSample.bsdfDir);
+	vec3 F = DisneyEval(material, bsdfSample);
 
 	payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
 	
@@ -46,7 +45,7 @@
 		float q = max(float(.05), 1.f - max3(payload.beta));
 		if (rnd(seed) < q) 
 			payload.stop = true;
-		payload.beta /= 1.f - q;
+		payload.beta /= (1.f - q);
 	}
 
 	payload.bsdf = bsdfSample;

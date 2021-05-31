@@ -29,24 +29,6 @@
 
 namespace Tracer
 {
-	const std::vector<std::string> CONFIGS =
-	{
-		"../Assets/Scenes/ajax.scene",
-		"../Assets/Scenes/bedroom.scene",
-		"../Assets/Scenes/boy.scene",
-		"../Assets/Scenes/coffee_cart.scene",
-		"../Assets/Scenes/coffee_maker.scene",
-		"../Assets/Scenes/cornell_box.scene",
-		"../Assets/Scenes/diningroom.scene",
-		"../Assets/Scenes/dragon.scene",
-		"../Assets/Scenes/hyperion.scene",
-		"../Assets/Scenes/panther.scene",
-		"../Assets/Scenes/spaceship.scene",
-		"../Assets/Scenes/staircase.scene",
-		"../Assets/Scenes/stormtrooper.scene",
-		"../Assets/Scenes/teapot.scene"
-	};
-
 	Application::Application()
 	{
 		PrintGPUInfo();
@@ -66,7 +48,7 @@ namespace Tracer
 
 	void Application::LoadScene()
 	{
-		scene.reset(new Scene(CONFIGS[settings.SceneId], *device, *commandPool));
+		scene.reset(new Scene(Interface::SceneWidget::GetScenePath(settings.SceneId), *device, *commandPool));
 	}
 
 	void Application::UpdateSettings()

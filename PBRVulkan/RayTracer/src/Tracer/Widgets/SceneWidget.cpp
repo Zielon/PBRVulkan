@@ -3,7 +3,7 @@
 #include <imgui.h>
 
 namespace Interface
-{
+{	
 	void SceneWidget::Render(Settings& settings)
 	{
 		ImGui::Text("Shaders");
