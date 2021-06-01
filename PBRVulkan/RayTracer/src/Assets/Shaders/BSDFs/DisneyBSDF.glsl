@@ -96,7 +96,7 @@ vec3 EvalDiffuse(in Material material, in vec3 Csheen, vec3 V, vec3 N, vec3 L, v
 }
 
 
-void DisneySample(in Material material, inout BsdfSample bsdfSample)
+vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
 {
     float pdf = 0.0;
     vec3 f = vec3(0.0);
@@ -117,11 +117,11 @@ void DisneySample(in Material material, inout BsdfSample bsdfSample)
 
     vec3 N = payload.ffnormal;
     vec3 V = -gl_WorldRayDirectionEXT;
-    vec3 L = bsdfSample.bsdfDir;
+    vec3 L = vec3(0);
 
     mat3 frame = localFrame(N);
 
-    if (rnd(seed) < transWeight)
+    if (r1 < transWeight)
     {
         vec3 H = ImportanceSampleGTR2(material.roughness, r1, r2);
         H = frame * H;
@@ -133,7 +133,7 @@ void DisneySample(in Material material, inout BsdfSample bsdfSample)
         float F = DielectricFresnel(abs(dot(R, H)), eta);
 
         // Reflection/Total internal reflection
-        if (rnd(seed) < F)
+        if (r2 < F)
         {
             L = normalize(R);
             f = EvalDielectricReflection(material, V, N, L, H, pdf);
@@ -149,7 +149,7 @@ void DisneySample(in Material material, inout BsdfSample bsdfSample)
     }
     else
     {
-        if (rnd(seed) < diffuseRatio)
+        if (r1 < diffuseRatio)
         {
             L = cosineSampleHemisphere();
             L = frame * L;
@@ -164,7 +164,7 @@ void DisneySample(in Material material, inout BsdfSample bsdfSample)
             float primarySpecRatio = 1.0 / (1.0 + material.clearcoat);
 
             // Sample primary specular lobe
-            if (rnd(seed) < primarySpecRatio)
+            if (r2 < primarySpecRatio)
             {
                 // TODO: Implement http://jcgt.org/published/0007/04/01/
                 vec3 H = ImportanceSampleGTR2(material.roughness, r1, r2);
@@ -198,9 +198,11 @@ void DisneySample(in Material material, inout BsdfSample bsdfSample)
     }
 
     bsdfSample.pdf = pdf;
-    bsdfSample.bsdfDir = f;
-}
+    bsdfSample.bsdfDir = L;
 
+    return f;
+}
+    
 vec3 DisneyEval(Material material, inout BsdfSample bsdfSample)
 {
     vec3 N = payload.ffnormal;

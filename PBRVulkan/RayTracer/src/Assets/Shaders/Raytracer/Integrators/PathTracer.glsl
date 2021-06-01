@@ -32,10 +32,9 @@
 	payload.specularBounce = false;
 	payload.radiance += directLight(material) * payload.beta;
 
-	DisneySample(material, bsdfSample);
+	vec3 F = DisneySample(material, bsdfSample);
 
 	float cosTheta = abs(dot(ffnormal, bsdfSample.bsdfDir));
-	vec3 F = DisneyEval(material, bsdfSample);
 
 	payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
 	

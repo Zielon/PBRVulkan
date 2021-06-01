@@ -21,6 +21,8 @@ vec3 directLight(in Material material)
 		vec3 lightDir = dirPdf.xyz;
 		float lightPdf = dirPdf.w;
 
+		bsdfSample.bsdfDir = lightDir;
+
 		isShadowed = true;
 
 		// Shadow ray (payload 1 is Shadow.miss)
@@ -28,13 +30,13 @@ vec3 directLight(in Material material)
 
 		if (!isShadowed)
 		{
-			float bsdfPdf = UE4Pdf(material, lightDir);
+			vec3 F = DisneyEval(material, bsdfSample);
+
 			float cosTheta = abs(dot(lightDir, payload.ffnormal));
-			vec3 F = UE4Eval(material, lightDir);
-			float misWeight = powerHeuristic(lightPdf, bsdfPdf);
+			float misWeight = powerHeuristic(lightPdf, bsdfSample.pdf);
 
 			if (misWeight > 0.0)
-				L += misWeight * F * cosTheta * color / lightPdf;
+				L += misWeight * F * cosTheta * color / (lightPdf + EPS);
 		}
 	}
 	#endif
@@ -45,7 +47,8 @@ vec3 directLight(in Material material)
 		int index = int(rnd(seed) * float(ubo.lights));
 		light = Lights[index];
 
-		// Dummy ligth
+		// In the case there is only environmnet light and not analitic light
+		// light type is set to -1 and discarded.
 		if (light.type == -1)
 			return L;
 
@@ -54,6 +57,8 @@ vec3 directLight(in Material material)
 		float lightDist     = length(lightDir);
 		float lightDistSq   = lightDist * lightDist;
 		lightDir = normalize(lightDir);
+
+		bsdfSample.bsdfDir = lightDir;
 
 		isShadowed = true;
 
@@ -66,12 +71,13 @@ vec3 directLight(in Material material)
 		
 		if (!isShadowed)
 		{
-			float bsdfPdf = UE4Pdf(material, lightDir);
+			vec3 F = DisneyEval(material, bsdfSample);
+
 			float lightPdf = lightDistSq / (light.area * abs(dot(sampled.normal, lightDir)));
 			float cosTheta = abs(dot(payload.ffnormal, lightDir));
-			vec3 F = UE4Eval(material, lightDir);
+			float misWeight = powerHeuristic(lightPdf, bsdfSample.pdf);
 
-			L += (powerHeuristic(lightPdf, bsdfPdf) * F * cosTheta * sampled.emission) / lightPdf;
+			L += misWeight * F * cosTheta * sampled.emission / (lightPdf + EPS);
 		}
 	}
 

@@ -120,6 +120,8 @@ namespace Loader
 					sscanf(line, " albedoTexture %s", albedoTexName);
 					sscanf(line, " metallicRoughnessTexture %s", metallicRoughnessTexName);
 					sscanf(line, " normalTexture %s", normalTexName);
+
+					material.roughness = glm::max(material.roughness, 0.001f);
 				}
 
 				// Albedo Texture
