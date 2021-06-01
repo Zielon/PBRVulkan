@@ -26,7 +26,7 @@ namespace Interface
 			"AO"
 		};
 
-		const char* scenes[14] = {
+		const char* scenes[18] = {
 			"Ajax",
 			"Bedroom",
 			"Boy",
@@ -40,7 +40,11 @@ namespace Interface
 			"Spaceship",
 			"Staircase",
 			"Stormtroopers",
-			"Teapot"
+			"Teapot",
+			"Hyperion II",
+			"Mustang",
+			"Mustang Red",
+			"Furnace"
 		};
 
 		static const inline std::vector<std::string> CONFIGS =
@@ -58,7 +62,11 @@ namespace Interface
 			"spaceship.scene",
 			"staircase.scene",
 			"stormtrooper.scene",
-			"teapot.scene"
+			"teapot.scene",
+			"hyperion2.scene",
+			"mustang.scene",
+			"mustang_red.scene",
+			"furnace.scene"
 		};
 	};
 }

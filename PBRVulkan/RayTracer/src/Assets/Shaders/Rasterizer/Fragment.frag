@@ -31,7 +31,7 @@ void main()
 	float shininess = 32.0f;
 
 	vec3 normal = normalize(inNormal);
-	vec3 viewDir = normalize(ubo.cameraPos - inPosition);
+	vec3 viewDir = normalize(ubo.cameraPos.xyz - inPosition);
 
 	vec3 color = vec3(0);
 	vec3 albedo = vec3(0);

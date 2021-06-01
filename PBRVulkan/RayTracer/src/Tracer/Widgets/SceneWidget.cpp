@@ -22,7 +22,7 @@ namespace Interface
 		ImGui::Text("Scene");
 
 		ImGui::PushItemWidth(-1);
-		ImGui::Combo("  ", &settings.SceneId, scenes, 14);
+		ImGui::Combo("  ", &settings.SceneId, scenes, CONFIGS.size());
 		ImGui::PopItemWidth();
 	}
 }

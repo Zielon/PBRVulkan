@@ -46,6 +46,7 @@ struct Material
 	int albedoTexID;
 	int metallicRoughnessTexID;
 	int normalmapTexID;
+	int heightmapTexID;
 };
 
 struct Ray

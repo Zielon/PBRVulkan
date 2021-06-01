@@ -49,15 +49,19 @@ void main()
 
 	#ifdef USE_HDR
 	{
-		float lightPdf = 1.0f;
+		float lightPdf = 0.f;
 		float misWeight = 1.0f;
 		vec2 uv = vec2((PI + atan(gl_WorldRayDirectionEXT.z, gl_WorldRayDirectionEXT.x)) * INV_2PI, acos(gl_WorldRayDirectionEXT.y) * INV_PI);
 		if (payload.depth > 0 && !payload.specularBounce)
 		{
-			lightPdf = envPdf();
-			misWeight = powerHeuristic(0, lightPdf);
+			float lightPdf = envPdf();
+
+			if (isnan(lightPdf))
+				lightPdf = EPS;
+
+			misWeight = powerHeuristic(payload.bsdf.pdf, lightPdf);
 		}
-		payload.radiance += misWeight * texture(HDRs[0], uv).xyz * payload.beta * ubo.hdrMultiplier;
+		payload.radiance += texture(HDRs[0], uv).xyz * payload.beta * ubo.hdrMultiplier;
 	}
 	#endif
 }

@@ -132,7 +132,7 @@ namespace Tracer
 			return verticesSize;
 		}
 
-		[[nodiscard]] uint32_t GetHDRResolution() const
+		[[nodiscard]] glm::float32 GetHDRResolution() const
 		{
 			return hdrResolution;
 		}
