@@ -92,7 +92,7 @@ namespace Tracer
 		}
 	}
 
-	void Scene::LoadHDR(Assets::HDRData* hdr)
+	void Scene::LoadHDR(HDRData* hdr)
 	{
 		VkFormat format = VK_FORMAT_R32G32B32_SFLOAT;
 		VkImageTiling tiling = VK_IMAGE_TILING_LINEAR;
@@ -101,10 +101,12 @@ namespace Tracer
 		auto columns = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->cols);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *columns, format, tiling, imageType));
 
-		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->conditionalDistData);
-		hdrImages.emplace_back(new TextureImage(device, commandPool, *conditional, format, tiling, imageType));
+		format = VK_FORMAT_R32G32_SFLOAT;
 
-		auto marginal = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->marginalDistData);
+		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 8, hdr->conditionalDistData);
+		hdrImages.emplace_back(new TextureImage(device, commandPool, *conditional, format, tiling, imageType));
+		
+		auto marginal = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 8, hdr->marginalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *marginal, format, tiling, imageType));
 	}
 
@@ -208,7 +210,7 @@ namespace Tracer
 		hdrLoader = std::async(std::launch::async, [this, path]()
 		{
 			const auto file = root + path;
-			auto* hdr = Assets::HDRLoader::Load(file.c_str());
+			auto* hdr = HDRLoader::load(file.c_str());
 
 			if (hdr == nullptr)
 				std::cerr << "[ERROR] Unable to load HDR!" << std::endl;

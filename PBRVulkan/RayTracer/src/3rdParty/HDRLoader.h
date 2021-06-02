@@ -1,61 +1,62 @@
 #pragma once
-#include <iostream>
+
 #include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+
 
 /***********************************************************************************
-	Created:	17:9:2002
-	FileName: 	hdrloader.h
-	Author:		Igor Kravtchenko
-	
-	Info:		Load HDR image and convert to a set of float32 RGB triplet.
+    Created:    17:9:2002
+    FileName:     hdrloader.h
+    Author:        Igor Kravtchenko
+
+    Info:        Load HDR image and convert to a set of float32 RGB triplet.
 ************************************************************************************/
 
-/* 
-	This is modified version of the original code. Addeed code to build marginal & conditional densities for IBL importance sampling
+/*
+    This is a modified version of the original code. Addeed code to build marginal & conditional densities for IBL importance sampling
 */
 
-namespace Assets
+struct Vec2
 {
-	enum HDRType
+	Vec2()
 	{
-		COLOR,
-		MARGINAL,
-		CONDITIONAL
-	};
+	}
 
-	class HDRData
+	Vec2(glm::float32_t x, glm::float32_t y)
 	{
-	public:
-		HDRData() : width(0), height(0), cols(nullptr), marginalDistData(nullptr), conditionalDistData(nullptr) {}
+		this->x = x;
+		this->y = y;
+	}
 
-		~HDRData()
-		{
-			if (cols != nullptr)
-				delete cols;
-			if (marginalDistData != nullptr)
-				delete marginalDistData;
-			if (conditionalDistData != nullptr)
-				delete conditionalDistData;
+	glm::float32_t x{};
+	glm::float32_t y{};
+};
 
-			cols = nullptr;
-			marginalDistData = nullptr;
-			conditionalDistData = nullptr;
-		}
-
-		int width, height;
-		// each pixel takes 3 float32, each component can be of any value...
-		float* cols;
-		glm::vec3* marginalDistData; // y component holds the pdf
-		glm::vec3* conditionalDistData; // y component holds the pdf
-	};
-
-	class HDRLoader
+class HDRData
+{
+public:
+	HDRData() : width(0), height(0), cols(nullptr), marginalDistData(nullptr), conditionalDistData(nullptr)
 	{
-	private:
-		static void BuildDistributions(HDRData* res);
+	}
 
-	public:
-		static HDRData* Load(const char* fileName);
-	};
-}
+	~HDRData()
+	{
+		delete cols;
+		delete marginalDistData;
+		delete conditionalDistData;
+	}
+
+	int width, height;
+	// each pixel takes 3 float32, each component can be of any value...
+	float* cols;
+	Vec2* marginalDistData; // y component holds the pdf
+	Vec2* conditionalDistData; // y component holds the pdf
+};
+
+class HDRLoader
+{
+private:
+	static void buildDistributions(HDRData* res);
+public:
+	static HDRData* load(const char* fileName);
+};

@@ -101,9 +101,6 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
     float pdf = 0.0;
     vec3 f = vec3(0.0);
 
-    float r1 = rnd(seed);
-    float r2 = rnd(seed);
-
     float diffuseRatio = 0.5 * (1.0 - material.metallic);
     float transWeight = (1.0 - material.metallic) * material.transmission;
 
@@ -121,9 +118,9 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
 
     mat3 frame = localFrame(N);
 
-    if (r1 < transWeight)
+    if (rnd(seed) < transWeight)
     {
-        vec3 H = ImportanceSampleGTR2(material.roughness, r1, r2);
+        vec3 H = ImportanceSampleGTR2(material.roughness, rnd(seed), rnd(seed));
         H = frame * H;
 
         if (dot(V, H) < 0.0)
@@ -133,7 +130,7 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
         float F = DielectricFresnel(abs(dot(R, H)), eta);
 
         // Reflection/Total internal reflection
-        if (r2 < F)
+        if (rnd(seed) < F)
         {
             L = normalize(R);
             f = EvalDielectricReflection(material, V, N, L, H, pdf);
@@ -149,7 +146,7 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
     }
     else
     {
-        if (r1 < diffuseRatio)
+        if (rnd(seed) < diffuseRatio)
         {
             L = cosineSampleHemisphere();
             L = frame * L;
@@ -164,10 +161,10 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
             float primarySpecRatio = 1.0 / (1.0 + material.clearcoat);
 
             // Sample primary specular lobe
-            if (r2 < primarySpecRatio)
+            if (rnd(seed) < primarySpecRatio)
             {
                 // TODO: Implement http://jcgt.org/published/0007/04/01/
-                vec3 H = ImportanceSampleGTR2(material.roughness, r1, r2);
+                vec3 H = ImportanceSampleGTR2(material.roughness, rnd(seed), rnd(seed));
                 H = frame * H;
 
                 if (dot(V, H) < 0.0)
@@ -180,7 +177,7 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
             }
             else // Sample clearcoat lobe
             {
-                vec3 H = ImportanceSampleGTR1(mix(0.1, 0.001, material.clearcoatGloss), r1, r2);
+                vec3 H = ImportanceSampleGTR1(mix(0.1, 0.001, material.clearcoatGloss), rnd(seed), rnd(seed));
                 H = frame * H;
 
                 if (dot(V, H) < 0.0)

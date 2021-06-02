@@ -17,6 +17,8 @@
 #include "../Assets/Light.h"
 #include "../Loader/RenderOptions.h"
 
+#include "../3rdParty/HDRLoader.h"
+
 namespace Vulkan
 {
 	class Device;
@@ -182,7 +184,7 @@ namespace Tracer
 		void Print() const;
 		void Load();
 		void LoadEmptyBuffers();
-		void LoadHDR(Assets::HDRData* hdr);
+		void LoadHDR(HDRData* hdr);
 		void Fill(std::unique_ptr<class Vulkan::Buffer>& buffer, void* data, size_t size,
 		          VkBufferUsageFlagBits storage,
 		          VkMemoryAllocateFlags allocateFlags) const;
