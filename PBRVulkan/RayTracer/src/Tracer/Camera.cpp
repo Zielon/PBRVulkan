@@ -6,7 +6,7 @@
 
 float Tracer::Camera::DELTA_TIME = 0;
 float Tracer::Camera::LAST_FRAME_TIME = 0;
-float SPEED = 5.f;
+float SPEED = 2.f;
 float SENSITIVITY = 0.10f;
 
 namespace Tracer

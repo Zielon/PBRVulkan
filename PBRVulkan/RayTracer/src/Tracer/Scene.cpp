@@ -101,12 +101,10 @@ namespace Tracer
 		auto columns = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->cols);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *columns, format, tiling, imageType));
 
-		format = VK_FORMAT_R32G32_SFLOAT;
-
-		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 8, hdr->conditionalDistData);
+		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->conditionalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *conditional, format, tiling, imageType));
 		
-		auto marginal = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 8, hdr->marginalDistData);
+		auto marginal = std::make_unique<Assets::Texture>(hdr->height, hdr->width, 12, hdr->marginalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *marginal, format, tiling, imageType));
 	}
 

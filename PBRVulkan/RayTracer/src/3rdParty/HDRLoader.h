@@ -16,22 +16,6 @@
     This is a modified version of the original code. Addeed code to build marginal & conditional densities for IBL importance sampling
 */
 
-struct Vec2
-{
-	Vec2()
-	{
-	}
-
-	Vec2(glm::float32_t x, glm::float32_t y)
-	{
-		this->x = x;
-		this->y = y;
-	}
-
-	glm::float32_t x{};
-	glm::float32_t y{};
-};
-
 class HDRData
 {
 public:
@@ -49,8 +33,8 @@ public:
 	int width, height;
 	// each pixel takes 3 float32, each component can be of any value...
 	float* cols;
-	Vec2* marginalDistData; // y component holds the pdf
-	Vec2* conditionalDistData; // y component holds the pdf
+	glm::vec3* marginalDistData; // y component holds the pdf
+	glm::vec3* conditionalDistData; // y component holds the pdf
 };
 
 class HDRLoader

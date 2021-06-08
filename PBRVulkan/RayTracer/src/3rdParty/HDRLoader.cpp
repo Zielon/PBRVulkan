@@ -64,8 +64,8 @@ void HDRLoader::buildDistributions(HDRData* res)
 	auto pdf1D = new float[height];
 	auto cdf1D = new float[height];
 
-	res->marginalDistData = new Vec2[width * height];
-	res->conditionalDistData = new Vec2[width * height];
+	res->marginalDistData = new glm::vec3[width * height];
+	res->conditionalDistData = new glm::vec3[width * height];
 
 	float colWeightSum = 0.0f;
 
