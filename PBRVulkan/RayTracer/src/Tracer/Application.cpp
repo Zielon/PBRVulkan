@@ -83,6 +83,11 @@ namespace Tracer
 
 	void Application::RecreateSwapChain()
 	{
+		Vulkan::Command::Submit(*commandPool, [this](VkCommandBuffer commandBuffer)
+		{
+			Clear(commandBuffer, this->imageIndex);
+		});
+
 		settings = menu->GetSettings();
 		device->WaitIdle();
 		menu.reset();
@@ -95,11 +100,6 @@ namespace Tracer
 		CreateMenu();
 		ResetAccumulation();
 		CreateComputePipeline();
-
-		Vulkan::Command::Submit(*commandPool, [this](VkCommandBuffer commandBuffer)
-		{
-			Clear(commandBuffer);
-		});
 	}
 
 	void Application::RecompileShaders()
@@ -162,12 +162,14 @@ namespace Tracer
 	{
 		Camera::TimeDeltaUpdate();
 
+		this->imageIndex = imageIndex;
+
 		if (scene->GetCamera().OnBeforeRender())
 			ResetAccumulation();
 
 		if (settings.UseRasterizer)
 		{
-			Clear(commandBuffer);
+			Clear(commandBuffer, imageIndex);
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
 		}
 		else

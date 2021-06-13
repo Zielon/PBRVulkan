@@ -112,6 +112,7 @@ struct RayPayload
 	Ray ray;
 	BsdfSample bsdf;
 	vec3 radiance;
+	vec3 absorption;
 	vec3 beta;
 	vec3 worldPos;
 	vec3 normal;

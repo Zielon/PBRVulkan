@@ -45,5 +45,6 @@ namespace Tracer
 		std::unique_ptr<class Vulkan::Computer> computer;
 
 		uint32_t frame = 0;
+		uint32_t imageIndex = 0;
 	};
 }

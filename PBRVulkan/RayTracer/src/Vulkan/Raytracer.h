@@ -21,7 +21,7 @@ namespace Vulkan
 		void CreateSwapChain() override;
 		void DeleteSwapChain() override;
 		void CreateGraphicsPipeline() override;
-		void Clear(VkCommandBuffer commandBuffer) const;
+		void Clear(VkCommandBuffer commandBuffer, uint32_t imageIndex) const;
 
 		[[nodiscard]] class ImageView& GetOutputImageView() const
 		{

@@ -22,13 +22,14 @@
 		vec3 Le = sampleEmitter(lightSample, payload.bsdf);
 
 		// One sided emitter only
-		// if (dot(payload.ffnormal, lightSample.normal) > 0.f)
+		if (dot(payload.ffnormal, lightSample.normal) > 0.f)
 			payload.radiance += Le * payload.beta;
 
 		payload.stop = true;
 		return;
 	}
 
+	payload.beta *= exp(-payload.absorption * gl_HitTEXT);
 	payload.specularBounce = false;
 	payload.radiance += directLight(material) * payload.beta;
 
@@ -38,6 +39,9 @@
 
 	payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
 	
+	if (dot(ffnormal, bsdfSample.bsdfDir) < 0.0)
+		payload.absorption = -log(material.extinction.xyz) / (material.atDistance + EPS);
+
 	// Russian roulette
 	if (max3(payload.beta) < 0.01f && payload.depth > 2)
 	{

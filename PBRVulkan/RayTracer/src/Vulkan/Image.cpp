@@ -53,7 +53,7 @@ namespace Vulkan
 
 	VkClearColorValue Image::GetColor(float r, float g, float b)
 	{
-		VkClearColorValue color = { r, g, b };
+		VkClearColorValue color = { r, g, b, 0.f };
 		return color;
 	}
 
