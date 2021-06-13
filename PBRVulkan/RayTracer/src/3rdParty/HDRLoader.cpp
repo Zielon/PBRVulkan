@@ -110,8 +110,8 @@ void HDRLoader::buildDistributions(HDRData* res)
 	{
 		float invHeight = static_cast<float>(i + 1) / height;
 		int row = LowerBound(cdf1D, 0, height, invHeight);
-		res->marginalDistData[i].x = row / static_cast<float>(height);
-		res->marginalDistData[i].y = pdf1D[i];
+		res->marginalDistData[i * width].x = row / static_cast<float>(height);
+		res->marginalDistData[i * width].y = pdf1D[i];
 	}
 
 	for (int j = 0; j < height; j++)

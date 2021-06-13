@@ -104,7 +104,7 @@ namespace Tracer
 		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->conditionalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *conditional, format, tiling, imageType));
 		
-		auto marginal = std::make_unique<Assets::Texture>(hdr->height, hdr->width, 12, hdr->marginalDistData);
+		auto marginal = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->marginalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *marginal, format, tiling, imageType));
 	}
 
