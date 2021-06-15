@@ -2,7 +2,7 @@ mkdir Build
 cd Build
 git clone https://github.com/Microsoft/vcpkg.git vcpkg.windows
 cd vcpkg.windows
-git checkout 2020.11
+git checkout 2021.05.12
 call bootstrap-vcpkg.bat
 
 vcpkg.exe install ^
@@ -15,5 +15,8 @@ vcpkg.exe install ^
 vcpkg.exe integrate install
 
 cd ../..
+
+cd PBRVulkan/Assets
+git clone https://github.com/Zielon/PBRScenes
 
 exit /b

@@ -32,6 +32,9 @@ namespace Tracer
 	Application::Application()
 	{
 		PrintGPUInfo();
+		CheckScenesFolder();
+		if (terminate) return;
+
 		LoadScene();
 		compiler.reset(new Compiler());
 		CompileShaders();
@@ -88,6 +91,9 @@ namespace Tracer
 			Clear(commandBuffer, this->imageIndex);
 		});
 
+		if (!scene->IsValid(Interface::SceneWidget::GetScenePath(menu->GetSettings().SceneId)))
+			return;
+
 		settings = menu->GetSettings();
 		device->WaitIdle();
 		menu.reset();
@@ -134,6 +140,17 @@ namespace Tracer
 	{
 		const auto resolution = scene->GetRendererOptions().resolution;
 		glfwSetWindowSize(window->Get(), resolution.x, resolution.y);
+	}
+
+	void Application::CheckScenesFolder()
+	{
+		terminate = !std::filesystem::exists("../Assets/PBRScenes/");
+
+		if (terminate)
+		{
+			std::cout << "[ERROR] Scenes folder does not exists. Download https://github.com/Zielon/PBRScenes!" <<
+				std::endl;
+		}
 	}
 
 	void Application::UpdateUniformBuffer(uint32_t imageIndex)
@@ -289,7 +306,7 @@ namespace Tracer
 
 	void Application::Run()
 	{
-		while (!glfwWindowShouldClose(window->Get()))
+		while (!glfwWindowShouldClose(window->Get()) && !terminate)
 		{
 			glfwPollEvents();
 			UpdateSettings();

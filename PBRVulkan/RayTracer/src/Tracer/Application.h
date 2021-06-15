@@ -30,6 +30,7 @@ namespace Tracer
 		void CreateMenu();
 		void ResetAccumulation();
 		void ResizeWindow() const;
+		void CheckScenesFolder();
 		void PrintGPUInfo() const;
 		void CreateComputePipeline();
 		void ComputePipeline(VkCommandBuffer commandBuffer, uint32_t imageIndex) const;
@@ -46,5 +47,6 @@ namespace Tracer
 
 		uint32_t frame = 0;
 		uint32_t imageIndex = 0;
+		bool terminate;
 	};
 }
