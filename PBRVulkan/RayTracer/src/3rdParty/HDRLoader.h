@@ -32,9 +32,9 @@ public:
 
 	int width, height;
 	// each pixel takes 3 float32, each component can be of any value...
-	float* cols;
-	glm::vec3* marginalDistData; // y component holds the pdf
-	glm::vec3* conditionalDistData; // y component holds the pdf
+	glm::float32* cols;
+	glm::vec<3, glm::float32>* marginalDistData; // y component holds the pdf
+	glm::vec<3, glm::float32>* conditionalDistData; // y component holds the pdf
 };
 
 class HDRLoader
