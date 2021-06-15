@@ -23,7 +23,7 @@ As an example of creating your own shader please take a look at [Ambient Occlusi
       lights (area, spherical)
     HDR
     path tracer integral
-    Unreal Engine 4 BRDF
+    Disney BRDF
 2) Rasterizer pipeline     
     Phong-Blinn model
 3) Compute shader pipeline 
@@ -33,22 +33,15 @@ As an example of creating your own shader please take a look at [Ambient Occlusi
 ```
 #### How to run
 
-1) Download [VulkanSDK](https://vulkan.lunarg.com/sdk/home#windows) and install it (`C:/VulkanSDK/x.x.x.x/`).
+1) Download [VulkanSDK](https://vulkan.lunarg.com/sdk/home#windows) and install it.
 2) Run `install.bat` script to download all necessary libraries.
-3) For shaders compliation you will need `python` (Python 3.x.x) and `glslc` available form the shell level. Check out `Compiler.h` and `Compile.py` for more details. `glslc` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslc.exe`.
-
-Add vulkan path `C:/VulkanSDK/x.x.x.x/Bin32` to the `Path` variable.  
-System variable needed for the project (they will be created after `Vulkan SDK` installation)
-1) `VULKAN_SDK`
-2) `VK_SDK_PATH`
+3) For shaders compliation you will need `python` (Python 3.x.x) and `glslangValidator` available form the shell level. Check out `Compiler.h` and `Compile.py` for more details. `glslangValidator` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslangValidator.exe`.
 
 C++17 is needed to compile the project.
 
 #### Assets
 
-The scene description and assets are taken from [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) project [4]. The whole dataset can be downloaded from [link](https://drive.google.com/file/d/1UFMMoVb5uB7WIvCeHOfQ2dCQSxNMXluB/view).
-
-Download the assets folder and place it in `PBRVulkan/Assets/Scenes/`. The folder structure has to be as follows:
+The scene description and assets are taken from [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) project [4]. The [scenes repository](https://github.com/Zielon/PBRScenes) will be automatically cloned during the installation process.
 
 ```
 PBRVulkan/Assets/Scenes/
