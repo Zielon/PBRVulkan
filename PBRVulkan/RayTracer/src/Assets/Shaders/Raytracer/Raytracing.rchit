@@ -40,6 +40,7 @@ hitAttributeEXT vec2 hit;
 
 #include "../Common/Sampling.glsl"
 #include "../BSDFs/UE4BSDF.glsl"
+#include "../BSDFs/DisneyBSDF.glsl"
 
 #include "../Common/DirectLight.glsl"
 
@@ -61,6 +62,7 @@ void main()
 	vec3 normal = normalize(mix(v0.normal, v1.normal, v2.normal, barycentrics));
 	// face forward normal
 	vec3 ffnormal = dot(normal, gl_WorldRayDirectionEXT) <= 0.0 ? normal : normal * -1.0;
+	float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
 
 	// Update the material properties using textures
 	
@@ -92,6 +94,7 @@ void main()
 	payload.worldPos = worldPos;
 	payload.normal = normal;
 	payload.ffnormal = ffnormal;
+	payload.eta = eta;
 
 	seed = tea(gl_LaunchIDEXT.y * gl_LaunchSizeEXT.x + gl_LaunchIDEXT.x, ubo.frame);
 

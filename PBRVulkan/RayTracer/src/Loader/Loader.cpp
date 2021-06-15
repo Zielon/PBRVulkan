@@ -1,5 +1,4 @@
 /*
-
 Copyright (c) 2018 Miles Macklin
 
 This software is provided 'as-is', without any express or implied
@@ -38,10 +37,7 @@ freely, subject to the following restrictions:
 
 namespace Loader
 {
-	static const float _PI = 3.14159265358979323846f;
-
 	static const int kMaxLineLength = 2048;
-	int (*Log)(const char* szFormat, ...) = printf;
 
 	bool LoadSceneFromFile(const std::string& filename, SceneBase& scene, RenderOptions& renderOptions)
 	{
@@ -50,11 +46,11 @@ namespace Loader
 
 		if (!file)
 		{
-			Log("[ERROR] Couldn't open %s for reading\n", filename.c_str());
+			printf("[ERROR] Couldn't open %s for reading\n", filename.c_str());
 			return false;
 		}
 
-		Log("[LOADER] Scene processing has begun!\n");
+		printf("[LOADER] Scene processing has begun!\n");
 
 		struct MaterialData
 		{
@@ -67,7 +63,6 @@ namespace Loader
 		std::vector<std::string> metallicRoughnessTex;
 		std::vector<std::string> normalTex;
 
-		int materialCount = 0;
 		char line[kMaxLineLength];
 
 		//Defaults
@@ -83,7 +78,7 @@ namespace Loader
 				continue;
 
 			// name used for materials and meshes
-			char name[kMaxLineLength] = { 0 };
+			char name[kMaxLineLength] = {0};
 
 			//--------------------------------------------
 			// Material
@@ -91,7 +86,7 @@ namespace Loader
 			if (sscanf(line, " material %s", name) == 1)
 			{
 				Assets::Material material{};
-				int albedoTexID, matRghTexID, nrmTexID;
+
 				char albedoTexName[100] = "None";
 				char metallicRoughnessTexName[100] = "None";
 				char normalTexName[100] = "None";
@@ -106,15 +101,27 @@ namespace Loader
 					sscanf(line, " color %f %f %f", &material.albedo.x, &material.albedo.y, &material.albedo.z);
 					sscanf(line, " emission %f %f %f", &material.emission.x, &material.emission.y,
 					       &material.emission.z);
-					sscanf(line, " materialType %f", &material.albedo.w);
 					sscanf(line, " metallic %f", &material.metallic);
 					sscanf(line, " roughness %f", &material.roughness);
+					sscanf(line, " subsurface %f", &material.subsurface);
+					sscanf(line, " specular %f", &material.albedo.w);
+					sscanf(line, " specularTint %f", &material.specularTint);
+					sscanf(line, " anisotropic %f", &material.emission.w);
+					sscanf(line, " sheen %f", &material.sheen);
+					sscanf(line, " sheenTint %f", &material.sheenTint);
+					sscanf(line, " clearcoat %f", &material.clearcoat);
+					sscanf(line, " clearcoatGloss %f", &material.clearcoatGloss);
+					sscanf(line, " transmission %f", &material.transmission);
 					sscanf(line, " ior %f", &material.ior);
-					sscanf(line, " transmittance %f", &material.transmittance);
+					sscanf(line, " extinction %f %f %f", &material.extinction.x, &material.extinction.y,
+					       &material.extinction.z);
+					sscanf(line, " atDistance %f", &material.atDistance);
 
-					sscanf(line, " albedoTexture %s", &albedoTexName);
-					sscanf(line, " metallicRoughnessTexture %s", &metallicRoughnessTexName);
+					sscanf(line, " albedoTexture %s", albedoTexName);
+					sscanf(line, " metallicRoughnessTexture %s", metallicRoughnessTexName);
 					sscanf(line, " normalTexture %s", normalTexName);
+
+					material.roughness = glm::max(material.roughness, 0.001f);
 				}
 
 				// Albedo Texture
@@ -129,11 +136,11 @@ namespace Loader
 				if (strcmp(normalTexName, "None") != 0)
 					material.normalmapTexID = scene.AddTexture(normalTexName);
 
-				// add material to map
+				// Add material to map
 				if (materialMap.find(name) == materialMap.end()) // New material
 				{
 					int id = scene.AddMaterial(material);
-					materialMap[name] = MaterialData{ material, id };
+					materialMap[name] = MaterialData{material, id};
 				}
 			}
 
@@ -172,7 +179,7 @@ namespace Loader
 				else if (strcmp(light_type, "Sphere") == 0)
 				{
 					light.type = Assets::LightType::SphereLight;
-					light.area = 4.0f * _PI * light.radius * light.radius;
+					light.area = 4.0f * glm::pi<float>() * light.radius * light.radius;
 				}
 
 				scene.AddLight(light);
@@ -195,8 +202,6 @@ namespace Loader
 					sscanf(line, " resolution %d %d", &renderOptions.resolution.x, &renderOptions.resolution.y);
 					sscanf(line, " hdrMultiplier %f", &renderOptions.hdrMultiplier);
 					sscanf(line, " maxDepth %i", &renderOptions.maxDepth);
-					sscanf(line, " numTilesX %i", &renderOptions.numTilesX);
-					sscanf(line, " numTilesY %i", &renderOptions.numTilesY);
 				}
 
 				if (strcmp(envMap, "None") != 0)
@@ -243,7 +248,7 @@ namespace Loader
 				std::string filename;
 				glm::vec3 pos{};
 				glm::vec3 scale{};
-				glm::mat4 xform = glm::mat4(1.f);
+				auto xform = glm::mat4(1.f);
 				int material_id = 0; // Default Material ID
 				while (fgets(line, kMaxLineLength, file))
 				{
@@ -264,11 +269,11 @@ namespace Loader
 						// look up material in dictionary
 						if (materialMap.find(matName) != materialMap.end())
 						{
-							material_id = static_cast<float>(materialMap[matName].id);
+							material_id = materialMap[matName].id;
 						}
 						else
 						{
-							Log("Could not find material %s\n", matName);
+							printf("Could not find material %s\n", matName);
 						}
 					}
 

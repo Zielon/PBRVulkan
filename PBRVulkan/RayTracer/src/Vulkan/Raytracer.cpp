@@ -69,21 +69,21 @@ namespace Vulkan
 		shaderBindingTable.reset(new ShaderBindingTable(*raytracerGraphicsPipeline));
 	}
 
-	void Raytracer::Clear(VkCommandBuffer commandBuffer) const
+	void Raytracer::Clear(VkCommandBuffer commandBuffer, uint32_t imageIndex) const
 	{
 		VkImageSubresourceRange subresourceRange = Image::GetSubresourceRange();
 
-		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
+		Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange,
 		                     VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
 		                     VK_IMAGE_LAYOUT_UNDEFINED,
 		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 		VkClearColorValue color = Image::GetColor(0, 0, 0);
 
-		vkCmdClearColorImage(commandBuffer, outputImage->Get(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &color, 1,
+		vkCmdClearColorImage(commandBuffer, swapChain->GetImage()[imageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &color, 1,
 		                     &subresourceRange);
 
-		Image::MemoryBarrier(commandBuffer, outputImage->Get(), subresourceRange,
+		Image::MemoryBarrier(commandBuffer, swapChain->GetImage()[imageIndex], subresourceRange,
 		                     VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT,
 		                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		                     VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);

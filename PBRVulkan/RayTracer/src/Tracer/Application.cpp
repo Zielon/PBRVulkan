@@ -29,24 +29,6 @@
 
 namespace Tracer
 {
-	const std::vector<std::string> CONFIGS =
-	{
-		"../Assets/Scenes/ajax.scene",
-		"../Assets/Scenes/bedroom.scene",
-		"../Assets/Scenes/boy.scene",
-		"../Assets/Scenes/coffee_cart.scene",
-		"../Assets/Scenes/coffee_maker.scene",
-		"../Assets/Scenes/cornell_box.scene",
-		"../Assets/Scenes/diningroom.scene",
-		"../Assets/Scenes/dragon.scene",
-		"../Assets/Scenes/hyperion.scene",
-		"../Assets/Scenes/panther.scene",
-		"../Assets/Scenes/spaceship.scene",
-		"../Assets/Scenes/staircase.scene",
-		"../Assets/Scenes/stormtrooper.scene",
-		"../Assets/Scenes/teapot.scene"
-	};
-
 	Application::Application()
 	{
 		PrintGPUInfo();
@@ -60,11 +42,13 @@ namespace Tracer
 		CreateComputePipeline();
 	}
 
-	Application::~Application() { }
+	Application::~Application()
+	{
+	}
 
 	void Application::LoadScene()
 	{
-		scene.reset(new Scene(CONFIGS[settings.SceneId], *device, *commandPool));
+		scene.reset(new Scene(Interface::SceneWidget::GetScenePath(settings.SceneId), *device, *commandPool));
 	}
 
 	void Application::UpdateSettings()
@@ -99,6 +83,11 @@ namespace Tracer
 
 	void Application::RecreateSwapChain()
 	{
+		Vulkan::Command::Submit(*commandPool, [this](VkCommandBuffer commandBuffer)
+		{
+			Clear(commandBuffer, this->imageIndex);
+		});
+
 		settings = menu->GetSettings();
 		device->WaitIdle();
 		menu.reset();
@@ -111,11 +100,6 @@ namespace Tracer
 		CreateMenu();
 		ResetAccumulation();
 		CreateComputePipeline();
-
-		Vulkan::Command::Submit(*commandPool, [this](VkCommandBuffer commandBuffer)
-		{
-			Clear(commandBuffer);
-		});
 	}
 
 	void Application::RecompileShaders()
@@ -129,7 +113,10 @@ namespace Tracer
 
 	void Application::CreateMenu()
 	{
-		settings.MaxDepth = scene->GetRendererOptions().maxDepth;
+		const auto renderer = scene->GetRendererOptions();
+		settings.MaxDepth = renderer.maxDepth;
+		settings.UseEnvMap = renderer.useEnvMap;
+		settings.HdrMultiplier = renderer.hdrMultiplier;
 
 		menu.reset(new Menu(*device, *swapChain, *commandPool, settings));
 
@@ -157,15 +144,16 @@ namespace Tracer
 		uniform.projection = scene->GetCamera().GetProjection();
 		uniform.cameraPos = scene->GetCamera().GetPosition();
 		uniform.lights = scene->GetLightsSize();
-		uniform.hasHDR = scene->UseHDR();
 		uniform.ssp = settings.SSP;
 		uniform.maxDepth = settings.MaxDepth;
 		uniform.aperture = settings.Aperture;
 		uniform.focalDistance = settings.FocalDistance;
+		uniform.hdrMultiplier = scene->UseHDR() ? settings.HdrMultiplier : 0.f;
 		uniform.hdrResolution = scene->UseHDR() ? scene->GetHDRResolution() : 0.f;
 		uniform.frame = frame;
 		uniform.AORayLength = settings.AORayLength;
 		uniform.integratorType = settings.IntegratorType;
+		uniform.doubleSided = settings.DoubleSidedLight;
 
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}
@@ -174,12 +162,14 @@ namespace Tracer
 	{
 		Camera::TimeDeltaUpdate();
 
+		this->imageIndex = imageIndex;
+
 		if (scene->GetCamera().OnBeforeRender())
 			ResetAccumulation();
 
 		if (settings.UseRasterizer)
 		{
-			Clear(commandBuffer);
+			Clear(commandBuffer, imageIndex);
 			Rasterizer::Render(framebuffer, commandBuffer, imageIndex);
 		}
 		else
@@ -280,8 +270,8 @@ namespace Tracer
 			{
 				computer->BuildCommand(settings.ComputeShaderId);
 
-				VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT };
-				VkCommandBuffer commandBuffers[]{ computer->GetCommandBuffers()[0] };
+				VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT};
+				VkCommandBuffer commandBuffers[]{computer->GetCommandBuffers()[0]};
 
 				VkSubmitInfo computeSubmitInfo{};
 				computeSubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

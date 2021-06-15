@@ -132,6 +132,9 @@
     <None Include="src\Assets\Shaders\Compute\Sharpen.comp">
       <Filter>Assets\Shaders\Compute</Filter>
     </None>
+    <None Include="src\Assets\Shaders\BSDFs\DisneyBSDF.glsl">
+      <Filter>Assets\Shaders\BSDFs</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Vulkan\Device.cpp">

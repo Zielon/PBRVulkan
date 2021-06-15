@@ -47,19 +47,19 @@ void main()
 		return;
 	}
 
-	if (ubo.useHDR)
+	#ifdef USE_HDR
 	{
-		#ifdef USE_HDR
-		float lightPdf = 1.0f;
 		float misWeight = 1.0f;
-		float hdrMultiplier = 7.0f;
 		vec2 uv = vec2((PI + atan(gl_WorldRayDirectionEXT.z, gl_WorldRayDirectionEXT.x)) * INV_2PI, acos(gl_WorldRayDirectionEXT.y) * INV_PI);
+		
 		if (payload.depth > 0 && !payload.specularBounce)
 		{
-			lightPdf = envPdf();
-			misWeight = powerHeuristic(0, lightPdf);
+			float lightPdf = envPdf();
+			misWeight = powerHeuristic(payload.bsdf.pdf, lightPdf);
 		}
-		payload.radiance += misWeight * texture(HDRs[0], uv).xyz * payload.beta * hdrMultiplier;
-		#endif
+
+		payload.radiance += misWeight * texture(HDRs[0], uv).xyz * payload.beta * ubo.hdrMultiplier;
+		payload.stop = true;
 	}
+	#endif
 }

@@ -14,10 +14,6 @@
 // See Random.glsl for more details
 uint seed = 0;
 
-// Material types
-int UE4 = 0;
-int GLASS = 1;
-
 // Lights types
 int AREA_LIGHT = 0;
 int SPHERE_LIGHT = 1;
@@ -31,12 +27,22 @@ struct Material
 { 
 	vec4 albedo;
 	vec4 emission;
-	// Parameters
+	vec4 extinction;
+	
 	float metallic;
-	float roughness;
-	float ior;
-	float transmittance;
-	// Textures
+    float roughness;
+    float subsurface;
+    float specularTint;
+    
+    float sheen;
+    float sheenTint;
+    float clearcoat;
+    float clearcoatGloss;
+    
+    float transmission;
+    float ior;
+    float atDistance;
+	
 	int albedoTexID;
 	int metallicRoughnessTexID;
 	int normalmapTexID;
@@ -66,12 +72,13 @@ struct Uniform
 	mat4 proj;
 	vec3 cameraPos;
 	uint lights;
-	bool useHDR;
+	bool doubleSidedLight;
 	uint spp;
 	uint maxDepth;
 	uint frame;
 	float aperture;
 	float focalDistance;
+	float hdrMultiplier;
 	float hdrResolution;
 	float AORayLength;
 	int integratorType;
@@ -100,11 +107,12 @@ struct BsdfSample
 	float pdf; 
 };
 
-struct RayPayload
+struct RayPayload	
 {
 	Ray ray;
 	BsdfSample bsdf;
 	vec3 radiance;
+	vec3 absorption;
 	vec3 beta;
 	vec3 worldPos;
 	vec3 normal;
@@ -112,4 +120,5 @@ struct RayPayload
 	uint depth;
 	bool specularBounce;
 	bool stop;
+	float eta;
 };

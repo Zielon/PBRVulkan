@@ -56,6 +56,7 @@ void main()
 		Ray ray = Ray(origin.xyz, direction.xyz);
 
 		vec3 beta = vec3(1);
+		vec3 absorption = vec3(0.0);
 		vec3 pathRadiance = vec3(0);
 		bool specularBounce = false;
 		BsdfSample bsdf;
@@ -69,6 +70,7 @@ void main()
 			payload.ray = ray;
 			payload.bsdf = bsdf;
 			payload.specularBounce = specularBounce;
+			payload.absorption = absorption;
 
 			traceRayEXT(
 					TLAS,           // acceleration structure
@@ -89,6 +91,7 @@ void main()
 			specularBounce = payload.specularBounce;		
 			ray = payload.ray;
 			bsdf = payload.bsdf;
+			absorption = payload.absorption;
 			
 			// First hit payload. Store infromation for denosing
 			if (j == 0)

@@ -72,8 +72,11 @@ namespace Tracer
 
 	void Scene::Load()
 	{
-		if (!LoadSceneFromFile(config, *this, options))
-			throw std::runtime_error("[ERROR] File does not exist!");
+		if (!LoadSceneFromFile(config, *this, options)) 
+		{
+			std::cout << "[ERROR] " + config + " does not exist" << std::endl;
+			std::cout << "[INFO] Download the scenes repository! " << std::endl;
+		}
 	}
 
 	void Scene::LoadEmptyBuffers()
@@ -86,11 +89,13 @@ namespace Tracer
 
 		if (lights.empty())
 		{
-			lights.emplace_back();
+			Assets::Light light;
+			light.type = -1;
+			lights.emplace_back(light);
 		}
 	}
 
-	void Scene::LoadHDR(Assets::HDRData* hdr)
+	void Scene::LoadHDR(HDRData* hdr)
 	{
 		VkFormat format = VK_FORMAT_R32G32B32_SFLOAT;
 		VkImageTiling tiling = VK_IMAGE_TILING_LINEAR;
@@ -99,12 +104,10 @@ namespace Tracer
 		auto columns = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->cols);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *columns, format, tiling, imageType));
 
-		format = VK_FORMAT_R32G32_SFLOAT;
-
-		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 8, hdr->conditionalDistData);
+		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->conditionalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *conditional, format, tiling, imageType));
-
-		auto marginal = std::make_unique<Assets::Texture>(hdr->width, 1, 8, hdr->marginalDistData);
+		
+		auto marginal = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->marginalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *marginal, format, tiling, imageType));
 	}
 
@@ -208,7 +211,7 @@ namespace Tracer
 		hdrLoader = std::async(std::launch::async, [this, path]()
 		{
 			const auto file = root + path;
-			auto* hdr = Assets::HDRLoader::Load(file.c_str());
+			auto* hdr = HDRLoader::load(file.c_str());
 
 			if (hdr == nullptr)
 				std::cerr << "[ERROR] Unable to load HDR!" << std::endl;

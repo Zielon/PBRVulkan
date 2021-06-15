@@ -11,6 +11,7 @@ namespace Interface
 
 		ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
 		ImGui::Checkbox("Gamma correction", &settings.UseGammaCorrection);
+		ImGui::Checkbox("Double sided light", &settings.DoubleSidedLight);
 		ImGui::Checkbox("Compute shaders", &settings.UseComputeShaders);
 
 		if (settings.UseComputeShaders)
@@ -35,5 +36,12 @@ namespace Interface
 		ImGui::Text("Aperture  ");
 		ImGui::SameLine();
 		ImGui::InputFloat("float_aperture", &settings.Aperture, 0.1);
+
+		if (settings.UseEnvMap)
+		{
+			ImGui::Text("HDR factor");
+			ImGui::SameLine();
+			ImGui::InputFloat("HDR_multiplier", &settings.HdrMultiplier, 0.1);
+		}
 	}
 }
