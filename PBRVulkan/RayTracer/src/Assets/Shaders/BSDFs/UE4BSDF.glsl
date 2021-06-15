@@ -110,7 +110,7 @@ vec3 glassSample(in Material material)
 	R0 *= R0;
 	float theta = dot(-gl_WorldRayDirectionEXT, payload.ffnormal);
 	float prob = R0 + (1. - R0) * SchlickFresnel(theta);
-	float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (n1 / n2) : (n2 / n1);
+	float eta = payload.eta;
 	vec3 refractDir = normalize(refract(gl_WorldRayDirectionEXT, payload.ffnormal, eta));
 	float cos2t = 1.0 - eta * eta * (1.0 - theta * theta);
 

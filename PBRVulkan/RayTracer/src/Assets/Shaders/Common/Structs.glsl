@@ -72,7 +72,7 @@ struct Uniform
 	mat4 proj;
 	vec3 cameraPos;
 	uint lights;
-	bool useHDR;
+	bool doubleSidedLight;
 	uint spp;
 	uint maxDepth;
 	uint frame;
@@ -120,4 +120,5 @@ struct RayPayload
 	uint depth;
 	bool specularBounce;
 	bool stop;
+	float eta;
 };

@@ -22,6 +22,7 @@ vec3 directLight(in Material material)
 		float lightPdf = dirPdf.w;
 
 		bsdfSample.bsdfDir = lightDir;
+		bsdfSample.pdf = lightPdf;
 
 		isShadowed = true;
 

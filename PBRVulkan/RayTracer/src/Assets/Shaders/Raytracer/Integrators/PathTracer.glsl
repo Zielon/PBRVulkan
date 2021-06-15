@@ -21,8 +21,7 @@
 	{
 		vec3 Le = sampleEmitter(lightSample, payload.bsdf);
 
-		// One sided emitter only
-		if (dot(payload.ffnormal, lightSample.normal) > 0.f)
+		if (ubo.doubleSidedLight || dot(payload.ffnormal, lightSample.normal) > 0.f)
 			payload.radiance += Le * payload.beta;
 
 		payload.stop = true;

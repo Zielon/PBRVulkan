@@ -144,7 +144,6 @@ namespace Tracer
 		uniform.projection = scene->GetCamera().GetProjection();
 		uniform.cameraPos = scene->GetCamera().GetPosition();
 		uniform.lights = scene->GetLightsSize();
-		uniform.hasHDR = scene->UseHDR();
 		uniform.ssp = settings.SSP;
 		uniform.maxDepth = settings.MaxDepth;
 		uniform.aperture = settings.Aperture;
@@ -154,6 +153,7 @@ namespace Tracer
 		uniform.frame = frame;
 		uniform.AORayLength = settings.AORayLength;
 		uniform.integratorType = settings.IntegratorType;
+		uniform.doubleSided = settings.DoubleSidedLight;
 
 		uniformBuffers[imageIndex]->Fill(&uniform);
 	}

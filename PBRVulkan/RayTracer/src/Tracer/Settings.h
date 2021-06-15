@@ -4,6 +4,7 @@ struct Settings final
 {
 	bool UseRasterizer{};
 	bool UseGammaCorrection = true;
+	bool DoubleSidedLight = false;
 	bool UseComputeShaders = false;
 	int IntegratorType{};
 	int ComputeShaderId{};
@@ -36,6 +37,7 @@ struct Settings final
 			FocalDistance != prev.FocalDistance ||
 			AORayLength != prev.AORayLength ||
 			HdrMultiplier != prev.HdrMultiplier ||
-			UseEnvMap != prev.UseEnvMap;
+			UseEnvMap != prev.UseEnvMap ||
+			DoubleSidedLight != prev.DoubleSidedLight;
 	}
 };

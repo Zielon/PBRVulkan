@@ -11,6 +11,7 @@ namespace Interface
 
 		ImGui::Checkbox("Use rasterizer", &settings.UseRasterizer);
 		ImGui::Checkbox("Gamma correction", &settings.UseGammaCorrection);
+		ImGui::Checkbox("Double sided light", &settings.DoubleSidedLight);
 		ImGui::Checkbox("Compute shaders", &settings.UseComputeShaders);
 
 		if (settings.UseComputeShaders)

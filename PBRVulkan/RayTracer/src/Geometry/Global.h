@@ -11,7 +11,7 @@ namespace Uniforms
 		alignas(16) glm::vec3 cameraPos{};
 		
 		glm::uint32_t lights{};
-		glm::uint32_t hasHDR{};
+		glm::uint32_t doubleSided{};
 		glm::uint32_t ssp{};
 		glm::uint32_t maxDepth{};
 		

@@ -72,8 +72,11 @@ namespace Tracer
 
 	void Scene::Load()
 	{
-		if (!LoadSceneFromFile(config, *this, options))
-			throw std::runtime_error("[ERROR] File does not exist!");
+		if (!LoadSceneFromFile(config, *this, options)) 
+		{
+			std::cout << "[ERROR] " + config + " does not exist" << std::endl;
+			std::cout << "[INFO] Download the scenes repository! " << std::endl;
+		}
 	}
 
 	void Scene::LoadEmptyBuffers()

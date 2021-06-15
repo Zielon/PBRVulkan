@@ -1,13 +1,11 @@
 
 vec3 EvalDielectricReflection(in Material material, vec3 V, vec3 N, vec3 L, vec3 H, inout float pdf)
 {
-    float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
-
     pdf = 0.0;
     if (dot(N, L) <= 0.0)
         return vec3(0.0);
 
-    float F = DielectricFresnel(dot(V, H), eta);
+    float F = DielectricFresnel(dot(V, H), payload.eta);
     float D = GTR2(dot(N, H), material.roughness);
 
     pdf = D * dot(N, H) * F / (4.0 * abs(dot(V, H)));
@@ -20,7 +18,7 @@ vec3 EvalDielectricReflection(in Material material, vec3 V, vec3 N, vec3 L, vec3
 
 vec3 EvalDielectricRefraction(in Material material, vec3 V, vec3 N, vec3 L, vec3 H, inout float pdf)
 {
-    float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
+    float eta = payload.eta;
 
     pdf = 0.0;
     if (dot(N, L) >= 0.0)
@@ -110,7 +108,7 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
     vec3 Ctint = Cdlum > 0.0 ? Cdlin / Cdlum : vec3(1.0f); // normalize lum. to isolate hue+sat
     vec3 Cspec0 = mix(material.albedo.w * 0.08 * mix(vec3(1.0), Ctint, material.specularTint), Cdlin, material.metallic);
     vec3 Csheen = mix(vec3(1.0), Ctint, material.sheenTint);
-    float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
+    float eta = payload.eta;
 
     vec3 N = payload.ffnormal;
     vec3 V = -gl_WorldRayDirectionEXT;
@@ -205,8 +203,7 @@ vec3 DisneyEval(Material material, inout BsdfSample bsdfSample)
     vec3 N = payload.ffnormal;
     vec3 V = -gl_WorldRayDirectionEXT;
     vec3 L = bsdfSample.bsdfDir;
-
-    float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
+    float eta = payload.eta;
 
     vec3 H;
     bool refl = dot(N, L) > 0.0;

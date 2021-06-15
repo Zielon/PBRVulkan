@@ -8,8 +8,8 @@ namespace Assets
 	{
 		Material()
 		{
-			albedo = glm::vec4(1.0f, 1.0f, 1.0f, 0.f);
-			extinction = glm::vec4(1.0f, 1.0f, 1.0f, 1.f);
+			albedo = glm::vec4(1.0f, 1.0f, 1.0f, 0.5f);
+			extinction = glm::vec4(1.0f, 1.0f, 1.0f, 0.f);
 			emission = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 			metallic = 0.0f;
 			roughness = 0.5f;
