@@ -6,6 +6,7 @@
 #include <string>
 
 #define GLM_FORCE_SWIZZLE 
+#include <filesystem>
 #include <future>
 #include <glm/glm.hpp>
 
@@ -63,6 +64,8 @@ namespace Tracer
 		{
 			return meshes;
 		}
+
+		[[nodiscard]] bool IsValid(const std::string config) const;
 
 		[[nodiscard]] const std::vector<Assets::MeshInstance>& GetMeshInstances() const
 		{
@@ -146,7 +149,7 @@ namespace Tracer
 
 	private:
 		std::string config;
-		const std::string root = "../Assets/Scenes/";
+		const std::string root = "../Assets/PBRScenes/";
 		uint32_t verticesSize{};
 		uint32_t indeciesSize{};
 		std::unique_ptr<class Camera> camera;
@@ -182,7 +185,7 @@ namespace Tracer
 
 		void Wait();
 		void Print() const;
-		void Load();
+		bool Load();
 		void LoadEmptyBuffers();
 		void LoadHDR(HDRData* hdr);
 		void Fill(std::unique_ptr<class Vulkan::Buffer>& buffer, void* data, size_t size,

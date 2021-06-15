@@ -16,7 +16,7 @@ namespace Interface
 
 		static std::string GetScenePath(uint32_t index)
 		{
-			return "../Assets/Scenes/" + CONFIGS[index];
+			return "../Assets/PBRScenes/" + CONFIGS[index];
 		}
 
 	private:

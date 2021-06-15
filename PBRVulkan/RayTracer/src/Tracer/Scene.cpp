@@ -70,13 +70,16 @@ namespace Tracer
 		std::cout << "	# materials: " << materials.size() << std::endl;
 	}
 
-	void Scene::Load()
+	bool Scene::Load()
 	{
-		if (!LoadSceneFromFile(config, *this, options)) 
+		if (!LoadSceneFromFile(config, *this, options))
 		{
 			std::cout << "[ERROR] " + config + " does not exist" << std::endl;
 			std::cout << "[INFO] Download the scenes repository! " << std::endl;
+			return false;
 		}
+
+		return true;
 	}
 
 	void Scene::LoadEmptyBuffers()
@@ -106,7 +109,7 @@ namespace Tracer
 
 		auto conditional = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->conditionalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *conditional, format, tiling, imageType));
-		
+
 		auto marginal = std::make_unique<Assets::Texture>(hdr->width, hdr->height, 12, hdr->marginalDistData);
 		hdrImages.emplace_back(new TextureImage(device, commandPool, *marginal, format, tiling, imageType));
 	}
@@ -148,7 +151,7 @@ namespace Tracer
 		auto size = sizeof(meshes[0]->GetVertices()[0]) * vertices.size();
 		std::cout << "[SCENE] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
 		Fill(vertexBuffer, vertices.data(), size, usage,
-			VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT);
+		     VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT);
 
 		// =============== INDEX BUFFER ===============
 
@@ -158,7 +161,7 @@ namespace Tracer
 			VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT);
 		size = sizeof(indices[0]) * indices.size();
 		Fill(indexBuffer, indices.data(), size, usage,
-			VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT);
+		     VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT);
 
 		// =============== MATERIAL BUFFER ===============
 
@@ -174,6 +177,19 @@ namespace Tracer
 
 		size = sizeof(lights[0]) * lights.size();
 		Fill(lightsBuffer, lights.data(), size, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, 0);
+	}
+
+	bool Scene::IsValid(const std::string config) const
+	{
+		const auto exists = std::filesystem::exists(config);
+
+		if (!exists)
+		{
+			std::cout << "[ERROR] " + config + " does not exist" << std::endl;
+			std::cout << "[INFO] Download https://github.com/Zielon/PBRScenes! " << std::endl;
+		}
+
+		return exists;
 	}
 
 	void Scene::Fill(
