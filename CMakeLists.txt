@@ -68,5 +68,4 @@ endif()
 
 set(MAIN_PROJECT "PBRVulkan")
 add_subdirectory(PBRVulkan/RayTracer/src)
-add_subdirectory(PBRVulkan/Assetsc)
 set_property (DIRECTORY PROPERTY VS_STARTUP_PROJECT ${MAIN_PROJECT})

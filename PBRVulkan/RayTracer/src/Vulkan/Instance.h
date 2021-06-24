@@ -2,6 +2,8 @@
 
 #include "Vulkan.h"
 
+#include <algorithm>
+#include <cstring>
 #include <vector>
 
 namespace Vulkan

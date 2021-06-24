@@ -2,6 +2,7 @@
 
 #include <map>
 #include <vector>
+#include <algorithm>
 
 #include "../Vulkan/Vulkan.h"
 

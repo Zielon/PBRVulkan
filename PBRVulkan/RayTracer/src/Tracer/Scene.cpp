@@ -6,7 +6,6 @@
 
 #include "Camera.h"
 #include "TextureImage.h"
-#include "../3rdParty/HDRloader.h"
 
 #include "../Vulkan/Device.h"
 #include "../Vulkan/CommandPool.h"
