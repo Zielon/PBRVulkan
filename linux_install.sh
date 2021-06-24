@@ -8,6 +8,9 @@ cd vcpkg.linux
 git checkout 2021.05.12
 ./bootstrap-vcpkg.sh
 
+# glfw3:x64-linux requires:
+# sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev
+
 ./vcpkg install \
 	glfw3:x64-linux \
 	glm:x64-linux \
