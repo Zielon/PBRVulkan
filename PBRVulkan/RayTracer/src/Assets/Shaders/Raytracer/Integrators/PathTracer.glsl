@@ -29,12 +29,17 @@
 	}
 
 	payload.beta *= exp(-payload.absorption * gl_HitTEXT);
-	payload.specularBounce = false;
 	payload.radiance += directLight(material) * payload.beta;
 
-	vec3 F = DisneySample(material, bsdfSample);
+	vec3 F = DisneySample(material, bsdfSample.bsdfDir, bsdfSample.pdf);
 
 	float cosTheta = abs(dot(ffnormal, bsdfSample.bsdfDir));
+
+	if (bsdfSample.pdf <= 0.0)
+	{
+		payload.stop = true;
+		return;
+	}
 
 	payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
 	

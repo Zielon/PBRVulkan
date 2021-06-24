@@ -93,8 +93,8 @@ float GTR1(float NDotH, float a)
 float GTR2(float NDotH, float a)
 {
 	float a2 = a * a;
-	float t = 1.0 + (a2 - 1.0)*NDotH*NDotH;
-	return a2 / (PI * t*t);
+	float t = 1.0 + (a2 - 1.0) * NDotH * NDotH;
+	return a2 / (PI * t * t);
 }
 
 
