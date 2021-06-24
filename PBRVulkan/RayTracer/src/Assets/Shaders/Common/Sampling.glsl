@@ -147,5 +147,5 @@ bool interesetsEmitter(inout LightSample lightSample, float hit)
 vec3 sampleEmitter(in LightSample lightSample, in BsdfSample bsdfSample)
 {
 	vec3 Le = lightSample.emission;
-	return (payload.depth == 0 || payload.specularBounce) ? Le : powerHeuristic(bsdfSample.pdf, lightSample.pdf) * Le;
+	return (payload.depth == 0) ? Le : powerHeuristic(bsdfSample.pdf, lightSample.pdf) * Le;
 }

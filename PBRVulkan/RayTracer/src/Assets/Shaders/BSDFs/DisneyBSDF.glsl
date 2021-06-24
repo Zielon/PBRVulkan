@@ -29,7 +29,7 @@ vec3 EvalDielectricReflection(in Material material, vec3 V, vec3 N, vec3 L, vec3
     if (dot(N, L) <= 0.0)
         return vec3(0.0);
 
-    float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
+    float eta = payload.eta;
 
     float F = DielectricFresnel(dot(V, H), eta);
     float D = GTR2(dot(N, H), material.roughness);
@@ -44,7 +44,7 @@ vec3 EvalDielectricReflection(in Material material, vec3 V, vec3 N, vec3 L, vec3
 
 vec3 EvalDielectricRefraction(in Material material, vec3 V, vec3 N, vec3 L, vec3 H, inout float pdf)
 {
-    float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
+    float eta = payload.eta;
 
     pdf = 0.0;
     if (dot(N, L) >= 0.0)
@@ -120,9 +120,9 @@ vec3 EvalDiffuse(in Material material, in vec3 Csheen, vec3 V, vec3 N, vec3 L, v
 }
 
 
-vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
+vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
 {
-    float pdf = 0.0;
+    pdf = 0.0;
     vec3 f = vec3(0.0);
 
     float diffuseRatio = 0.5 * (1.0 - material.metallic);
@@ -134,17 +134,19 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
     vec3 Ctint = Cdlum > 0.0 ? Cdlin / Cdlum : vec3(1.0f); // normalize lum. to isolate hue+sat
     vec3 Cspec0 = mix(material.albedo.w * 0.08 * mix(vec3(1.0), Ctint, material.specularTint), Cdlin, material.metallic);
     vec3 Csheen = mix(vec3(1.0), Ctint, material.sheenTint);
-    float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
+    float eta = payload.eta;
 
     vec3 N = payload.ffnormal;
     vec3 V = -gl_WorldRayDirectionEXT;
-    vec3 L = vec3(0);
 
     mat3 frame = localFrame(N);
 
+    float r1 = rnd(seed);
+    float r2 = rnd(seed);
+
     if (rnd(seed) < transWeight)
     {
-        vec3 H = ImportanceSampleGTR2(material.roughness, rnd(seed), rnd(seed));
+        vec3 H = ImportanceSampleGTR2(material.roughness, r1, r2);
         H = frame * H;
 
         if (dot(V, H) < 0.0)
@@ -154,7 +156,7 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
         float F = DielectricFresnel(abs(dot(R, H)), eta);
 
         // Reflection/Total internal reflection
-        if (rnd(seed) < F)
+        if (r2 < F)
         {
             L = normalize(R);
             f = EvalDielectricReflection(material, V, N, L, H, pdf);
@@ -188,7 +190,7 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
             if (rnd(seed) < primarySpecRatio)
             {
                 // TODO: Implement http://jcgt.org/published/0007/04/01/
-                vec3 H = ImportanceSampleGTR2(material.roughness, rnd(seed), rnd(seed));
+                vec3 H = ImportanceSampleGTR2(material.roughness, r1, r2);
                 H = frame * H;
 
                 if (dot(V, H) < 0.0)
@@ -201,7 +203,7 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
             }
             else // Sample clearcoat lobe
             {
-                vec3 H = ImportanceSampleGTR1(mix(0.1, 0.001, material.clearcoatGloss), rnd(seed), rnd(seed));
+                vec3 H = ImportanceSampleGTR1(mix(0.1, 0.001, material.clearcoatGloss), r1, r2);
                 H = frame * H;
 
                 if (dot(V, H) < 0.0)
@@ -218,18 +220,14 @@ vec3 DisneySample(in Material material, inout BsdfSample bsdfSample)
         pdf *= (1.0 - transWeight);
     }
 
-    bsdfSample.pdf = pdf;
-    bsdfSample.bsdfDir = L;
-
     return f;
 }
     
-vec3 DisneyEval(Material material, inout BsdfSample bsdfSample)
+vec3 DisneyEval(Material material, vec3 L, inout float pdf)
 {
     vec3 N = payload.ffnormal;
     vec3 V = -gl_WorldRayDirectionEXT;
-    vec3 L = bsdfSample.bsdfDir;
-    float eta = dot(payload.normal, payload.ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
+    float eta = payload.eta;
 
     vec3 H;
     bool refl = dot(N, L) > 0.0;
@@ -288,7 +286,7 @@ vec3 DisneyEval(Material material, inout BsdfSample bsdfSample)
         brdfPdf += m_pdf * (1.0 - primarySpecRatio) * (1.0 - diffuseRatio);
     }
 
-    bsdfSample.pdf = mix(brdfPdf, bsdfPdf, transWeight);
+    pdf = mix(brdfPdf, bsdfPdf, transWeight);
 
     return mix(brdf, bsdf, transWeight);
 }

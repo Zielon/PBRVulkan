@@ -52,7 +52,7 @@ void main()
 		float misWeight = 1.0f;
 		vec2 uv = vec2((PI + atan(gl_WorldRayDirectionEXT.z, gl_WorldRayDirectionEXT.x)) * INV_2PI, acos(gl_WorldRayDirectionEXT.y) * INV_PI);
 		
-		if (payload.depth > 0 && !payload.specularBounce)
+		if (payload.depth > 0)
 		{
 			float lightPdf = envPdf();
 			misWeight = powerHeuristic(payload.bsdf.pdf, lightPdf);

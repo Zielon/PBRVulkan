@@ -118,7 +118,6 @@ struct RayPayload
 	vec3 normal;
 	vec3 ffnormal;
 	uint depth;
-	bool specularBounce;
 	bool stop;
 	float eta;
 };

@@ -21,9 +21,6 @@ vec3 directLight(in Material material)
 		vec3 lightDir = dirPdf.xyz;
 		float lightPdf = dirPdf.w;
 
-		bsdfSample.bsdfDir = lightDir;
-		bsdfSample.pdf = lightPdf;
-
 		isShadowed = true;
 
 		// Shadow ray (payload 1 is Shadow.miss)
@@ -31,7 +28,7 @@ vec3 directLight(in Material material)
 
 		if (!isShadowed)
 		{
-			vec3 F = DisneyEval(material, bsdfSample);
+			vec3 F = DisneyEval(material, lightDir, bsdfSample.pdf);
 
 			float cosTheta = abs(dot(lightDir, payload.ffnormal));
 			float misWeight = powerHeuristic(lightPdf, bsdfSample.pdf);
@@ -59,8 +56,6 @@ vec3 directLight(in Material material)
 		float lightDistSq   = lightDist * lightDist;
 		lightDir = normalize(lightDir);
 
-		bsdfSample.bsdfDir = lightDir;
-
 		isShadowed = true;
 
 		// The light has to be visible from the surface. Less than 90° between vectors.
@@ -72,7 +67,7 @@ vec3 directLight(in Material material)
 		
 		if (!isShadowed)
 		{
-			vec3 F = DisneyEval(material, bsdfSample);
+			vec3 F = DisneyEval(material, lightDir, bsdfSample.pdf);
 
 			float lightPdf = lightDistSq / (light.area * abs(dot(sampled.normal, lightDir)));
 			float cosTheta = abs(dot(payload.ffnormal, lightDir));
