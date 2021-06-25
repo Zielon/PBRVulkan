@@ -34,17 +34,17 @@ As an example of creating your own shader please take a look at [Ambient Occlusi
 #### How to run
 
 1) Download [VulkanSDK](https://vulkan.lunarg.com/sdk/home#windows) and install it.
-2) Run `install.bat` script to download all necessary libraries.
+2) Run `windows_install.bat` or `linux_install.bat` script to download all necessary libraries.
 3) For shaders compliation you will need `python` (Python 3.x.x) and `glslangValidator` available form the shell level. Check out `Compiler.h` and `Compile.py` for more details. `glslangValidator` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslangValidator.exe`.
 
 C++17 is needed to compile the project.
 
 #### Assets
 
-The scene description and assets are taken from [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) project [4]. The [scenes repository](https://github.com/Zielon/PBRScenes) will be automatically cloned during the installation process.
+The scene description and assets are adapted from [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) project [4]. The [scenes repository](https://github.com/Zielon/PBRScenes) will be automatically cloned during the installation process.
 
 ```
-PBRVulkan/Assets/Scenes/
+PBRVulkan/Assets/PBRScenes/
     bedroom/
     coffee_cart/
     HDR/
