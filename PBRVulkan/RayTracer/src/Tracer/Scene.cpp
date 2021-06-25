@@ -30,6 +30,15 @@ namespace Tracer
 	{
 		const auto start = std::chrono::high_resolution_clock::now();
 
+		root = std::filesystem::current_path();		
+		while(root.string().find("PBRVulkan") != std::string::npos)
+			root = root.parent_path();
+		
+		root /= "PBRVulkan";
+		root /= "PBRVulkan";
+		root /= "Assets";
+		root /= "PBRScenes";
+		
 		Load();
 		LoadEmptyBuffers();
 		Wait();
@@ -225,7 +234,8 @@ namespace Tracer
 	{
 		hdrLoader = std::async(std::launch::async, [this, path]()
 		{
-			const auto file = root + path;
+			auto fs = std::filesystem::path(path).make_preferred();
+			const auto file = (root / fs).string();
 			auto* hdr = HDRLoader::load(file.c_str());
 
 			if (hdr == nullptr)
@@ -257,7 +267,8 @@ namespace Tracer
 		}
 		else
 		{
-			const auto file = root + path;
+			auto fs = std::filesystem::path(path).make_preferred();
+			const auto file = (root / fs).string();
 			id = meshes.size();
 			meshes.emplace_back(new Assets::Mesh(file));
 			meshMap[path] = id;
@@ -277,7 +288,8 @@ namespace Tracer
 		}
 		else
 		{
-			const auto file = root + path;
+			auto fs = std::filesystem::path(path).make_preferred();
+			const auto file = (root / fs).string();
 			id = textures.size();
 			textures.emplace_back(new Assets::Texture(file));
 			textureMap[path] = id;

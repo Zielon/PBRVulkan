@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <filesystem>
 
 #include "../Vulkan/Vulkan.h"
 
@@ -43,5 +44,6 @@ namespace Tracer
 		
 	private:
 		void Read() const;
+		std::filesystem::path root;
 	};
 }

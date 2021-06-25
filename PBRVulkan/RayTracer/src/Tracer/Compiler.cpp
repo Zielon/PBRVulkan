@@ -1,5 +1,6 @@
 #include "Compiler.h"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -21,10 +22,10 @@ namespace Tracer
 		std::string TOKEN_INTEGRATOR = "// ====== INTEGRATOR ======";
 		std::string TOKEN_DEFINES = "// ====== DEFINES ======";
 
-		std::string RAY_HIT_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing";
-		std::string RAY_MISS_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing";
-		std::string RAY_SHADOW_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Shadow";
-		std::string RAY_GEN_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing";
+		std::string RAY_HIT_SHADER = "src/Assets/Shaders/Raytracer/Raytracing";
+		std::string RAY_MISS_SHADER = "src/Assets/Shaders/Raytracer/Raytracing";
+		std::string RAY_SHADOW_SHADER = "src/Assets/Shaders/Raytracer/Shadow";
+		std::string RAY_GEN_SHADER = "src/Assets/Shaders/Raytracer/Raytracing";
 
 		std::map<Include, std::string> INCLUDES = {
 			{ Include::PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
@@ -47,6 +48,14 @@ namespace Tracer
 
 	Compiler::Compiler()
 	{
+		root = std::filesystem::current_path();
+		while (root.string().find("PBRVulkan") != std::string::npos)
+			root = root.parent_path();
+
+		root /= "PBRVulkan";
+		root /= "PBRVulkan";
+		root /= "RayTracer";
+	
 		Read();
 	}
 
@@ -55,7 +64,9 @@ namespace Tracer
 		for (const auto& pair : Parser::SHADERS)
 		{
 			auto shader = pair.second;
-			std::ifstream inShader(shader.path + shader.extension);
+			auto name = std::filesystem::path(shader.path + shader.extension).make_preferred();
+			auto path = (root / name).string();
+			std::ifstream inShader(path);
 			std::string line;
 			int i = 0;
 			std::vector<std::string> file;
@@ -119,7 +130,11 @@ namespace Tracer
 			outShader.close();
 		}
 
-		std::system("python ./scripts/Compile.py");
+		auto current = root;
+		current /= "scripts";
+		current /= "Compile.py";
+		
+		std::system(("python " + current.string()).c_str());
 
 		std::cout << "[COMPILER] Shaders compilation has ended." << std::endl;
 	}

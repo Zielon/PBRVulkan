@@ -1,5 +1,7 @@
 #pragma once
 
+#include <filesystem>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -16,7 +18,17 @@ namespace Interface
 
 		static std::string GetScenePath(uint32_t index)
 		{
-			return "../Assets/PBRScenes/" + CONFIGS[index];
+			auto root = std::filesystem::current_path();
+			while (root.string().find("PBRVulkan") != std::string::npos)
+				root = root.parent_path();
+
+			root /= "PBRVulkan";
+			root /= "PBRVulkan";
+			root /= "Assets";
+			root /= "PBRScenes";
+			const auto path = root / CONFIGS[index];
+			std::cout << "[SCENE] Scene selected " << path.string() << std::endl;
+			return path.string();
 		}
 
 	private:

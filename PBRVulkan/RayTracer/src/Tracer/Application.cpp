@@ -144,8 +144,16 @@ namespace Tracer
 
 	void Application::CheckScenesFolder()
 	{
-		terminate = !std::filesystem::exists("../Assets/PBRScenes/");
+		auto root = std::filesystem::current_path();
+		while (root.string().find("PBRVulkan") != std::string::npos)
+			root = root.parent_path();
 
+		root /= "PBRVulkan";
+		root /= "PBRVulkan";
+		root /= "Assets";
+		root /= "PBRScenes";
+		terminate = !std::filesystem::exists(root);
+		
 		if (terminate)
 		{
 			std::cout << "[ERROR] Scenes folder does not exists. Download https://github.com/Zielon/PBRScenes!" <<

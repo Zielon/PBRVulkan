@@ -71,7 +71,17 @@ namespace Tracer
 
 		auto& io = ImGui::GetIO();
 
-		if (!io.Fonts->AddFontFromFileTTF("../Assets/Fonts/Cousine-Regular.ttf", 13))
+		auto root = std::filesystem::current_path();
+		while (root.string().find("PBRVulkan") != std::string::npos)
+			root = root.parent_path();
+
+		root /= "PBRVulkan";
+		root /= "PBRVulkan";
+		root /= "Assets";
+		root /= "Fonts";
+		root /= "Cousine-Regular.ttf";
+		
+		if (!io.Fonts->AddFontFromFileTTF(root.string().c_str(), 13))
 		{
 			throw std::runtime_error("failed to load ImGui font");
 		}
