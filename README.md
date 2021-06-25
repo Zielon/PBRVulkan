@@ -2,7 +2,7 @@
 
 This project is an engine where you can create/test new shaders in real-time physically based ray tracing system. The main idea is that users can test their own integrators in predefined environment with assets like: meshes, materials, lights and textures. The Vulkan pipeline is abstracted in a shaders form and the only concern for a user is providing either their own scene description or using already existing one.
 
- ![discord](https://img.shields.io/discord/774330363810938890) ![issues](https://img.shields.io/github/issues/Zielon/PBRVulkan) ![release](https://img.shields.io/github/v/release/Zielon/PBRVulkan) ![closed](https://img.shields.io/github/issues-closed-raw/Zielon/PBRVulkan) ![Windwos](https://img.shields.io/badge/system-Windows-green)
+ ![discord](https://img.shields.io/discord/774330363810938890) ![issues](https://img.shields.io/github/issues/Zielon/PBRVulkan) ![release](https://img.shields.io/github/v/release/Zielon/PBRVulkan) ![closed](https://img.shields.io/github/issues-closed-raw/Zielon/PBRVulkan) ![Linux](https://img.shields.io/badge/system-Linux-green) ![Windwos](https://img.shields.io/badge/system-Windows-green)
 
 Check out the discord [#general](https://discord.gg/365bNPbFTM) for more info or [discussions](https://github.com/Zielon/PBRVulkan/discussions). The current development is available under [project](https://github.com/Zielon/PBRVulkan/projects/1).  
 
@@ -34,17 +34,17 @@ As an example of creating your own shader please take a look at [Ambient Occlusi
 #### How to run
 
 1) Download [VulkanSDK](https://vulkan.lunarg.com/sdk/home#windows) and install it.
-2) Run `install.bat` script to download all necessary libraries.
+2) Run `windows_install.bat` or `linux_install.bat` script to download all necessary libraries.
 3) For shaders compliation you will need `python` (Python 3.x.x) and `glslangValidator` available form the shell level. Check out `Compiler.h` and `Compile.py` for more details. `glslangValidator` can be found for instance in `C:/VulkanSDK/x.x.x.x/Bin32/glslangValidator.exe`.
 
 C++17 is needed to compile the project.
 
 #### Assets
 
-The scene description and assets are taken from [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) project [4]. The [scenes repository](https://github.com/Zielon/PBRScenes) will be automatically cloned during the installation process.
+The scene description and assets are adapted from [GLSL-PathTracer](https://github.com/knightcrawler25/GLSL-PathTracer) project [4]. The [scenes repository](https://github.com/Zielon/PBRScenes) will be automatically cloned during the installation process.
 
 ```
-PBRVulkan/Assets/Scenes/
+PBRVulkan/Assets/PBRScenes/
     bedroom/
     coffee_cart/
     HDR/

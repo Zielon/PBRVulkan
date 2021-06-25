@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-
+#include <cstring>
 #define GLM_FORCE_SWIZZLE 
 #include <glm/glm.hpp>
 

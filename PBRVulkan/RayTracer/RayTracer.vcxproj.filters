@@ -455,5 +455,6 @@
     <ClInclude Include="src\Geometry\Compute.h">
       <Filter>Geometry\Uniforms</Filter>
     </ClInclude>
+    <ClInclude Include="src\path.h" />
   </ItemGroup>
 </Project>

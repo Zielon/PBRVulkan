@@ -6,7 +6,6 @@
 
 #include "Camera.h"
 #include "TextureImage.h"
-#include "../3rdParty/HDRloader.h"
 
 #include "../Vulkan/Device.h"
 #include "../Vulkan/CommandPool.h"
@@ -20,6 +19,7 @@
 #include "../Assets/Mesh.h"
 
 #include "../Loader/Loader.h"
+#include "../path.h"
 
 namespace Tracer
 {
@@ -30,6 +30,8 @@ namespace Tracer
 		: config(std::move(config)), device(device), commandPool(commandPool)
 	{
 		const auto start = std::chrono::high_resolution_clock::now();
+
+		root = Path::Root({ "PBRVulkan", "Assets", "PBRScenes" });
 
 		Load();
 		LoadEmptyBuffers();
@@ -226,7 +228,8 @@ namespace Tracer
 	{
 		hdrLoader = std::async(std::launch::async, [this, path]()
 		{
-			const auto file = root + path;
+			auto fs = std::filesystem::path(path).make_preferred();
+			const auto file = (root / fs).string();
 			auto* hdr = HDRLoader::load(file.c_str());
 
 			if (hdr == nullptr)
@@ -258,7 +261,8 @@ namespace Tracer
 		}
 		else
 		{
-			const auto file = root + path;
+			auto fs = std::filesystem::path(path).make_preferred();
+			const auto file = (root / fs).string();
 			id = meshes.size();
 			meshes.emplace_back(new Assets::Mesh(file));
 			meshMap[path] = id;
@@ -278,7 +282,8 @@ namespace Tracer
 		}
 		else
 		{
-			const auto file = root + path;
+			auto fs = std::filesystem::path(path).make_preferred();
+			const auto file = (root / fs).string();
 			id = textures.size();
 			textures.emplace_back(new Assets::Texture(file));
 			textureMap[path] = id;

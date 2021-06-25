@@ -103,6 +103,7 @@
     <ClInclude Include="src\ImGui\imgui_impl_vulkan.h" />
     <ClInclude Include="src\Loader\Loader.h" />
     <ClInclude Include="src\Loader\RenderOptions.h" />
+    <ClInclude Include="src\path.h" />
     <ClInclude Include="src\Tracer\Camera.h" />
     <ClInclude Include="src\Tracer\Compiler.h" />
     <ClInclude Include="src\Tracer\Menu.h" />

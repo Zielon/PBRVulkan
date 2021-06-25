@@ -23,6 +23,8 @@
 #include "../Vulkan/ImageView.h"
 #include "../Vulkan/Command.cpp"
 
+#include "../path.h"
+
 #include "Widgets/CinemaWidget.h"
 #include "Widgets/RendererWidget.h"
 #include "Widgets/SceneWidget.h"
@@ -144,8 +146,9 @@ namespace Tracer
 
 	void Application::CheckScenesFolder()
 	{
-		terminate = !std::filesystem::exists("../Assets/PBRScenes/");
-
+		auto root = Path::Root({ "PBRVulkan", "Assets", "PBRScenes" });
+		terminate = !std::filesystem::exists(root);
+		
 		if (terminate)
 		{
 			std::cout << "[ERROR] Scenes folder does not exists. Download https://github.com/Zielon/PBRScenes!" <<

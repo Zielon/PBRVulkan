@@ -1,17 +1,22 @@
 #include "Shader.h"
 
+#include <filesystem>
+
 #include "Device.h"
 
 #include <fstream>
 #include <string>
 #include <iostream>
 
+#include "../path.h"
+
 namespace Vulkan
 {
 	Shader::Shader(const Device& device, const std::string& filename):
 		device(device)
 	{
-		CreateShaderModule(Load("../Assets/Shaders/" + filename));
+		auto root = Path::Root({"PBRVulkan", "Assets", "Shaders"});
+		CreateShaderModule(Load((root / filename).string()));
 	}
 
 	Shader::~Shader()
@@ -50,8 +55,10 @@ namespace Vulkan
 
 		if (!file.is_open())
 		{
-			throw std::runtime_error("Failed to open file: '" + filename + "'");
+			std::cout << "[ERROR] Failed to open file: '" + filename + "'" << std::endl;
 		}
+
+		std::cout << "[INFO] Shader loaded " << filename << std::endl;
 
 		const auto fileSize = static_cast<size_t>(file.tellg());
 		std::vector<char> buffer(fileSize);

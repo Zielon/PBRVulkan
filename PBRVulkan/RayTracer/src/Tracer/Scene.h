@@ -149,7 +149,7 @@ namespace Tracer
 
 	private:
 		std::string config;
-		const std::string root = "../Assets/PBRScenes/";
+		std::filesystem::path root;
 		uint32_t verticesSize{};
 		uint32_t indeciesSize{};
 		std::unique_ptr<class Camera> camera;

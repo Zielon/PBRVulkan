@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <vector>
-
+#include <cstring>
 #include "Vulkan.h"
 
 namespace Vulkan

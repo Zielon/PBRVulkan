@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vulkan.h"
+#include <cstring>
 
 namespace Vulkan
 {

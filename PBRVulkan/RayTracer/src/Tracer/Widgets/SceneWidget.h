@@ -1,7 +1,11 @@
 #pragma once
 
+#include <filesystem>
+#include <iostream>
 #include <string>
 #include <vector>
+
+#include "../../path.h"
 
 #include "Widget.h"
 
@@ -16,7 +20,10 @@ namespace Interface
 
 		static std::string GetScenePath(uint32_t index)
 		{
-			return "../Assets/PBRScenes/" + CONFIGS[index];
+			auto root = Path::Root({"PBRVulkan", "Assets", "PBRScenes"});
+			const auto path = root / CONFIGS[index];
+			std::cout << "[SCENE] Scene selected " << path.string() << std::endl;
+			return path.string();
 		}
 
 	private:

@@ -1,9 +1,12 @@
 #include "Compiler.h"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <utility>
+
+#include "../path.h"
 
 namespace Tracer
 {
@@ -21,32 +24,33 @@ namespace Tracer
 		std::string TOKEN_INTEGRATOR = "// ====== INTEGRATOR ======";
 		std::string TOKEN_DEFINES = "// ====== DEFINES ======";
 
-		std::string RAY_HIT_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing";
-		std::string RAY_MISS_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing";
-		std::string RAY_SHADOW_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Shadow";
-		std::string RAY_GEN_SHADER = "../RayTracer/src/Assets/Shaders/Raytracer/Raytracing";
+		std::string RAY_HIT_SHADER = "src/Assets/Shaders/Raytracer/Raytracing";
+		std::string RAY_MISS_SHADER = "src/Assets/Shaders/Raytracer/Raytracing";
+		std::string RAY_SHADOW_SHADER = "src/Assets/Shaders/Raytracer/Shadow";
+		std::string RAY_GEN_SHADER = "src/Assets/Shaders/Raytracer/Raytracing";
 
 		std::map<Include, std::string> INCLUDES = {
-			{ Include::PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
-			{ Include::PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" },
-			{ Include::AMBIENT_OCCLUSION, "#include \"Integrators/AO.glsl\"" }
+			{Include::PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\""},
+			{Include::PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\""},
+			{Include::AMBIENT_OCCLUSION, "#include \"Integrators/AO.glsl\""}
 		};
 
 		std::map<Define, std::string> DEFINES = {
-			{ Define::USE_HDR, "#define USE_HDR" },
-			{ Define::USE_GAMMA_CORRECTION, "#define USE_GAMMA_CORRECTION" }
+			{Define::USE_HDR, "#define USE_HDR"},
+			{Define::USE_GAMMA_CORRECTION, "#define USE_GAMMA_CORRECTION"}
 		};
 
 		std::map<ShaderType, Shader> SHADERS = {
-			{ ShaderType::RAY_HIT, { RAY_HIT_SHADER, ".rchit" } },
-			{ ShaderType::RAY_MISS, { RAY_MISS_SHADER, ".rmiss" } },
-			{ ShaderType::RAY_GEN, { RAY_GEN_SHADER, ".rgen" } },
-			{ ShaderType::RAY_SHADOW, { RAY_SHADOW_SHADER, ".rmiss" } }
+			{ShaderType::RAY_HIT, {RAY_HIT_SHADER, ".rchit"}},
+			{ShaderType::RAY_MISS, {RAY_MISS_SHADER, ".rmiss"}},
+			{ShaderType::RAY_GEN, {RAY_GEN_SHADER, ".rgen"}},
+			{ShaderType::RAY_SHADOW, {RAY_SHADOW_SHADER, ".rmiss"}}
 		};
 	}
 
 	Compiler::Compiler()
 	{
+		root = Path::Root({"PBRVulkan", "RayTracer"});
 		Read();
 	}
 
@@ -55,7 +59,9 @@ namespace Tracer
 		for (const auto& pair : Parser::SHADERS)
 		{
 			auto shader = pair.second;
-			std::ifstream inShader(shader.path + shader.extension);
+			auto name = std::filesystem::path(shader.path + shader.extension).make_preferred();
+			auto path = (root / name).string();
+			std::ifstream inShader(path);
 			std::string line;
 			int i = 0;
 			std::vector<std::string> file;
@@ -87,7 +93,9 @@ namespace Tracer
 		for (const auto& pair : Parser::SHADERS)
 		{
 			const auto& shader = pair.second;
-			std::ofstream outShader(shader.path + ".compiled" + shader.extension, std::ofstream::trunc);
+			auto name = std::filesystem::path(shader.path + ".compiled" + shader.extension).make_preferred();
+			auto path = (root / name).string();
+			std::ofstream outShader(path, std::ofstream::trunc);
 			int i = 0;
 			for (const auto& line : shader.content)
 			{
@@ -119,7 +127,11 @@ namespace Tracer
 			outShader.close();
 		}
 
-		std::system("python ./scripts/Compile.py");
+		auto current = root;
+		current /= "scripts";
+		current /= "Compile.py";
+
+		std::system(("python " + current.string()).c_str());
 
 		std::cout << "[COMPILER] Shaders compilation has ended." << std::endl;
 	}
