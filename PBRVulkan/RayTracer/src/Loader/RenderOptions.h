@@ -10,7 +10,7 @@ namespace Loader
 		{
 			maxDepth = 2;
 			useEnvMap = false;
-			resolution = glm::vec2(1280, 720);
+			resolution = glm::vec2(1920, 1080);
 			hdrMultiplier = 1.0f;
 		}
 
