@@ -12,6 +12,7 @@
 #include "../Vulkan/CommandPool.h"
 #include "../Vulkan/RenderPass.h"
 #include "../Vulkan/Command.cpp"
+#include "../path.h"
 
 #include "Widgets/Widget.h"
 
@@ -42,7 +43,7 @@ namespace Tracer
 		descriptor.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		descriptor.descriptorCount = 1;
 
-		std::array<VkDescriptorPoolSize, 1> poolSizes = { descriptor };
+		std::array<VkDescriptorPoolSize, 1> poolSizes = {descriptor};
 
 		VkDescriptorPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -71,16 +72,8 @@ namespace Tracer
 
 		auto& io = ImGui::GetIO();
 
-		auto root = std::filesystem::current_path();
-		while (root.string().find("PBRVulkan") != std::string::npos)
-			root = root.parent_path();
+		auto root = Path::Root({"PBRVulkan", "Assets", "Fonts", "Cousine-Regular.ttf"});
 
-		root /= "PBRVulkan";
-		root /= "PBRVulkan";
-		root /= "Assets";
-		root /= "Fonts";
-		root /= "Cousine-Regular.ttf";
-		
 		if (!io.Fonts->AddFontFromFileTTF(root.string().c_str(), 13))
 		{
 			throw std::runtime_error("failed to load ImGui font");
@@ -117,7 +110,7 @@ namespace Tracer
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = renderPass->Get();
 		renderPassInfo.framebuffer = framebuffer;
-		renderPassInfo.renderArea.offset = { 0, 0 };
+		renderPassInfo.renderArea.offset = {0, 0};
 		renderPassInfo.renderArea.extent = swapChain.Extent;
 		renderPassInfo.clearValueCount = 0;
 		renderPassInfo.pClearValues = clearValues.data();
@@ -138,8 +131,8 @@ namespace Tracer
 	{
 		bool open = true;
 		const float distance = 5.0f;
-		const ImVec2 pos = ImVec2(distance, distance);
-		const ImVec2 posPivot = ImVec2(0.0f, 0.0f);
+		const auto pos = ImVec2(distance, distance);
+		const auto posPivot = ImVec2(0.0f, 0.0f);
 		const auto flags =
 			ImGuiWindowFlags_AlwaysAutoResize |
 			ImGuiWindowFlags_NoMove |

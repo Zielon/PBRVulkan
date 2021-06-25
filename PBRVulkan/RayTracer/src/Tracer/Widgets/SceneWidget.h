@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "../../path.h"
+
 #include "Widget.h"
 
 namespace Interface
@@ -18,14 +20,7 @@ namespace Interface
 
 		static std::string GetScenePath(uint32_t index)
 		{
-			auto root = std::filesystem::current_path();
-			while (root.string().find("PBRVulkan") != std::string::npos)
-				root = root.parent_path();
-
-			root /= "PBRVulkan";
-			root /= "PBRVulkan";
-			root /= "Assets";
-			root /= "PBRScenes";
+			auto root = Path::Root({"PBRVulkan", "Assets", "PBRScenes"});
 			const auto path = root / CONFIGS[index];
 			std::cout << "[SCENE] Scene selected " << path.string() << std::endl;
 			return path.string();

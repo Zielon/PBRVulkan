@@ -129,6 +129,7 @@ set(src_files_vulkan
 
 set(src_files
         main.cpp
+	path.h
         )
 
 source_group("3rdParty" FILES ${src_files_3rdParty})

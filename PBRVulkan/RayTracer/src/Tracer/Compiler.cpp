@@ -6,6 +6,8 @@
 #include <string>
 #include <utility>
 
+#include "../path.h"
+
 namespace Tracer
 {
 	namespace Parser
@@ -28,34 +30,27 @@ namespace Tracer
 		std::string RAY_GEN_SHADER = "src/Assets/Shaders/Raytracer/Raytracing";
 
 		std::map<Include, std::string> INCLUDES = {
-			{ Include::PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\"" },
-			{ Include::PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\"" },
-			{ Include::AMBIENT_OCCLUSION, "#include \"Integrators/AO.glsl\"" }
+			{Include::PATH_TRACER_DEFAULT, "#include \"Integrators/PathTracer.glsl\""},
+			{Include::PATH_TRACER_MSM, "#include \"Integrators/PathTracerMSM.glsl\""},
+			{Include::AMBIENT_OCCLUSION, "#include \"Integrators/AO.glsl\""}
 		};
 
 		std::map<Define, std::string> DEFINES = {
-			{ Define::USE_HDR, "#define USE_HDR" },
-			{ Define::USE_GAMMA_CORRECTION, "#define USE_GAMMA_CORRECTION" }
+			{Define::USE_HDR, "#define USE_HDR"},
+			{Define::USE_GAMMA_CORRECTION, "#define USE_GAMMA_CORRECTION"}
 		};
 
 		std::map<ShaderType, Shader> SHADERS = {
-			{ ShaderType::RAY_HIT, { RAY_HIT_SHADER, ".rchit" } },
-			{ ShaderType::RAY_MISS, { RAY_MISS_SHADER, ".rmiss" } },
-			{ ShaderType::RAY_GEN, { RAY_GEN_SHADER, ".rgen" } },
-			{ ShaderType::RAY_SHADOW, { RAY_SHADOW_SHADER, ".rmiss" } }
+			{ShaderType::RAY_HIT, {RAY_HIT_SHADER, ".rchit"}},
+			{ShaderType::RAY_MISS, {RAY_MISS_SHADER, ".rmiss"}},
+			{ShaderType::RAY_GEN, {RAY_GEN_SHADER, ".rgen"}},
+			{ShaderType::RAY_SHADOW, {RAY_SHADOW_SHADER, ".rmiss"}}
 		};
 	}
 
 	Compiler::Compiler()
 	{
-		root = std::filesystem::current_path();
-		while (root.string().find("PBRVulkan") != std::string::npos)
-			root = root.parent_path();
-
-		root /= "PBRVulkan";
-		root /= "PBRVulkan";
-		root /= "RayTracer";
-	
+		root = Path::Root({"PBRVulkan", "RayTracer"});
 		Read();
 	}
 
@@ -98,7 +93,9 @@ namespace Tracer
 		for (const auto& pair : Parser::SHADERS)
 		{
 			const auto& shader = pair.second;
-			std::ofstream outShader(shader.path + ".compiled" + shader.extension, std::ofstream::trunc);
+			auto name = std::filesystem::path(shader.path + ".compiled" + shader.extension).make_preferred();
+			auto path = (root / name).string();
+			std::ofstream outShader(path, std::ofstream::trunc);
 			int i = 0;
 			for (const auto& line : shader.content)
 			{
@@ -133,7 +130,7 @@ namespace Tracer
 		auto current = root;
 		current /= "scripts";
 		current /= "Compile.py";
-		
+
 		std::system(("python " + current.string()).c_str());
 
 		std::cout << "[COMPILER] Shaders compilation has ended." << std::endl;

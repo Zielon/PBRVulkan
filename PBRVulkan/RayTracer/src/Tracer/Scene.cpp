@@ -19,6 +19,7 @@
 #include "../Assets/Mesh.h"
 
 #include "../Loader/Loader.h"
+#include "../path.h"
 
 namespace Tracer
 {
@@ -30,15 +31,8 @@ namespace Tracer
 	{
 		const auto start = std::chrono::high_resolution_clock::now();
 
-		root = std::filesystem::current_path();		
-		while(root.string().find("PBRVulkan") != std::string::npos)
-			root = root.parent_path();
-		
-		root /= "PBRVulkan";
-		root /= "PBRVulkan";
-		root /= "Assets";
-		root /= "PBRScenes";
-		
+		root = Path::Root({ "PBRVulkan", "Assets", "PBRScenes" });
+
 		Load();
 		LoadEmptyBuffers();
 		Wait();

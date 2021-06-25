@@ -23,6 +23,8 @@
 #include "../Vulkan/ImageView.h"
 #include "../Vulkan/Command.cpp"
 
+#include "../path.h"
+
 #include "Widgets/CinemaWidget.h"
 #include "Widgets/RendererWidget.h"
 #include "Widgets/SceneWidget.h"
@@ -144,14 +146,7 @@ namespace Tracer
 
 	void Application::CheckScenesFolder()
 	{
-		auto root = std::filesystem::current_path();
-		while (root.string().find("PBRVulkan") != std::string::npos)
-			root = root.parent_path();
-
-		root /= "PBRVulkan";
-		root /= "PBRVulkan";
-		root /= "Assets";
-		root /= "PBRScenes";
+		auto root = Path::Root({ "PBRVulkan", "Assets", "PBRScenes" });
 		terminate = !std::filesystem::exists(root);
 		
 		if (terminate)

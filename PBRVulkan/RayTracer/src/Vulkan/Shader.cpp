@@ -8,20 +8,14 @@
 #include <string>
 #include <iostream>
 
+#include "../path.h"
+
 namespace Vulkan
 {
 	Shader::Shader(const Device& device, const std::string& filename):
 		device(device)
 	{
-		auto root = std::filesystem::current_path();
-		while (root.string().find("PBRVulkan") != std::string::npos)
-			root = root.parent_path();
-
-		root /= "PBRVulkan";
-		root /= "PBRVulkan";
-		root /= "Assets";
-		root /= "Shaders";
-
+		auto root = Path::Root({"PBRVulkan", "Assets", "Shaders"});
 		CreateShaderModule(Load((root / filename).string()));
 	}
 
