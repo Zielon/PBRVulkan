@@ -7,31 +7,31 @@ set(src_files_assets
         Assets/Mesh.h
         Assets/Texture.h
         Assets/Texture.cpp
-    )
+        )
 
 set(src_files_geometry
         Geometry/Compute.h
         Geometry/Global.h
         Geometry/Vertex.h
-    )
+        )
 
 set(src_files_3rdParty
         3rdParty/HDRLoader.cpp
         3rdParty/HDRLoader.h
-    )
+        )
 
 set(src_files_imgui
         ImGui/imgui_impl_glfw.cpp
         ImGui/imgui_impl_glfw.h
         ImGui/imgui_impl_vulkan.cpp
         ImGui/imgui_impl_vulkan.h
-    )
+        )
 
 set(src_files_loader
         Loader/Loader.cpp
         Loader/Loader.h
         Loader/RenderOptions.h
-    )
+        )
 
 set(src_files_tracer
         Tracer/Widgets/CinemaWidget.cpp
@@ -55,7 +55,7 @@ set(src_files_tracer
         Tracer/Settings.h
         Tracer/TextureImage.cpp
         Tracer/TextureImage.h
-    )
+        )
 
 set(src_files_vulkan
         Vulkan/AccelerationStructure.cpp
@@ -125,11 +125,11 @@ set(src_files_vulkan
         Vulkan/RenderPass.h
         Vulkan/Surface.cpp
         Vulkan/TLAS.h
-    )
+        )
 
 set(src_files
         main.cpp
-    )
+        )
 
 source_group("3rdParty" FILES ${src_files_3rdParty})
 source_group("Assets" FILES ${src_files_assets})
@@ -149,13 +149,13 @@ add_executable(${exe_name}
         ${src_files_tracer}
         ${src_files_vulkan}
         ${src_files}
-    )
+        )
 
 if (UNIX)
     # GCC8 needs an extra lib for <filesystem>.
     # This is not needed with GCC9 or higher.
     set(extra_libs -lstdc++fs ${Backtrace_LIBRARIES})
-endif()
+endif ()
 
 set_target_properties(${exe_name} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 target_include_directories(${exe_name} PRIVATE . ${Boost_INCLUDE_DIRS} ${glfw3_INCLUDE_DIRS} ${glm_INCLUDE_DIRS} ${STB_INCLUDE_DIRS} ${Vulkan_INCLUDE_DIRS})
