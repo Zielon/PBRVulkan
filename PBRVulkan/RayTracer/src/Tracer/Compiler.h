@@ -44,6 +44,7 @@ namespace Tracer
 		
 	private:
 		void Read() const;
+		void GlslangValidator() const;
 		std::filesystem::path root;
 	};
 }

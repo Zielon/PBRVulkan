@@ -83,6 +83,37 @@ namespace Tracer
 		}
 	}
 
+	void Compiler::GlslangValidator() const
+	{
+		auto output_folder = root / ".." / "Assets" / "Shaders";
+		auto shaders = root / "src" / "Assets" / "Shaders";
+		std::vector<std::string> extensionsToCheck = {
+			".frag", ".vert", ".comp", ".compiled.rchit", ".compiled.rgen", ".compiled.rmiss"
+		};
+
+		auto s = std::vector<std::string>();
+
+		for (const auto& entry : std::filesystem::recursive_directory_iterator(shaders))
+		{
+			if (entry.is_directory())
+				continue;
+
+			auto path = entry.path();
+
+			for (const auto& extension : extensionsToCheck)
+			{
+				if (path.filename().string().find(extension) != std::string::npos)
+				{
+					auto shader = path;
+					shader.replace_extension(path.extension().string() + ".spv");
+					auto output = output_folder / shader.filename();
+					auto cmd = "glslangValidator --target-env vulkan1.2 -V " + path.string() + " -o " + output.string();
+					std::system(cmd.c_str());
+				}
+			}
+		}
+	}
+
 	/*
 	 * Includes integrator selected form the menu
 	 */
@@ -127,11 +158,7 @@ namespace Tracer
 			outShader.close();
 		}
 
-		auto current = root;
-		current /= "scripts";
-		current /= "Compile.py";
-
-		std::system(("python " + current.string()).c_str());
+		GlslangValidator();
 
 		std::cout << "[COMPILER] Shaders compilation has ended." << std::endl;
 	}

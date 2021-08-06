@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Scripts">
-      <UniqueIdentifier>{99d00138-8642-4e15-a5a9-30937569766c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets">
       <UniqueIdentifier>{e7376797-e7f2-4088-a0a1-f2836eea3574}</UniqueIdentifier>
     </Filter>
@@ -66,9 +63,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\Compile.py">
-      <Filter>Scripts</Filter>
-    </None>
     <None Include="src\Assets\Shaders\Rasterizer\Fragment.frag">
       <Filter>Assets\Shaders\Rasterizer</Filter>
     </None>

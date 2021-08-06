@@ -14,7 +14,6 @@
     <ProjectGuid>{7DC88BB6-76B3-4D37-B93D-7E9451517654}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Scripts\Compile.py" />
     <None Include="src\Assets\Shaders\BSDFs\DisneyBSDF.glsl" />
     <None Include="src\Assets\Shaders\BSDFs\UE4BSDF.glsl" />
     <None Include="src\Assets\Shaders\Common\Denoiser.glsl" />
