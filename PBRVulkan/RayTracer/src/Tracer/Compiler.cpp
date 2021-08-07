@@ -91,7 +91,7 @@ namespace Tracer
 			".frag", ".vert", ".comp", ".compiled.rchit", ".compiled.rgen", ".compiled.rmiss"
 		};
 
-		auto s = std::vector<std::string>();
+		std::filesystem::create_directory(output_folder);
 
 		for (const auto& entry : std::filesystem::recursive_directory_iterator(shaders))
 		{
