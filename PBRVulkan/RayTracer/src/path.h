@@ -8,10 +8,14 @@ public:
 	static std::filesystem::path Root(std::vector<std::string> segments)
 	{
 		auto root = std::filesystem::current_path();
-		while (root.string().find("PBRVulkan") != std::string::npos)
+		auto current = root.filename();
+		while (current.string().find("PBRVulkan") == std::string::npos)
+		{
 			root = root.parent_path();
+			current = root.filename();
+		}
 
-		root /= "PBRVulkan";
+		root = root.parent_path();
 
 		for (const auto segment : segments)
 			root /= segment;

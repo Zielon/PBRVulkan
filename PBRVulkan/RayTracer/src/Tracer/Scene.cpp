@@ -78,7 +78,7 @@ namespace Tracer
 		{
 			std::cout << "[ERROR] " + config + " does not exist" << std::endl;
 			std::cout << "[INFO] Download the scenes repository! " << std::endl;
-			return false;
+			exit(-1);
 		}
 
 		return true;
