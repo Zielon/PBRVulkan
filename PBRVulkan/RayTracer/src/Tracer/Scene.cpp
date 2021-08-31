@@ -151,6 +151,13 @@ namespace Tracer
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT |
 			VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT);
 		auto size = sizeof(meshes[0]->GetVertices()[0]) * vertices.size();
+
+		if (size == 0)
+		{
+		    std::cout << "[SCENE] Check if git-lfs is installed and re-clone the scenes repository!" << std::endl;
+		    exit(-1);
+		}
+
 		std::cout << "[SCENE] Vertex buffer size = " << static_cast<double>(size) / 1000000.0 << " MB" << std::endl;
 		Fill(vertexBuffer, vertices.data(), size, usage,
 		     VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT);

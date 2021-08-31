@@ -34,7 +34,8 @@ As an example of creating your own shader please take a look at [Ambient Occlusi
 #### How to run
 
 1) Download [VulkanSDK](https://vulkan.lunarg.com/sdk/home#windows) and install it following the instuctions.
-2) Run `windows_install.bat` or `linux_install.sh` script depending on the system to download all necessary libraries. 
+2) Run `windows_install.bat` or `sudo linux_install.sh` script depending on the system to download all necessary libraries. 
+3) `git-lfs` must be installed in order to fetch scenes repository.
 
 C++17 is needed to compile the project.
 
