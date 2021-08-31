@@ -14,9 +14,10 @@ public:
 			root = root.parent_path();
 			current = root.filename();
 		}
-
-		root = root.parent_path();
-
+		
+		if (root.parent_path().filename().string() == "PBRVulkan")
+			root = root.parent_path();
+		
 		for (const auto segment : segments)
 			root /= segment;
 
