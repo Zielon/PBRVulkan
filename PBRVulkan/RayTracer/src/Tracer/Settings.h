@@ -4,7 +4,7 @@ struct Settings final
 {
 	bool UseRasterizer{};
 	bool UseGammaCorrection = true;
-	bool DoubleSidedLight = false;
+	bool DoubleSidedLight = true;
 	bool UseComputeShaders = false;
 	int IntegratorType{};
 	int ComputeShaderId{};

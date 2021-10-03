@@ -149,7 +149,8 @@ namespace Tracer
 		auto usage = static_cast<VkBufferUsageFlagBits>(
 			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT |
-			VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT);
+			VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
+			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR);
 		auto size = sizeof(meshes[0]->GetVertices()[0]) * vertices.size();
 
 		if (size == 0)
@@ -167,7 +168,8 @@ namespace Tracer
 		usage = static_cast<VkBufferUsageFlagBits>(
 			VK_BUFFER_USAGE_INDEX_BUFFER_BIT |
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT |
-			VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT);
+			VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
+			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR);
 		size = sizeof(indices[0]) * indices.size();
 		Fill(indexBuffer, indices.data(), size, usage,
 		     VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT);

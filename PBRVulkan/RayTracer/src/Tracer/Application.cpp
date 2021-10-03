@@ -261,6 +261,13 @@ namespace Tracer
 		// Selected by default CreatePhysicalDevice() in Core.cpp
 		auto* physicalDevice = instance->GetDevices().front();
 
+		uint instanceVersion = VK_API_VERSION_1_2;
+		vkEnumerateInstanceVersion(&instanceVersion );
+		uint32_t major = VK_VERSION_MAJOR(instanceVersion);
+		uint32_t minor = VK_VERSION_MINOR(instanceVersion);
+		uint32_t patch = VK_VERSION_PATCH(instanceVersion);
+
+		std::cout << "[INFO] Vulkan SDK version: " << major << "." << minor << "." << patch << std::endl;
 		std::cout << "[INFO] Available Vulkan devices:" << std::endl;
 		for (const auto& device : instance->GetDevices())
 		{

@@ -42,7 +42,7 @@
 	}
 
 	payload.beta *= F * cosTheta / (bsdfSample.pdf + EPS);
-	
+
 	if (dot(ffnormal, bsdfSample.bsdfDir) < 0.0)
 		payload.absorption = -log(material.extinction.xyz) / (material.atDistance + EPS);
 
@@ -50,7 +50,7 @@
 	if (max3(payload.beta) < 0.01f && payload.depth > 2)
 	{
 		float q = max(float(.05), 1.f - max3(payload.beta));
-		if (rnd(seed) < q) 
+		if (rnd(seed) < q)
 			payload.stop = true;
 		payload.beta /= (1.f - q);
 	}

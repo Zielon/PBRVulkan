@@ -225,7 +225,7 @@ namespace Vulkan
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		const auto usage = static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
-			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR);
+		        VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 
 		ScratchBLASBuffer.reset(new Buffer(
 			*device, total.buildScratchSize, usage, VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
@@ -249,7 +249,7 @@ namespace Vulkan
 
 		geometryInstances.reserve(scene->GetMeshes().size());
 
-		for (auto instanceId = 0; instanceId < scene->GetMeshInstances().size(); ++instanceId)
+		for (auto instanceId = 0; instanceId < int(scene->GetMeshInstances().size()); ++instanceId)
 		{
 			geometryInstances.push_back(TLAS::CreateInstance(BLASs[instanceId], glm::mat4(1), instanceId));
 		}
@@ -258,7 +258,7 @@ namespace Vulkan
 		instanceBuffer.reset(
 			new Buffer(*device, size,
 			           static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_TRANSFER_DST_BIT |
-				           VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT),
+			           VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR),
 			           VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
 			           VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
@@ -287,7 +287,7 @@ namespace Vulkan
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 		const auto usage = static_cast<VkBufferUsageFlagBits>(VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
-			VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR);
+		        VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 
 		ScratchTLASBuffer.reset(new Buffer(
 			*device, total.buildScratchSize, usage,
