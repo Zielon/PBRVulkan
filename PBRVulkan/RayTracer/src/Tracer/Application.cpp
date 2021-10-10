@@ -261,7 +261,7 @@ namespace Tracer
 		// Selected by default CreatePhysicalDevice() in Core.cpp
 		auto* physicalDevice = instance->GetDevices().front();
 
-		uint instanceVersion = VK_API_VERSION_1_2;
+		uint32_t instanceVersion = VK_API_VERSION_1_2;
 		vkEnumerateInstanceVersion(&instanceVersion );
 		uint32_t major = VK_VERSION_MAJOR(instanceVersion);
 		uint32_t minor = VK_VERSION_MINOR(instanceVersion);
@@ -273,8 +273,8 @@ namespace Tracer
 		{
 			VkPhysicalDeviceProperties prop;
 			vkGetPhysicalDeviceProperties(device, &prop);
-			const auto* selected = device == physicalDevice ? "	 (selected)" : "";
-			std::cout << "	" << prop.deviceName << selected << std::endl;
+			const auto* selected = device == physicalDevice ? "	 (x) " : " ( ) ";
+			std::cout << selected << prop.deviceName << std::endl;
 		}
 	}
 
